@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -27,12 +26,12 @@ public class UnitActivity extends AppCompatActivity {
     String spinner_area[] = {"제곱미터(m^2)", "제곱키로미터(km^2)", "제곱피트(ft^2)", "제곱야드(yd^2)", "아르(a)", "헥타르(ha)", "에이커(ac)", "평"};
     String spinner_weight[] = {"밀리그램(mg)", "그램(g)", "킬로그램(kg)", "톤(t)", "킬로톤(kt)", "파운드(lb)", "그레인(gr)", "온스(oz)"};
 
-    int length_from = 0;
-    int length_to = 0;
-    int area_from = 0;
-    int area_to = 0;
-    int weight_from = 0;
-    int weight_to = 0;
+//    int length_from = 0;
+//    int length_to = 0;
+//    int area_from = 0;
+//    int area_to = 0;
+//    int weight_from = 0;
+//    int weight_to = 0;
 
     String unitFlag = "LENGTH"; // 어떤 종류의 단위를 선택했는지 나타내는 상태 변수
 
@@ -89,7 +88,6 @@ public class UnitActivity extends AppCompatActivity {
         spinner_area_to.setAdapter(adapter_area);
         spinner_weight_from.setAdapter(adapter_weight);
         spinner_weight_to.setAdapter(adapter_weight);
-
     }
 
     private void setListener() {
@@ -136,6 +134,9 @@ public class UnitActivity extends AppCompatActivity {
         }
     }; // clickListener
 
+    /**
+     * TextView에 숫자를 입력할때 마다 결과값을 실시간으로 보여준다.
+     */
     TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -165,7 +166,7 @@ public class UnitActivity extends AppCompatActivity {
     }; // textWatcher
 
     /**
-     *  앞쪽에 있는 Spinner가 바뀔 때(선택했을 때)의 Listener
+     *  앞쪽에 있는 Spinner를 선택했을 때(바뀔 때)의 Listener
      */
     AdapterView.OnItemSelectedListener itemSelectedListener;
     {
@@ -188,10 +189,10 @@ public class UnitActivity extends AppCompatActivity {
 
             }
         };
-    }
+    } // itemSelectedListener
 
     /**
-     * 뒷쪽에 있는 Spinner가 바뀔 때(선택했을 때)의 Listener
+     * 뒷쪽에 있는 Spinner를 선택했을 때(바뀔 때)의 Listener
      */
     AdapterView.OnItemSelectedListener toItemSelectedListener;
     {
@@ -214,7 +215,7 @@ public class UnitActivity extends AppCompatActivity {
 
             }
         };
-    }
+    } // toItemSelectedListener
 
 
     /**
