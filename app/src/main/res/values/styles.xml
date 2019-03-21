@@ -6,6 +6,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="windowActionBar">false</item> <!-- 타이틀바 없애기 -->
+        <item name="windowNoTitle">true</item> <!-- 타이틀바 없애기 -->
     </style>
 
 </resources>
