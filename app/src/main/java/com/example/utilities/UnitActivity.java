@@ -165,7 +165,7 @@ public class UnitActivity extends AppCompatActivity {
     }; // textWatcher
 
     /**
-     *  앞쪽에 있는 Spinner가 바뀔때(선택했을때) Listener
+     *  앞쪽에 있는 Spinner가 바뀔 때(선택했을 때)의 Listener
      */
     AdapterView.OnItemSelectedListener itemSelectedListener;
     {
@@ -191,7 +191,7 @@ public class UnitActivity extends AppCompatActivity {
     }
 
     /**
-     * 뒷쪽에 있는 Spinner가 바뀔때(선택했을때) Listener
+     * 뒷쪽에 있는 Spinner가 바뀔 때(선택했을 때)의 Listener
      */
     AdapterView.OnItemSelectedListener toItemSelectedListener;
     {
@@ -219,7 +219,6 @@ public class UnitActivity extends AppCompatActivity {
 
     /**
      * 길이를 변환하는 함수
-     * length sign is
      * 0 is mm,  1 is cm,  2 is m,  3 is km,  4 is inch,  5 is ft,  6 is yd,  7 is mile
      * 기준 단위는 미터(m)
      * @param slF(sign_length_from)
@@ -324,12 +323,11 @@ public class UnitActivity extends AppCompatActivity {
             case 6: output = input * 1760; break; // mile -> yd
             default: break;
         }
-        tv_length_output.setText(output+"");
+        tv_length_output.setText(String.format("%s", output));
     }
 
     /**
      * 무게를 변환하는 함수
-     * weight sign is
      * 0 is mg,  1 is g,  2 is kg,  3 is t,  4 is kt,  5 is lb,  6 is gr,  7 is oz
      * 기준 단위는 밀리그램(mg)
      * @param swF
@@ -440,17 +438,15 @@ public class UnitActivity extends AppCompatActivity {
 
     /**
      * 넓이를 변환하는 함수
+     * 0 is m^2,  1 is km^2,  2 is ft^2,  3 is yd^2,  4 is a,  5 is ha,  6 is ac, 7 is 평
+     * 기준 단위는 제곱미터(m^2)
      * @param saF
      * @param saT
      */
     public void convertArea(int saF, int saT) {
-
-        // length sign is
-        // 1 is m^2,  2 is km^2,  3 is ft^2,  4 is yd^2,  5 is a,  6 is ha,  7 is ac, 8 is 평
-        // 기준 단위는 제곱미터(m^2)
-
         double input = 0;
         double output = 0;
+
         if( !(editText_area.getText().toString().equals("")) ) {
             input = Double.parseDouble(editText_area.getText().toString());
         }
@@ -458,233 +454,96 @@ public class UnitActivity extends AppCompatActivity {
         if( saF == saT ) {
             output = input;
         }
-        // m^2 -> km^2 and REV
-        if( ((saF == 1) && (saT == 2)) || ((saF == 2) && (saT == 1)) ) {
-            if(saF == 1) {
-                output = input * 0.000001;
-            }
-            else if(saF == 2) {
-                output = input * 1000000;
-            }
-        }
-        // m^2 -> ft^2 and REV
-        if( ((saF == 1) && (saT == 3)) || ((saF == 3) && (saT == 1)) ) {
-            if (saF == 1) {
-                output = input * 10.76391;
-            } else if (saF == 3) {
-                output = input * 0.092903;
-            }
-        }
-        // m^2 -> yd^2 and REV
-        if( ((saF == 1) && (saT == 4)) || ((saF == 4) && (saT == 1)) ) {
-            if (saF == 1) {
-                output = input * 1.19599;
-            } else if (saF == 4) {
-                output = input * 0.836127;
-            }
-        }
-        // m^2 -> a and REV
-        if( ((saF == 1) && (saT == 5)) || ((saF == 5) && (saT == 1)) ) {
-            if (saF == 1) {
-                output = input * 0.01;
-            } else if (saF == 5) {
-                output = input * 100;
-            }
-        }
-        // m^2 -> ha and REV
-        if( ((saF == 1) && (saT == 6)) || ((saF == 6) && (saT == 1)) ) {
-            if (saF == 1) {
-                output = input * 0.0001;
-            } else if (saF == 6) {
-                output = input * 10000;
-            }
-        }
-        // m^2 -> ac and REV
-        if( ((saF == 1) && (saT == 7)) || ((saF == 7) && (saT == 1)) ) {
-            if (saF == 1) {
-                output = input * 0.000247;
-            } else if (saF == 7) {
-                output = input * 4046.85642;
-            }
-        }
-        // km^2 -> ft^2 and REV
-        if( ((saF == 2) && (saT == 3)) || ((saF == 3) && (saT == 2)) ) {
-            if (saF == 2) {
-                output = input * 10763910.4;
-            } else if (saF == 3) {
-                output = input * 0.000000093;
-            }
-        }
-        // km^2 -> yd^2 and REV
-        if( ((saF == 2) && (saT == 4)) || ((saF == 4) && (saT == 2)) ) {
-            if (saF == 2) {
-                output = input * 1195990.05;
-            } else if (saF == 4) {
-                output = input * 0.000000836;
-            }
-        }
-        // km^2 -> a and REV
-        if( ((saF == 2) && (saT == 5)) || ((saF == 5) && (saT == 2)) ) {
-            if (saF == 2) {
-                output = input * 10000;
-            } else if (saF == 5) {
-                output = input * 0.0001;
-            }
-        }
-        // km^2 -> ha and REV
-        if( ((saF == 2) && (saT == 6)) || ((saF == 6) && (saT == 2)) ) {
-            if (saF == 2) {
-                output = input * 100;
-            } else if (saF == 6) {
-                output = input * 0.01;
-            }
-        }
-        // km^2 -> a and REV
-        if( ((saF == 2) && (saT == 7)) || ((saF == 7) && (saT == 2)) ) {
-            if (saF == 2) {
-                output = input * 10000;
-            } else if (saF == 7) {
-                output = input * 0.0001;
-            }
-        }
-        // ft^2 -> yd^2 and REV
-        if( ((saF == 3) && (saT == 4)) || ((saF == 4) && (saT == 3)) ) {
-            if (saF == 3) {
-                output = input * 0.111111;
-            } else if (saF == 4) {
-                output = input * 9;
-            }
-        }
-        // ft^2 -> a and REV
-        if( ((saF == 3) && (saT == 5)) || ((saF == 5) && (saT == 3)) ) {
-            if (saF == 3) {
-                output = input * 0.000929;
-            } else if (saF == 5) {
-                output = input * 1076.39104;
-            }
-        }
-        // ft^2 -> ha and REV
-        if( ((saF == 3) && (saT == 6)) || ((saF == 6) && (saT == 3)) ) {
-            if (saF == 3) {
-                output = input * 0.00000929;
-            } else if (saF == 6) {
-                output = input * 107639.104;
-            }
-        }
-        // ft^2 -> ac and REV
-        if( ((saF == 3) && (saT == 7)) || ((saF == 7) && (saT == 3)) ) {
-            if (saF == 3) {
-                output = input * 0.000023;
-            } else if (saF == 7) {
-                output = input * 43560;
-            }
-        }
-        // yd^2 -> a and REV
-        if( ((saF == 4) && (saT == 5)) || ((saF == 5) && (saT == 4)) ) {
-            if (saF == 4) {
-                output = input * 0.008361;
-            } else if (saF == 5) {
-                output = input * 119.599005;
-            }
-        }
-        // yd^2 -> ha and REV
-        if( ((saF == 4) && (saT == 6)) || ((saF == 6) && (saT == 4)) ) {
-            if (saF == 4) {
-                output = input * 0.000084;
-            } else if (saF == 6) {
-                output = input * 11959.9005;
-            }
-        }
-        // yd^2 -> ac and REV
-        if( ((saF == 4) && (saT == 7)) || ((saF == 7) && (saT == 4)) ) {
-            if (saF == 4) {
-                output = input * 0.000207;
-            } else if (saF == 7) {
-                output = input * 4840;
-            }
-        }
-        // a -> ha and REV
-        if( ((saF == 5) && (saT == 6)) || ((saF == 6) && (saT == 5)) ) {
-            if (saF == 5) {
-                output = input * 0.01;
-            } else if (saF == 6) {
-                output = input * 100;
-            }
-        }
-        // a -> ac and REV
-        if( ((saF == 5) && (saT == 7)) || ((saF == 7) && (saT == 5)) ) {
-            if (saF == 5) {
-                output = input * 0.024711;
-            } else if (saF == 7) {
-                output = input * 40.468564;
-            }
-        }
-        // ha -> ac and REV
-        if( ((saF == 6) && (saT == 7)) || ((saF == 7) && (saT == 6)) ) {
-            if (saF == 6) {
-                output = input * 2.471054;
-            } else if (saF == 7) {
-                output = input * 0.404686;
-            }
-        }
-        // 평 -> m^2 and REV
-        if( ((saF == 8) && (saT == 1)) || ((saF == 1) && (saT == 8)) ) {
-            if (saF == 8) {
-                output = input * 3.305785;
-            } else if (saF == 1) {
-                output = input * 0.3025;
-            }
-        }
-        // 평 -> km^2 and REV
-        if( ((saF == 8) && (saT == 2)) || ((saF == 2) && (saT == 8)) ) {
-            if (saF == 8) {
-                output = input * 0.0000033;
-            } else if (saF == 2) {
-                output = input * 302500;
-            }
-        }
-        // 평 -> ft^2 and REV
-        if( ((saF == 8) && (saT == 3)) || ((saF == 3) && (saT == 8)) ) {
-            if (saF == 8) {
-                output = input * 3.305785;
-            } else if (saF == 3) {
-                output = input * 0.3025;
-            }
-        }
-        // 평 -> yd^2 and REV
-        if( ((saF == 8) && (saT == 4)) || ((saF == 4) && (saT == 8)) ) {
-            if (saF == 8) {
-                output = input * 35.583175;
-            } else if (saF == 4) {
-                output = input * 0.028103;
-            }
-        }
-        // 평 -> a and REV
-        if( ((saF == 8) && (saT == 5)) || ((saF == 5) && (saT == 8)) ) {
-            if (saF == 8) {
-                output = input * 0.033058;
-            } else if (saF == 5) {
-                output = input * 30.25;
-            }
-        }
-        // 평 -> ha and REV
-        if( ((saF == 8) && (saT == 6)) || ((saF == 6) && (saT == 8)) ) {
-            if (saF == 8) {
-                output = input * 0.000331;
-            } else if (saF == 6) {
-                output = input * 3025;
-            }
-        }
-        // 평 -> ac and REV
-        if( ((saF == 8) && (saT == 7)) || ((saF == 7) && (saT == 8)) ) {
-            if (saF == 8) {
-                output = input * 0.000817;
-            } else if (saF == 7) {
-                output = input * 1224.17407;
-            }
-        }
 
-        tv_area_output.setText(output+"");
+        // m^2를 다른 단위로 변환
+        if (saF == 0) switch (saT) {
+            case 1: output = input * 0.000001; break; // m^2 -> km^2
+            case 2: output = input * 10.76391; break; // m^2 -> ft^2
+            case 3: output = input * 1.19599; break; // m^2 -> yd^2
+            case 4: output = input * 0.01; break; // m^2 -> a
+            case 5: output = input * 0.0001; break; // m^2 -> ha
+            case 6: output = input * 0.000247; break; // m^2 -> ac
+            case 7: output = input * 0.3025; break; // m^2 -> 평
+            default: break;
+        }
+        // km^2를 다른 단위로 변환
+        if (saF == 1) switch (saT) {
+            case 0: output = input * 1000000; break; // km^2 -> m^2
+            case 2: output = input * 10763910.4; break; // km^2 -> ft^2
+            case 3: output = input * 1195990.05; break; // km^2 -> yd^2
+            case 4: output = input * 10000; break; // km^2 -> a
+            case 5: output = input * 100; break; // km^2 -> ha
+            case 6: output = input * 247.105381; break; // km^2 -> ac
+            case 7: output = input * 302500; break; // km^2 -> 평
+            default: break;
+        }
+        // ft^2를 다른 단위로 변환
+        if (saF == 2) switch (saT) {
+            case 0: output = input * 0.092903; break; // ft^2 -> m^2
+            case 1: output = input * 0.000000093; break; // ft^2 -> km^2
+            case 3: output = input * 0.111111; break; // ft^2 -> yd^2
+            case 4: output = input * 0.000929; break; // ft^2 -> a
+            case 5: output = input * 0.00000929; break; // ft^2 -> ha
+            case 6: output = input * 0.000023; break; // ft^2 -> ac
+            case 7: output = input * 0.028103; break; // ft^2 -> 평
+            default: break;
+        }
+        // yd^2를 다른 단위로 변환
+        if (saF == 3) switch (saT) {
+            case 0: output = input * 0.836127; break; // yd^2 -> m^2
+            case 1: output = input * 0.000000836; break; // yd^2 -> km^2
+            case 2: output = input * 9; break; // yd^2 -> ft^2
+            case 4: output = input * 0.008361; break; // yd^2 -> a
+            case 5: output = input * 0.000084; break; // yd^2 -> ha
+            case 6: output = input * 0.000207; break; // yd^2 -> ac
+            case 7: output = input * 0.252929; break; // yd^2 -> 평
+            default: break;
+        }
+        // a를 다른 단위로 변환
+        if (saF == 4) switch (saT) {
+            case 0: output = input * 100; break; // a -> m^2
+            case 1: output = input * 0.0001; break; // a -> km^2
+            case 2: output = input * 1076.39104; break; // a -> ft^2
+            case 3: output = input * 119.599005; break; // a -> yd^2
+            case 5: output = input * 0.01; break; // a -> ha
+            case 6: output = input * 0.024711; break; // a -> ac
+            case 7: output = input * 30.25; break; // a -> 평
+            default: break;
+        }
+        // ha를 다른 단위로 변환
+        if (saF == 5) switch (saT) {
+            case 0: output = input * 10000; break; // ha -> m^2
+            case 1: output = input * 0.01; break; // ha -> km^2
+            case 2: output = input * 107639.104; break; // ha -> ft^2
+            case 3: output = input * 11959.9005; break; // ha -> yd^2
+            case 4: output = input * 100; break; // ha -> a
+            case 6: output = input * 2.471054; break; // ha -> ac
+            case 7: output = input * 3025; break; // ha -> 평
+            default: break;
+        }
+        // ac를 다른 단위로 변환
+        if (saF == 6) switch (saT) {
+            case 0: output = input * 4046.85642; break; // ac -> m^2
+            case 1: output = input * 0.004047; break; // ac -> km^2
+            case 2: output = input * 43560; break; // ac -> ft^2
+            case 3: output = input * 4840; break; // ac -> yd^2
+            case 4: output = input * 0.404686; break; // ac -> ha
+            case 5: output = input * 40.468564; break; // ac -> a
+            case 7: output = input * 1224.17407; break; // ac -> 평
+            default: break;
+        }
+        // 평을 다른 단위로 변환
+        if (saF == 7) switch (saT) {
+            case 0: output = input * 3.305785; break; // 평 -> m^2
+            case 1: output = input * 0.0000033058; break; // 평 -> km^2
+            case 2: output = input * 35.583175; break; // 평 -> ft^2
+            case 3: output = input * 3.953686; break; // 평 -> yd^2
+            case 4: output = input * 0.000331; break; // 평 -> ha
+            case 5: output = input * 0.033058; break; // 평 -> a
+            case 6: output = input * 0.000817; break; // 평 -> ac
+            default: break;
+        }
+        tv_area_output.setText(String.format("%s", output)); // textView에 결과값 출력
     }
 
 }
