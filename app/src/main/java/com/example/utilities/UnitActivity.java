@@ -27,12 +27,12 @@ public class UnitActivity extends AppCompatActivity {
     String spinner_area[] = {"제곱미터(m^2)", "제곱키로미터(km^2)", "제곱피트(ft^2)", "제곱야드(yd^2)", "아르(a)", "헥타르(ha)", "에이커(ac)", "평"};
     String spinner_weight[] = {"밀리그램(mg)", "그램(g)", "킬로그램(kg)", "톤(t)", "킬로톤(kt)", "파운드(lb)", "그레인(gr)", "온스(oz)"};
 
-    int sign_length_from = 1;
-    int sign_length_to = 1;
-    int sign_area_from = 1;
-    int sign_area_to = 1;
-    int sign_weight_from = 1;
-    int sign_weight_to = 1;
+    int length_from = 0;
+    int length_to = 0;
+    int area_from = 0;
+    int area_to = 0;
+    int weight_from = 0;
+    int weight_to = 0;
 
     String unitFlag = "LENGTH"; // 어떤 종류의 단위를 선택했는지 나타내는 상태 변수
 
@@ -151,9 +151,9 @@ public class UnitActivity extends AppCompatActivity {
         public void afterTextChanged(Editable s) {
             if(!(s.toString().equals(""))) {
                 switch (unitFlag) {
-                    case "LENGTH": convertLength(sign_length_from, sign_length_to); break;
-                    case "WEIGHT": convertWeight(sign_weight_from, sign_weight_to); break;
-                    case "AREA": convertArea(sign_area_from, sign_area_to); break;
+                    case "LENGTH": convertLength(spinner_length_from.getSelectedItemPosition(), spinner_length_to.getSelectedItemPosition()); break;
+                    case "WEIGHT": convertWeight(spinner_weight_from.getSelectedItemPosition(), spinner_weight_to.getSelectedItemPosition()); break;
+                    case "AREA": convertArea(spinner_area_from.getSelectedItemPosition(), spinner_area_to.getSelectedItemPosition()); break;
                     default: break;
                 }
             } else if(s.toString().equals("")) {
@@ -435,7 +435,7 @@ public class UnitActivity extends AppCompatActivity {
             case 6: output = input * 437.5; break; // oz -> gr
             default: break;
         }
-        tv_weight_output.setText(output+"");
+        tv_weight_output.setText(String.format("%s", output));
     }
 
     /**
