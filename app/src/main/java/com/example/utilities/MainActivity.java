@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.button_search:
-                    intent = new Intent(MainActivity.this, CalcActivity.class);
+                    intent = new Intent(MainActivity.this, SearchActivity.class);
                     startActivity(intent);
                     break;
                 case R.id.button_gallery:
