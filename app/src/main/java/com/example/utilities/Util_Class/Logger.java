@@ -1,4 +1,4 @@
-package com.hyunseok.android.memo.utility;
+package com.example.utilities.Util_Class;
 
 import android.util.Log;
 
