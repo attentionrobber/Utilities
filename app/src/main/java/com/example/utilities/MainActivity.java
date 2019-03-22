@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.button_maps:
-                    intent = new Intent(MainActivity.this, CalcActivity.class);
+                    intent = new Intent(MainActivity.this, MapsActivity.class);
                     startActivity(intent);
                     break;
                 case R.id.button_search:
