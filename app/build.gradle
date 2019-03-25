@@ -38,6 +38,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.libraries.places:places:1.0.0'
 
-    implementation 'com.j256.ormlite:ormlite-core:5.0'
-    implementation 'com.j256.ormlite:ormlite-android:5.0'
+    implementation 'com.j256.ormlite:ormlite-core:5.0' // Memo 기능에서 DB 사용할 떄
+    implementation 'com.j256.ormlite:ormlite-android:5.0' // Memo 기능에서 DB 사용할 떄
 }
