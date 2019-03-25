@@ -9,7 +9,7 @@ import android.os.Build;
 /**
  * 권한 처리를 담당하는 클래스
  * 권한 변경시 PERMISSION_ARR의 값과 Manifest에 추가만 하면 된다.
- * Created by Administrator on 2017-02-10.
+ * Created by KHS on 2017-02-10.
  */
 
 public class PermissionControl {
