@@ -20,12 +20,12 @@ import java.util.List;
  */
 public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
 
-    List<Memo> datas;
-    Context context;
-    Intent intent;
+    private List<Memo> datas;
+    private Context context;
+    private Intent intent;
 
     // 생성자
-    public MemoAdapter(List<Memo> datas, Context context) {
+    MemoAdapter(List<Memo> datas, Context context) {
         this.datas = datas;
         this.context = context;
         intent = new Intent(context, MemoViewActivity.class);
@@ -65,13 +65,13 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
         String imageUri;
         int position;
 
-        public Holder(View itemView) {
+        Holder(View itemView) {
             super(itemView);
 
-            cardView = (CardView) itemView.findViewById(R.id.cardView);
-            textView_title = (TextView) itemView.findViewById(R.id.textView_title);
-            textView_content = (TextView) itemView.findViewById(R.id.textView_content);
-            textView_time = (TextView)itemView.findViewById(R.id.textView_time);
+            cardView = itemView.findViewById(R.id.cardView);
+            textView_title = itemView.findViewById(R.id.textView_title);
+            textView_content = itemView.findViewById(R.id.textView_content);
+            textView_time = itemView.findViewById(R.id.textView_time);
 
             cardView.setOnClickListener(clickListener);
         }

@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -37,7 +38,7 @@ import java.util.Date;
 public class MemoNewActivity extends AppCompatActivity {
 
     private static final String TAG = "MemoNewActivity";
-    private boolean keypad_toggle = false;
+    //private boolean keypad_toggle = false;
 
     // 권한 관련
     private final int PERM_GRANT = 1;
@@ -58,9 +59,9 @@ public class MemoNewActivity extends AppCompatActivity {
     Bundle bundle;
 
     // Widget 관련
+    //Button btn_OK, btn_cancle;
+    //ImageButton imgbtn_addimg, imgbtn_location;
     EditText editText_title, editText_content;
-    Button btn_OK, btn_cancle;
-    ImageButton imgbtn_addimg, imgbtn_location;
     ImageView imageView;
 
     @Override
@@ -68,10 +69,7 @@ public class MemoNewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_new);
 
-
-
         setWidget(); // 위젯 세팅
-        setListener(); // 리스너 계열을 등록
         //checkPermission();
     }
 
@@ -99,42 +97,21 @@ public class MemoNewActivity extends AppCompatActivity {
     }
 
     private void setWidget() {
-        editText_title = (EditText) findViewById(R.id.textView_title);
-        // 키패드(키보드) 자동으로 띄우기
-        displayKeypad();
-
+        editText_title = findViewById(R.id.textView_title);
+        displayKeypad();// 키패드(키보드) 자동으로 띄우기
         editText_content = findViewById(R.id.editText_content);
-        btn_OK = findViewById(R.id.btn_OK);
-        btn_cancle = findViewById(R.id.btn_cancle);
-        imgbtn_addimg = findViewById(R.id.imgbtn_addimg);
-        imgbtn_location = findViewById(R.id.imgbtn_location);
-        imageView = findViewById(R.id.imageView);
+
+        findViewById(R.id.btn_OK).setOnClickListener(this::clickListener);
+        findViewById(R.id.btn_cancle).setOnClickListener(this::clickListener);
+        findViewById(R.id.imgbtn_addimg).setOnClickListener(this::clickListener);
+        findViewById(R.id.imgbtn_location).setOnClickListener(this::clickListener);
+        findViewById(R.id.imageView).setOnClickListener(this::clickListener);
     }
 
-    private void setListener() {
-        btn_OK.setOnClickListener(clickListener);
-        btn_cancle.setOnClickListener(clickListener);
-        imgbtn_addimg.setOnClickListener(clickListener);
-        imgbtn_location.setOnClickListener(clickListener);
-        imageView.setOnClickListener(clickListener);
-    }
-    // 키패드(키보드) 띄우기
-    private void displayKeypad() {
-        InputMethodManager imm;
-        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        //imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-    }
-    // 키패드(키보드) 없애기
-    private void hideKeypad() {
-        InputMethodManager immhide = (InputMethodManager) getSystemService(MemoNewActivity.INPUT_METHOD_SERVICE);
-        View view = this.getCurrentFocus();
-        if (view == null) {
-            view = new View(this);
-        }
-        immhide.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
+    /**
+     * 이미지 추가 버튼 눌렀을때
+     * 카메라, 갤러리 둘 중 선택하는 AlertDialog 띄우는 함수
+     */
     private void alertAddImage() {
         // 1. 팝업창 만들기
         AlertDialog.Builder alert_Imgbtn = new AlertDialog.Builder(MemoNewActivity.this);
@@ -172,6 +149,9 @@ public class MemoNewActivity extends AppCompatActivity {
         alert_Imgbtn.show(); // 4. show함수로 팝업창을 띄운다.
     }
 
+    /**
+     * ImageView 클릭시 이미지 바꿀지 삭제할지 AlertDialog 띄우는 함수
+     */
     private void alertClickImageView() {
         AlertDialog.Builder alertImageView = new AlertDialog.Builder(MemoNewActivity.this);
         alertImageView.setTitle("Image Option");
@@ -195,7 +175,11 @@ public class MemoNewActivity extends AppCompatActivity {
         alertImageView.show(); // show함수로 팝업창을 띄운다.
     }
 
-    private void alertLocation() {
+    /**
+     * 위치 추가 버튼
+     * 현재 위치 추가할지, 장소 검색 후 위치 추가할지 선택하는 AlertDialog
+     */
+    private void alertDialogLocation() {
         AlertDialog.Builder alertImageView = new AlertDialog.Builder(MemoNewActivity.this);
         alertImageView.setTitle("Location Option");
         final CharSequence[] items_Location = {"Current Location", "Search Location"};
@@ -237,6 +221,63 @@ public class MemoNewActivity extends AppCompatActivity {
 //        }
     }
 
+    /**
+     * ClickListener 함수화
+     */
+    private void clickListener(View v) {
+        switch (v.getId()) {
+            case R.id.btn_OK :
+                hideKeypad();
+                try {
+                    Memo memo = makeMemo();
+                    saveToDB(memo);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                finish();
+                break;
+            case R.id.btn_cancle :
+                hideKeypad();
+                // 제목이나 내용을 작성했을 경우에만 AlertDialog 나타나게함.
+                if( !(editText_title.getText().toString().equals("")) || !(editText_content.getText().toString().equals(""))) {
+                    AlertDialog.Builder alert_delete = new AlertDialog.Builder(MemoNewActivity.this);
+                    alert_delete.setTitle("FINISH WRITING A NOTE");
+                    alert_delete.setMessage("Exit without saving.");
+                    alert_delete.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            MemoNewActivity.super.onBackPressed();
+                        }
+                    });
+                    alert_delete.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    alert_delete.show();
+                } else {
+                    MemoNewActivity.super.onBackPressed();
+                }
+                break;
+            case R.id.imgbtn_addimg : // Add Image 버튼 클릭시
+                hideKeypad();
+                alertAddImage();
+                break;
+            case R.id.imageView : // ImageView 클릭시
+                hideKeypad();
+                alertClickImageView();
+                break;
+            case R.id.imgbtn_location: // Location 버튼 클릭시
+                hideKeypad();
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    PermissionControl.checkPermission(MemoNewActivity.this, REQ_LOCATION);
+                } else {
+                    alertDialogLocation(); // 내 위치 or 지도 검색할지 선택하는 alert
+                }
+                break;
+        }
+    }
+
     private void checkPermission(int permission) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // 안드로이드 버전 체크
             if (PermissionControl.checkPermission(this, permission)) { // 권한 체크
@@ -251,88 +292,26 @@ public class MemoNewActivity extends AppCompatActivity {
         }
     }
 
-    // 권한 체크 후 콜백처리(사용자가 확인 후 시스템이 호출하는 함수)
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if(requestCode == REQ_PLACE_PICKER) {
-            if( PermissionControl.onCheckResult(grantResults) ) { // 권한이 GRANTED 될 경우
-                //init(); // 프로그램 실행
-                PERM_RESULT = PERM_GRANT;
-                Logger.print("333335", "ssibal");
-            } else {
-                Toast.makeText(this, "권한을 실행하지 않으면 프로그램이 실행되지 않습니다.", Toast.LENGTH_SHORT).show();
-                finish();
-            }
+    // 키패드(키보드) 띄우기
+    private void displayKeypad() {
+        InputMethodManager imm;
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        //imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+    // 키패드(키보드) 없애기
+    private void hideKeypad() {
+        InputMethodManager immhide = (InputMethodManager) getSystemService(MemoNewActivity.INPUT_METHOD_SERVICE);
+        View view = this.getCurrentFocus();
+        if (view == null) {
+            view = new View(this);
         }
-//        else if(requestCode == REQ_CAMERA) {
-//        }
+        immhide.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-
     /**
-     * Listener 계열
+     * startActivityForResult() 후에 실행되는 콜백 함수
      */
-    View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.btn_OK :
-                    hideKeypad();
-                    try {
-                        Memo memo = makeMemo();
-                        saveToDB(memo);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    finish();
-                    break;
-                case R.id.btn_cancle :
-                    hideKeypad();
-
-                    // 제목이나 내용을 작성했을 경우에만 AlertDialog 나타나게함.
-                    if( !(editText_title.getText().toString().equals("")) || !(editText_content.getText().toString().equals(""))) {
-                        AlertDialog.Builder alert_delete = new AlertDialog.Builder(MemoNewActivity.this);
-                        alert_delete.setTitle("FINISH WRITING A NOTE");
-                        alert_delete.setMessage("Exit without saving.");
-                        alert_delete.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                MemoNewActivity.super.onBackPressed();
-                            }
-                        });
-                        alert_delete.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                        alert_delete.show();
-                    } else {
-                        MemoNewActivity.super.onBackPressed();
-                    }
-                    break;
-                case R.id.imgbtn_addimg : // Add Image 버튼 클릭시
-                    hideKeypad();
-                    alertAddImage();
-                    break;
-                case R.id.imageView : // ImageView 클릭시
-                    hideKeypad();
-                    alertClickImageView();
-                    break;
-                case R.id.imgbtn_location: // Location 버튼 클릭시
-                    hideKeypad();
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        PermissionControl.checkPermission(MemoNewActivity.this, REQ_LOCATION);
-                    } else {
-                        alertLocation(); // 내 위치 or 지도 검색할지 선택하는 alert
-                    }
-                    break;
-            }
-        }
-    };
-
-    //startActivityForResult() 후에 실행되는 콜백 함수
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -353,8 +332,8 @@ public class MemoNewActivity extends AppCompatActivity {
                     } else {
 
                     }
-                } else { // reulstCode가 uri가 남아있는데 삭제처리해야함.
-
+                } else { // resultCode가 uri가 남아있는데 삭제처리해야함.
+                    //imageUri = null;
                 }
                 break;
             case REQ_GALLERY:
@@ -393,6 +372,27 @@ public class MemoNewActivity extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    /**
+     * 권한 체크 후 콜백처리(사용자가 확인 후 시스템이 호출하는 함수)
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == REQ_PLACE_PICKER) {
+            if( PermissionControl.onCheckResult(grantResults) ) { // 권한이 GRANTED 될 경우
+                //init(); // 프로그램 실행
+                PERM_RESULT = PERM_GRANT;
+                Logger.print("333335", "ssibal");
+            } else {
+                Toast.makeText(this, "권한을 실행하지 않으면 프로그램이 실행되지 않습니다.", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+//        else if(requestCode == REQ_CAMERA) {
+//        }
     }
 
     @Override

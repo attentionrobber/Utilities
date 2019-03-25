@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import com.example.utilities.R;
 import com.example.utilities.data.DBHelper;
@@ -37,38 +36,24 @@ public class MemoActivity extends AppCompatActivity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        // 5. 어댑터 세팅
-        init();
+        
+        init(); // 5. 어댑터 세팅
     }
 
     private void setWidget() {
         recyclerView = findViewById(R.id.recyclerView);
-        findViewById(R.id.imgbtn_new).setOnClickListener(clickListener);
+        findViewById(R.id.imgbtn_new).setOnClickListener(v -> clickListener());
     }
 
-    View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-            Intent intent = null;
-            switch (v.getId()) {
-                case R.id.imgbtn_new :
-                    intent = new Intent(MemoActivity.this, MemoNewActivity.class);
-                    startActivity(intent);
-                    break;
-            }
-        }
-    };
+    private void clickListener() {
+        Intent intent = new Intent(MemoActivity.this, MemoNewActivity.class);
+        startActivity(intent);
+    }
 
     private void init() {
-
-        // 2. Adapter 생성하기
-        adapter = new MemoAdapter(datas, this);
-        // 3. Recycler View에 Adapter 세팅하기
-        recyclerView.setAdapter(adapter);
-        // 4. Recycler View 매니저 등록하기(View의 모양(Grid, 일반, 비대칭Grid)을 결정한다.)
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new MemoAdapter(datas, this); // 2. Adapter 생성하기
+        recyclerView.setAdapter(adapter); // 3. Recycler View에 Adapter 세팅하기
+        recyclerView.setLayoutManager(new LinearLayoutManager(this)); // 4. Recycler View 매니저 등록하기(View의 모양(Grid, 일반, 비대칭Grid)을 결정한다.)
     }
 
     public void loadData() throws SQLException {
