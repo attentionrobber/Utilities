@@ -1,5 +1,6 @@
 package com.example.utilities;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -14,11 +15,14 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.utilities.Util_Class.Logger;
+
 public class UnitActivity extends AppCompatActivity {
 
     Button btn_length, btn_area, btn_weight;
     EditText editText_length, editText_area, editText_weight;
     TextView tv_length_output, tv_area_output, tv_weight_output;
+    TextView tv_mm, tv_cm, tv_m, tv_km, tv_inch, tv_ft, tv_yd, tv_mile;
     LinearLayout layout_length, layout_area, layout_weight;
     Spinner spinner_length_from, spinner_length_to, spinner_area_from, spinner_area_to, spinner_weight_from, spinner_weight_to;
 
@@ -57,6 +61,14 @@ public class UnitActivity extends AppCompatActivity {
         tv_length_output = findViewById(R.id.tv_length_output);
         tv_area_output = findViewById(R.id.tv_area_output);
         tv_weight_output = findViewById(R.id.tv_weight_output);
+        tv_mm = findViewById(R.id.tv_mm);
+        tv_cm = findViewById(R.id.tv_cm);
+        tv_m = findViewById(R.id.tv_m);
+        tv_km = findViewById(R.id.tv_km);
+        tv_inch = findViewById(R.id.tv_inch);
+        tv_ft = findViewById(R.id.tv_ft);
+        tv_yd = findViewById(R.id.tv_yd);
+        tv_mile = findViewById(R.id.tv_mile);
 
         spinner_length_from = findViewById(R.id.spinner_length_from);
         spinner_length_to = findViewById(R.id.spinner_length_to);
@@ -77,9 +89,9 @@ public class UnitActivity extends AppCompatActivity {
         spinner_weight_to = findViewById(R.id.spinner_weight_to);
 
         // 스피너 데이터(length, area, weight)를 어댑터로 생성
-        ArrayAdapter<String> adapter_length = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spinner_length); // R. 은 내가 정의한 리소스 android.R. 은 android에 정의되어있는 리소스
-        ArrayAdapter<String> adapter_area = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spinner_area);
-        ArrayAdapter<String> adapter_weight = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spinner_weight);
+        ArrayAdapter<String> adapter_length = new ArrayAdapter<>(this, R.layout.spniner_dropdown_item, spinner_length); // R. 은 내가 정의한 리소스 android.R. 은 android에 정의되어있는 리소스
+        ArrayAdapter<String> adapter_area = new ArrayAdapter<>(this, R.layout.spniner_dropdown_item, spinner_area);
+        ArrayAdapter<String> adapter_weight = new ArrayAdapter<>(this, R.layout.spniner_dropdown_item, spinner_weight);
 
         // 스피너 어댑터에 등록
         spinner_length_from.setAdapter(adapter_length);
@@ -88,7 +100,7 @@ public class UnitActivity extends AppCompatActivity {
         spinner_area_to.setAdapter(adapter_area);
         spinner_weight_from.setAdapter(adapter_weight);
         spinner_weight_to.setAdapter(adapter_weight);
-    }
+    } // setWidget();
 
     private void setListener() {
         btn_length.setOnClickListener(clickListener);
@@ -152,9 +164,13 @@ public class UnitActivity extends AppCompatActivity {
         public void afterTextChanged(Editable s) {
             if(!(s.toString().equals(""))) {
                 switch (unitFlag) {
-                    case "LENGTH": convertLength(spinner_length_from.getSelectedItemPosition(), spinner_length_to.getSelectedItemPosition()); break;
-                    case "WEIGHT": convertWeight(spinner_weight_from.getSelectedItemPosition(), spinner_weight_to.getSelectedItemPosition()); break;
-                    case "AREA": convertArea(spinner_area_from.getSelectedItemPosition(), spinner_area_to.getSelectedItemPosition()); break;
+                    case "LENGTH":
+                        convertLength(spinner_length_from.getSelectedItemPosition(), spinner_length_to.getSelectedItemPosition());
+                        convertLengthByValue(spinner_length_from.getSelectedItemPosition(), Double.parseDouble(editText_length.getText().toString()));break;
+                    case "WEIGHT":
+                        convertWeight(spinner_weight_from.getSelectedItemPosition(), spinner_weight_to.getSelectedItemPosition()); break;
+                    case "AREA":
+                        convertArea(spinner_area_from.getSelectedItemPosition(), spinner_area_to.getSelectedItemPosition()); break;
                     default: break;
                 }
             } else if(s.toString().equals("")) {
@@ -175,12 +191,9 @@ public class UnitActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 switch (unitFlag) {
-                    case "LENGTH":
-                        convertLength(position, spinner_length_to.getSelectedItemPosition()); break;
-                    case "WEIGHT":
-                        convertWeight(position, spinner_weight_to.getSelectedItemPosition()); break;
-                    case "AREA":
-                        convertArea(position, spinner_area_to.getSelectedItemPosition());  break;
+                    case "LENGTH": convertLength(position, spinner_length_to.getSelectedItemPosition()); break;
+                    case "WEIGHT": convertWeight(position, spinner_weight_to.getSelectedItemPosition()); break;
+                    case "AREA": convertArea(position, spinner_area_to.getSelectedItemPosition());  break;
                 }
             }
 
@@ -201,12 +214,9 @@ public class UnitActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 switch (unitFlag) {
-                    case "LENGTH":
-                        convertLength(spinner_length_from.getSelectedItemPosition(), position); break;
-                    case "WEIGHT":
-                        convertWeight(spinner_weight_from.getSelectedItemPosition(), position); break;
-                    case "AREA":
-                        convertArea(spinner_area_from.getSelectedItemPosition(), position); break;
+                    case "LENGTH": convertLength(spinner_length_from.getSelectedItemPosition(), position); break;
+                    case "WEIGHT": convertWeight(spinner_weight_from.getSelectedItemPosition(), position); break;
+                    case "AREA": convertArea(spinner_area_from.getSelectedItemPosition(), position); break;
                 }
             }
 
@@ -219,11 +229,113 @@ public class UnitActivity extends AppCompatActivity {
 
 
     /**
+     * 숫자 표시 형식을 맞춰주고 TextView setText 를 해주는 함수
+     * @param tv
+     * @param num
+     */
+    @SuppressLint("DefaultLocale")
+    public void setTextAndStringFormat(TextView tv, double num) {
+        String format;
+        if(num == (int)num) { // num 값이 자연수일 경우 소수점 없이 출력
+            format = String.format("%.0f", num);
+        } else { // num 값이 실수일 경우 최대 소수점 6자리까지 출력
+            format = String.format("%.6f", num);
+            num = Double.parseDouble(format); // 실수 num을 강제로 6자리까지 변환
+            if (format.endsWith("0")) { // 소수점이 125.500000와 같이 끝날 경우 125.5로 표시
+                format = String.format("%s", num);
+            }
+        }
+        //Logger.print("UnitAc","value: "+format);
+        tv.setText(format);
+    }
+    /**
+     * 길이를 변환하는 함수 ver.2
+     * @param slF(spinner_length_from)
+     * @param input(value)
+     */
+    private void convertLengthByValue(int slF, double input) {
+        double output;
+
+        if (slF == 0) { // mm를 다른 단위로 변환
+            output = input; setTextAndStringFormat(tv_mm, output);
+            output = input * 0.1; setTextAndStringFormat(tv_cm, output); // mm -> cm
+            output = input * 0.001; setTextAndStringFormat(tv_m, output); // mm -> m
+            output = input * 0.000001; setTextAndStringFormat(tv_km, output); // mm -> km
+            output = input * 0.03937; setTextAndStringFormat(tv_inch, output); // mm -> inch
+            output = input * 0.003281; setTextAndStringFormat(tv_ft, output); // mm -> ft
+            output = input * 0.001094; setTextAndStringFormat(tv_yd, output); // mm -> yd
+            output = input * 0.000000621; setTextAndStringFormat(tv_mile, output); // mm -> mile
+        } else if (slF == 1) {
+            output = input * 10; setTextAndStringFormat(tv_mm, output);
+            output = input; setTextAndStringFormat(tv_cm, output);
+            output = input * 0.01; setTextAndStringFormat(tv_m, output);
+            output = input * 0.00001; setTextAndStringFormat(tv_km, output);
+            output = input * 0.393701; setTextAndStringFormat(tv_inch, output);
+            output = input * 0.032808; setTextAndStringFormat(tv_ft, output);
+            output = input * 0.010936; setTextAndStringFormat(tv_yd, output);
+            output = input * 0.00000621; setTextAndStringFormat(tv_mile, output);
+        } else if (slF == 2) {
+            output = input * 1000; setTextAndStringFormat(tv_mm, output);
+            output = input * 10; setTextAndStringFormat(tv_cm, output);
+            output = input; setTextAndStringFormat(tv_m, output);
+            output = input * 0.001; setTextAndStringFormat(tv_km, output);
+            output = input * 39.370079; setTextAndStringFormat(tv_inch, output);
+            output = input * 3.28084; setTextAndStringFormat(tv_ft, output);
+            output = input * 1.093613;setTextAndStringFormat(tv_yd, output);
+            output = input * 0.00062137; setTextAndStringFormat(tv_mile, output);
+        } else if (slF == 3) {
+            output = input * 1000; setTextAndStringFormat(tv_mm, output);
+            output = input * 0.1; setTextAndStringFormat(tv_cm, output);
+            output = input * 0.001; setTextAndStringFormat(tv_m, output);
+            output = input; setTextAndStringFormat(tv_km, output);
+            output = input * 39370.0787; setTextAndStringFormat(tv_inch, output);
+            output = input * 3280.8399; setTextAndStringFormat(tv_ft, output);
+            output = input * 1093.6133; setTextAndStringFormat(tv_yd, output);
+            output = input * 0.621371; setTextAndStringFormat(tv_mile, output);
+        } else if (slF == 4) {
+            output = input * 25.4; setTextAndStringFormat(tv_mm, output);
+            output = input * 2.54; setTextAndStringFormat(tv_cm, output);
+            output = input * 0.0254; setTextAndStringFormat(tv_m, output);
+            output = input * 0.000025; setTextAndStringFormat(tv_km, output);
+            output = input; setTextAndStringFormat(tv_inch, output);
+            output = input * 0.083333; setTextAndStringFormat(tv_ft, output);
+            output = input * 0.027778; setTextAndStringFormat(tv_yd, output);
+            output = input * 0.000016; setTextAndStringFormat(tv_mile, output);
+        } else if (slF == 5) { // ft
+            output = input * 304.8; setTextAndStringFormat(tv_mm, output);
+            output = input * 30.48; setTextAndStringFormat(tv_cm, output);
+            output = input * 0.3048; setTextAndStringFormat(tv_m, output);
+            output = input * 0.000305; setTextAndStringFormat(tv_km, output);
+            output = input * 12; setTextAndStringFormat(tv_inch, output);
+            output = input; setTextAndStringFormat(tv_ft, output);
+            output = input * 0.333333; setTextAndStringFormat(tv_yd, output);
+            output = input * 0.000189; setTextAndStringFormat(tv_mile, output);
+        } else if (slF == 6) { // yd
+            output = input * 914.4; setTextAndStringFormat(tv_mm, output);
+            output = input * 91.44; setTextAndStringFormat(tv_cm, output);
+            output = input * 0.9144; setTextAndStringFormat(tv_m, output);
+            output = input * 0.000914; setTextAndStringFormat(tv_km, output);
+            output = input * 36; setTextAndStringFormat(tv_inch, output);
+            output = input * 3; setTextAndStringFormat(tv_ft, output);
+            output = input; setTextAndStringFormat(tv_yd, output);
+            output = input * 0.000568; setTextAndStringFormat(tv_mile, output);
+        } else if (slF == 7) { // mile
+            output = input * 1609344; setTextAndStringFormat(tv_mm, output);
+            output = input * 160934.4; setTextAndStringFormat(tv_cm, output);
+            output = input * 1609.344; setTextAndStringFormat(tv_m, output);
+            output = input * 1.609344; setTextAndStringFormat(tv_km, output);
+            output = input * 63360; setTextAndStringFormat(tv_inch, output);
+            output = input * 5280; setTextAndStringFormat(tv_ft, output);
+            output = input * 1760; setTextAndStringFormat(tv_yd, output);
+            output = input; setTextAndStringFormat(tv_mile, output);
+        }
+    }
+    /**
      * 길이를 변환하는 함수
      * 0 is mm,  1 is cm,  2 is m,  3 is km,  4 is inch,  5 is ft,  6 is yd,  7 is mile
      * 기준 단위는 미터(m)
-     * @param slF(sign_length_from)
-     * @param slT(sign_length_to)
+     * @param slF(spinner_length_from)
+     * @param slT(spinner_length_to)
      */
     public void convertLength(int slF, int slT) {
         double input = 0;

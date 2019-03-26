@@ -132,7 +132,7 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_C:
                 tv_preview.setText(" ");
-                tv_result.setText(" ");
+                tv_result.setText("0");
                 list.clear(); // list.clear()가 처음상태일때 실행되면 앱 다운. -> 초기화를 null에서 new ArrayList<>()로 바꿈으로써 해결
                 break;
             case R.id.btn_result:
