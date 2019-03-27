@@ -11,7 +11,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
-
         <Button
             android:id="@+id/btn_length"
             android:text="length"
@@ -38,241 +37,6 @@
             android:background="@drawable/button" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_weight"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="5dp" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Spinner
-                android:id="@+id/spinner_weight_from"
-                android:layout_height="50dp"
-                android:layout_width="0dp"
-                android:layout_weight="1" />
-            <Spinner
-                android:id="@+id/spinner_weight_to"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/editText_weight"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:inputType="number"
-                android:ems="10"
-                android:hint="input number" />
-            <TextView
-                android:id="@+id/tv_weight_output"
-                android:text="0"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/tv_mg"
-                android:text="mm"
-                android:layout_height="30dp"
-                android:layout_width="130dp"
-                android:gravity="center"/>
-            <TextView
-                android:id="@+id/tv_g"
-                android:text="cm"
-                android:layout_height="30dp"
-                android:layout_width="130dp"
-                android:gravity="center"
-                android:layout_toRightOf="@+id/tv_mg"/>
-            <TextView
-                android:id="@+id/tv_kg"
-                android:text="m"
-                android:layout_height="30dp"
-                android:layout_width="130dp"
-                android:gravity="center"
-                android:layout_toRightOf="@+id/tv_g"/>
-            <TextView
-                android:id="@+id/tv_ton"
-                android:text="km"
-                android:layout_height="30dp"
-                android:layout_width="130dp"
-                android:gravity="center"
-                android:layout_below="@+id/tv_mg"/>
-            <TextView
-                android:id="@+id/tv_kt"
-                android:text="inch"
-                android:layout_height="30dp"
-                android:layout_width="130dp"
-                android:gravity="center"
-                android:layout_below="@+id/tv_g"
-                android:layout_toRightOf="@+id/tv_ton"/>
-            <TextView
-                android:id="@+id/tv_lb"
-                android:text="ft"
-                android:layout_height="30dp"
-                android:layout_width="130dp"
-                android:gravity="center"
-                android:layout_below="@+id/tv_g"
-                android:layout_toRightOf="@+id/tv_kt"/>
-            <TextView
-                android:id="@+id/tv_gr"
-                android:text="yd"
-                android:layout_height="30dp"
-                android:layout_width="130dp"
-                android:gravity="center"
-                android:layout_below="@+id/tv_ton"/>
-            <TextView
-                android:id="@+id/tv_oz"
-                android:text="mile"
-                android:layout_height="30dp"
-                android:layout_width="130dp"
-                android:gravity="center"
-                android:layout_below="@+id/tv_kt"
-                android:layout_toRightOf="@+id/tv_gr"/>
-        </RelativeLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_area"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="5dp" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Spinner
-                android:id="@+id/spinner_area_from"
-                android:layout_height="50dp"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginRight="20dp"
-                android:layout_marginEnd="20dp" />
-            <Spinner
-                android:id="@+id/spinner_area_to"
-                android:layout_height="50dp"
-                android:layout_width="wrap_content"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/editText_area"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:inputType="number"
-                android:ems="10" />
-
-            <TextView
-                android:id="@+id/tv_area_output"
-                android:text="0"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/tv_m2"
-                android:text="m^2"
-                android:layout_height="30dp"
-                android:layout_width="130dp"
-                android:gravity="center"/>
-            <TextView
-                android:id="@+id/tv_km2"
-                android:text="km^2"
-                android:layout_height="30dp"
-                android:layout_width="130dp"
-                android:gravity="center"
-                android:layout_toRightOf="@+id/tv_m2"/>
-            <TextView
-                android:id="@+id/tv_ft2"
-                android:text="ft^2"
-                android:layout_height="30dp"
-                android:layout_width="130dp"
-                android:gravity="center"
-                android:layout_toRightOf="@+id/tv_km2"/>
-            <TextView
-                android:id="@+id/tv_yd2"
-                android:text="yd^2"
-                android:layout_height="30dp"
-                android:layout_width="130dp"
-                android:gravity="center"
-                android:layout_below="@+id/tv_m2"/>
-            <TextView
-                android:id="@+id/tv_a"
-                android:text="a"
-                android:layout_height="30dp"
-                android:layout_width="130dp"
-                android:gravity="center"
-                android:layout_below="@+id/tv_km2"
-                android:layout_toRightOf="@+id/tv_yd2"/>
-            <TextView
-                android:id="@+id/tv_ha"
-                android:text="ha"
-                android:layout_height="30dp"
-                android:layout_width="130dp"
-                android:gravity="center"
-                android:layout_below="@+id/tv_ft2"
-                android:layout_toRightOf="@+id/tv_a"/>
-            <TextView
-                android:id="@+id/tv_ac"
-                android:text="ac"
-                android:layout_height="30dp"
-                android:layout_width="130dp"
-                android:gravity="center"
-                android:layout_below="@+id/tv_yd2"/>
-            <TextView
-                android:id="@+id/tv_pyeong"
-                android:text="평"
-                android:layout_height="30dp"
-                android:layout_width="130dp"
-                android:gravity="center"
-                android:layout_below="@+id/tv_a"
-                android:layout_toRightOf="@+id/tv_ac"/>
-        </RelativeLayout>
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout_length"
@@ -280,33 +44,522 @@
         android:layout_height="0dp"
         android:layout_weight="9"
         android:orientation="vertical"
-        android:visibility="visible"
-        android:paddingTop="5dp" >
-
+        android:visibility="visible" >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="horizontal">
-
-            <Spinner
-                android:id="@+id/spinner_length_from"
-                android:layout_height="match_parent"
+            <RelativeLayout
                 android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="8"
-                android:layout_margin="10dp" />
+                android:paddingRight="5dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/button">
+                <Spinner
+                    android:id="@+id/spinner_length_from"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"/>
+            </RelativeLayout>
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text=">"
+                android:text="＞"
+                android:textSize="20sp"
                 android:gravity="center"/>
-            <Spinner
-                android:id="@+id/spinner_length_to"
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:paddingRight="5dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/button">
+                <Spinner
+                    android:id="@+id/spinner_length_to"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent" />
+            </RelativeLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/editText_length"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:layout_margin="5dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:background="@drawable/button"
+                android:ems="10"
+                android:inputType="number"
+                android:gravity="center|right"
+                android:textSize="30sp"
+                android:hint="@string/input_number"
+                android:textCursorDrawable="@null"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="＝"
+                android:textSize="25sp"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/tv_length_output"
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:layout_weight="8"
-                android:layout_margin="10dp" />
+                android:layout_margin="5dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:background="@drawable/button"
+                android:gravity="center|right"
+                android:text="0"
+                android:textColor="@color/quantum_orange700"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+        </LinearLayout>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7">
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp">
+                <TextView
+                    android:id="@+id/tv_mm"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" mm" />
+                <TextView
+                    android:id="@+id/tv_cm"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" cm" />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp">
+                <TextView
+                    android:id="@+id/tv_m"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" m" />
+                <TextView
+                    android:id="@+id/tv_km"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" km" />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp">
+                <TextView
+                    android:id="@+id/tv_inch"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" inch" />
+                <TextView
+                    android:id="@+id/tv_ft"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" ft" />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp">
+                <TextView
+                    android:id="@+id/tv_yd"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" yd" />
+                <TextView
+                    android:id="@+id/tv_mile"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" mile" />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="20">
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layout_weight"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:orientation="vertical"
+        android:visibility="gone" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:paddingRight="5dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/button">
+                <Spinner
+                    android:id="@+id/spinner_weight_from"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"/>
+            </RelativeLayout>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="＞"
+                android:textSize="20sp"
+                android:gravity="center"/>
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:paddingRight="5dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/button">
+                <Spinner
+                    android:id="@+id/spinner_weight_to"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent" />
+            </RelativeLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/editText_weight"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:layout_margin="5dp"
+                android:background="@drawable/button"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="input number"
+                android:inputType="number"
+                android:textSize="30sp" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="＝"
+                android:textSize="25sp"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/tv_weight_output"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="8"
+                android:layout_margin="5dp"
+                android:background="@drawable/button"
+                android:text="0"
+                android:textColor="@color/quantum_orange700"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+        </LinearLayout>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7">
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp">
+                <TextView
+                    android:id="@+id/tv_mg"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" mg" />
+                <TextView
+                    android:id="@+id/tv_g"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" g" />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp">
+                <TextView
+                    android:id="@+id/tv_kg"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" kg" />
+                <TextView
+                    android:id="@+id/tv_ton"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" t" />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp">
+                <TextView
+                    android:id="@+id/tv_kt"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" kt" />
+                <TextView
+                    android:id="@+id/tv_lb"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" lb" />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp">
+                <TextView
+                    android:id="@+id/tv_gr"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" gr" />
+                <TextView
+                    android:id="@+id/tv_oz"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" oz" />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="20">
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layout_area"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:orientation="vertical"
+        android:visibility="gone" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:paddingRight="5dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/button">
+                <Spinner
+                    android:id="@+id/spinner_area_from"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"/>
+            </RelativeLayout>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="＞"
+                android:textSize="20sp"
+                android:gravity="center"/>
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:paddingRight="5dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/button">
+                <Spinner
+                    android:id="@+id/spinner_area_to"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent" />
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -314,26 +567,34 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="horizontal">
-
             <EditText
-                android:id="@+id/editText_length"
+                android:id="@+id/editText_area"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
+                android:layout_weight="8"
+                android:layout_margin="5dp"
+                android:background="@drawable/button"
                 android:ems="10"
                 android:gravity="center"
                 android:hint="input number"
                 android:inputType="number"
                 android:textSize="30sp" />
-
             <TextView
-                android:id="@+id/tv_length_output"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="＝"
+                android:textSize="25sp"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/tv_area_output"
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_margin="10dp"
+                android:layout_weight="8"
+                android:layout_margin="5dp"
+                android:background="@drawable/button"
                 android:text="0"
+                android:textColor="@color/quantum_orange700"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
         </LinearLayout>
@@ -341,92 +602,157 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="6">
-
+            android:layout_weight="7">
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_margin="10dp">
+                android:layout_margin="5dp">
                 <TextView
-                    android:id="@+id/tv_mm"
-                    android:text="mm"
+                    android:id="@+id/tv_m2"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|right"/>
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" ㎡" />
                 <TextView
-                    android:id="@+id/tv_cm"
-                    android:text="cm"
+                    android:id="@+id/tv_km2"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|right"/>
-                <TextView
-                    android:id="@+id/tv_m"
-                    android:text="m"
-                    android:layout_height="match_parent"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center|right"/>
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" ㎢" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_margin="10dp">
+                android:layout_margin="5dp">
                 <TextView
-                    android:id="@+id/tv_km"
-                    android:text="km"
+                    android:id="@+id/tv_ft2"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|right"/>
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" ft²" />
                 <TextView
-                    android:id="@+id/tv_inch"
-                    android:text="inch"
+                    android:id="@+id/tv_yd2"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|right"/>
-                <TextView
-                    android:id="@+id/tv_ft"
-                    android:text="ft"
-                    android:layout_height="match_parent"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center|right"/>
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" yd²" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_margin="10dp">
+                android:layout_margin="5dp">
                 <TextView
-                    android:id="@+id/tv_yd"
-                    android:text="yd"
+                    android:id="@+id/tv_a"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|right"/>
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" a" />
                 <TextView
-                    android:id="@+id/tv_mile"
-                    android:text="mile"
+                    android:id="@+id/tv_ha"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|right"/>
-                <TextView
-                    android:layout_height="match_parent"
-                    android:layout_width="0dp"
-                    android:layout_weight="1" />
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" ha" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="12">
+                android:layout_weight="1"
+                android:layout_margin="5dp">
+                <TextView
+                    android:id="@+id/tv_ac"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" ac" />
+                <TextView
+                    android:id="@+id/tv_pyeong"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center|right"
+                    android:textSize="20sp"
+                    android:textColor="@color/quantum_orange700"/>
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:textSize="20sp"
+                    android:text=" 평" />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="20">
             </TableRow>
         </TableLayout>
-
     </LinearLayout>
+
 </LinearLayout>

@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.utilities.Util_Class.Logger;
+
 public class UnitActivity extends AppCompatActivity {
 
     Button btn_length, btn_area, btn_weight;
@@ -45,7 +47,6 @@ public class UnitActivity extends AppCompatActivity {
 
         setWidget();
         setListener();
-
     }
 
     private void setWidget() {
@@ -181,20 +182,22 @@ public class UnitActivity extends AppCompatActivity {
         public void afterTextChanged(Editable s) {
             if(!(s.toString().equals(""))) {
                 switch (unitFlag) {
-                    case "LENGTH":
+                    case LENGTH:
                         convertLength(spinner_length_from.getSelectedItemPosition(), spinner_length_to.getSelectedItemPosition(), editText_length.getText().toString());
                         break;
-                    case "WEIGHT":
+                    case WEIGHT:
                         convertWeight(spinner_weight_from.getSelectedItemPosition(), spinner_weight_to.getSelectedItemPosition(), editText_weight.getText().toString());
                         break;
-                    case "AREA":
-                        convertArea(spinner_area_from.getSelectedItemPosition(), spinner_area_to.getSelectedItemPosition(), editText_area.getText().toString()); break;
+                    case AREA:
+                        convertArea(spinner_area_from.getSelectedItemPosition(), spinner_area_to.getSelectedItemPosition(), editText_area.getText().toString());
+                        break;
                     default: break;
                 }
             } else if(s.toString().equals("")) {
-                tv_length_output.setText("0");
-                tv_weight_output.setText("0");
-                tv_area_output.setText("0");
+                tv_length_output.setText("0"); tv_weight_output.setText("0"); tv_area_output.setText("0");
+                tv_mm.setText("0");tv_cm.setText("0");tv_m.setText("0");tv_km.setText("0");tv_inch.setText("0");tv_ft.setText("0");tv_yd.setText("0");tv_mile.setText("0");
+                tv_mg.setText("0");tv_g.setText("0");tv_kg.setText("0");tv_ton.setText("0");tv_kt.setText("0");tv_lb.setText("0");tv_gr.setText("0");tv_oz.setText("0");
+                tv_m2.setText("0");tv_km2.setText("0");tv_ft2.setText("0");tv_yd2.setText("0");tv_a.setText("0");tv_ha.setText("0");tv_ac.setText("0");tv_pyeong.setText("0");
             }
         }
     }; // textWatcher
