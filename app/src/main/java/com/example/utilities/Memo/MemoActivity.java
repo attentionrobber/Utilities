@@ -31,8 +31,7 @@ public class MemoActivity extends AppCompatActivity {
         setWidget();
 
         try {
-            // 4. DB에서 데이터 로드
-            loadData();
+            loadData(); // 4. DB에서 데이터 로드
         } catch (SQLException e) {
             e.printStackTrace();
         }

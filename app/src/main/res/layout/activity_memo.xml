@@ -22,7 +22,6 @@
         android:paddingRight="0dp"
         android:paddingStart="0dp"
         android:paddingTop="0dp">
-
     </android.support.v7.widget.RecyclerView>
 
     <ImageButton

@@ -46,9 +46,9 @@ public class UnitActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unit);
 
+        displayKeypad(); // 키패드 띄워줌
         setWidget();
         setListener();
-        displayKeypad(); // 키패드 띄워줌
     }
 
     private void setWidget() {
