@@ -1,6 +1,8 @@
 package com.example.utilities;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -133,10 +135,10 @@ public class UnitActivity extends AppCompatActivity {
         editText_weight.addTextChangedListener(textWatcher);
 
         spinner_length_from.setOnItemSelectedListener(itemSelectedListener);
-        spinner_length_to.setOnItemSelectedListener(toItemSelectedListener);
         spinner_weight_from.setOnItemSelectedListener(itemSelectedListener);
-        spinner_weight_to.setOnItemSelectedListener(toItemSelectedListener);
         spinner_area_from.setOnItemSelectedListener(itemSelectedListener);
+        spinner_length_to.setOnItemSelectedListener(toItemSelectedListener);
+        spinner_weight_to.setOnItemSelectedListener(toItemSelectedListener);
         spinner_area_to.setOnItemSelectedListener(toItemSelectedListener);
     } // setListener();
 
@@ -144,19 +146,19 @@ public class UnitActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch(v.getId()) {
-                case R.id.btn_length :
+                case R.id.btn_length:
                     layout_length.setVisibility(View.VISIBLE);
                     layout_area.setVisibility(View.GONE);
                     layout_weight.setVisibility(View.GONE);
                     unitFlag = LENGTH;
                     break;
-                case R.id.btn_weight :
+                case R.id.btn_weight:
                     layout_length.setVisibility(View.GONE);
                     layout_area.setVisibility(View.GONE);
                     layout_weight.setVisibility(View.VISIBLE);
                     unitFlag = WEIGHT;
                     break;
-                case R.id.btn_area :
+                case R.id.btn_area:
                     layout_length.setVisibility(View.GONE);
                     layout_area.setVisibility(View.VISIBLE);
                     layout_weight.setVisibility(View.GONE);

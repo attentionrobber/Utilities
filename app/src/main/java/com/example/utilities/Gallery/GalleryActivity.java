@@ -25,6 +25,8 @@ public class GalleryActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     GalleryRecyclerViewAdapter adapter;
 
+
+
     private static View view = null;
 
     List<String> imgdatas = new ArrayList<>(); // 사진정보 데이터 저장소
