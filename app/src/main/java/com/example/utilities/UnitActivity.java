@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.example.utilities.Util_Class.Logger;
 
+import java.text.DecimalFormat;
+
 public class UnitActivity extends AppCompatActivity {
 
     Button btn_length, btn_area, btn_weight;
@@ -210,7 +212,6 @@ public class UnitActivity extends AppCompatActivity {
         itemSelectedListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
                 switch (unitFlag) {
                     case LENGTH:
                         convertLength(position, spinner_length_to.getSelectedItemPosition(), editText_length.getText().toString());
@@ -239,7 +240,6 @@ public class UnitActivity extends AppCompatActivity {
         toItemSelectedListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
                 switch (unitFlag) {
                     case LENGTH:
                         convertLength(spinner_length_from.getSelectedItemPosition(), position, editText_length.getText().toString());
@@ -268,22 +268,25 @@ public class UnitActivity extends AppCompatActivity {
      */
     @SuppressLint("DefaultLocale")
     public void setTextAndStringFormat(TextView tv, double num) {
+        DecimalFormat df = new DecimalFormat("###,###.#######");
         String format;
-        if(num == (int)num) { // num 값이 자연수일 경우 소수점 없이 출력
-            format = String.format("%.0f", num);
-        } else { // num 값이 실수일 경우 최대 소수점 6자리까지 출력
-            format = String.format("%.6f", num);
-            num = Double.parseDouble(format); // 실수 num을 강제로 6자리까지 변환
-            if (format.endsWith("0")) { // 소수점이 125.500000와 같이 끝날 경우 125.5로 표시
-                format = String.format("%s", num);
-            }
-        }
-        //Logger.print("UnitAc","value: "+format);
+//        if(num == (int)num) { // num 값이 자연수일 경우 소수점 없이 출력
+//            //format = String.format("%.0f", num);
+//            format = df.format(num);
+//        } else { // num 값이 실수일 경우 최대 소수점 6자리까지 출력
+//            format = String.format("%.6f", num);
+//            num = Double.parseDouble(format); // 실수 num을 강제로 6자리까지 변환
+//            if (format.endsWith("0")) { // 소수점이 125.500000와 같이 끝날 경우 125.5로 표시
+//                format = String.format("%s", num);
+//            }
+//        }
+        format = df.format(num);
         tv.setText(format);
     }
 
     /**
      * spinner_to (스피너의 뒷부분(출력값))을 switch 해주는 함수
+     * TextView_Output 에 표시해주는 함수
      * @param slT
      */
     private void switchResult(int slT) {
