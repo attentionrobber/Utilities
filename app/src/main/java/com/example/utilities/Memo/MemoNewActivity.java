@@ -301,12 +301,12 @@ public class MemoNewActivity extends AppCompatActivity {
     }
     // 키패드(키보드) 없애기
     private void hideKeypad() {
-        InputMethodManager immhide = (InputMethodManager) getSystemService(MemoNewActivity.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(MemoNewActivity.INPUT_METHOD_SERVICE);
         View view = this.getCurrentFocus();
         if (view == null) {
             view = new View(this);
         }
-        immhide.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     /**

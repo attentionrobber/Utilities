@@ -1,11 +1,12 @@
 package com.example.utilities;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -13,8 +14,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.example.utilities.Util_Class.Logger;
 
 import java.text.DecimalFormat;
 
@@ -49,6 +48,7 @@ public class UnitActivity extends AppCompatActivity {
 
         setWidget();
         setListener();
+        displayKeypad(); // 키패드 띄워줌
     }
 
     private void setWidget() {
@@ -260,77 +260,6 @@ public class UnitActivity extends AppCompatActivity {
         };
     } // toItemSelectedListener
 
-
-    /**
-     * 숫자 표시 형식을 맞춰주고 TextView setText 를 해주는 함수
-     * @param tv
-     * @param num
-     */
-    @SuppressLint("DefaultLocale")
-    public void setTextAndStringFormat(TextView tv, double num) {
-        DecimalFormat df = new DecimalFormat("###,###.#######");
-        String format;
-//        if(num == (int)num) { // num 값이 자연수일 경우 소수점 없이 출력
-//            //format = String.format("%.0f", num);
-//            format = df.format(num);
-//        } else { // num 값이 실수일 경우 최대 소수점 6자리까지 출력
-//            format = String.format("%.6f", num);
-//            num = Double.parseDouble(format); // 실수 num을 강제로 6자리까지 변환
-//            if (format.endsWith("0")) { // 소수점이 125.500000와 같이 끝날 경우 125.5로 표시
-//                format = String.format("%s", num);
-//            }
-//        }
-        format = df.format(num);
-        tv.setText(format);
-    }
-
-    /**
-     * spinner_to (스피너의 뒷부분(출력값))을 switch 해주는 함수
-     * TextView_Output 에 표시해주는 함수
-     * @param slT
-     */
-    private void switchResult(int slT) {
-        switch (unitFlag) {
-            case LENGTH:
-                switch (slT) {
-                    case 0: setTextAndStringFormat(tv_length_output, output_mm); break;
-                    case 1: setTextAndStringFormat(tv_length_output, output_cm); break;
-                    case 2: setTextAndStringFormat(tv_length_output, output_m); break;
-                    case 3: setTextAndStringFormat(tv_length_output, output_km); break;
-                    case 4: setTextAndStringFormat(tv_length_output, output_inch); break;
-                    case 5: setTextAndStringFormat(tv_length_output, output_ft); break;
-                    case 6: setTextAndStringFormat(tv_length_output, output_yd); break;
-                    case 7: setTextAndStringFormat(tv_length_output, output_mile); break;
-                    default: break;
-                } break;
-            case WEIGHT:
-                switch (slT) {
-                    case 0: setTextAndStringFormat(tv_weight_output, output_mg); break;
-                    case 1: setTextAndStringFormat(tv_weight_output, output_g); break;
-                    case 2: setTextAndStringFormat(tv_weight_output, output_kg); break;
-                    case 3: setTextAndStringFormat(tv_weight_output, output_ton); break;
-                    case 4: setTextAndStringFormat(tv_weight_output, output_kt); break;
-                    case 5: setTextAndStringFormat(tv_weight_output, output_lb); break;
-                    case 6: setTextAndStringFormat(tv_weight_output, output_gr); break;
-                    case 7: setTextAndStringFormat(tv_weight_output, output_oz); break;
-                    default: break;
-                } break;
-            case AREA:
-                switch (slT) {
-                    case 0: setTextAndStringFormat(tv_area_output, output_m2); break;
-                    case 1: setTextAndStringFormat(tv_area_output, output_km2); break;
-                    case 2: setTextAndStringFormat(tv_area_output, output_ft2); break;
-                    case 3: setTextAndStringFormat(tv_area_output, output_yd2); break;
-                    case 4: setTextAndStringFormat(tv_area_output, output_a); break;
-                    case 5: setTextAndStringFormat(tv_area_output, output_ha); break;
-                    case 6: setTextAndStringFormat(tv_area_output, output_ac); break;
-                    case 7: setTextAndStringFormat(tv_area_output, output_pyeong); break;
-                    default: break;
-                }
-                break;
-        }
-    }
-
     /**
      * 길이를 변환하는 함수 ver.2
      * 0 is mm,  1 is cm,  2 is m,  3 is km,  4 is inch,  5 is ft,  6 is yd,  7 is mile
@@ -431,9 +360,9 @@ public class UnitActivity extends AppCompatActivity {
     /**
      * 무게를 변환하는 함수
      * 0 is mg,  1 is g,  2 is kg,  3 is t,  4 is kt,  5 is lb,  6 is gr,  7 is oz
-     * 기준 단위는 밀리그램(mg)
      * @param swF
      * @param swT
+     * @param editText(value)
      */
     public void convertWeight(int swF, int swT, String editText) {
 
@@ -528,9 +457,9 @@ public class UnitActivity extends AppCompatActivity {
     /**
      * 넓이를 변환하는 함수
      * 0 is m^2,  1 is km^2,  2 is ft^2,  3 is yd^2,  4 is a,  5 is ha,  6 is ac, 7 is 평
-     * 기준 단위는 제곱미터(m^2)
      * @param saF
      * @param saT
+     * @param editText(value)
      */
     public void convertArea(int saF, int saT, String editText) {
         double input = 0;
@@ -622,4 +551,84 @@ public class UnitActivity extends AppCompatActivity {
         }
     }
 
+
+
+    /**
+     * 숫자 표시 형식을 맞춰주고 TextView setText 를 해주는 함수
+     * @param tv
+     * @param num
+     */
+    public void setTextAndStringFormat(TextView tv, double num) {
+        DecimalFormat df = new DecimalFormat("###,###.#######");
+        String format;
+//        if(num == (int)num) { // num 값이 자연수일 경우 소수점 없이 출력
+//            //format = String.format("%.0f", num);
+//            format = df.format(num);
+//        } else { // num 값이 실수일 경우 최대 소수점 6자리까지 출력
+//            format = String.format("%.6f", num);
+//            num = Double.parseDouble(format); // 실수 num을 강제로 6자리까지 변환
+//            if (format.endsWith("0")) { // 소수점이 125.500000와 같이 끝날 경우 125.5로 표시
+//                format = String.format("%s", num);
+//            }
+//        }
+        format = df.format(num);
+        tv.setText(format);
+    }
+
+    /**
+     * spinner_to (스피너의 뒷부분(출력값))을 switch 해주는 함수
+     * TextView_Output 에 표시해주는 함수
+     * @param slT
+     */
+    private void switchResult(int slT) {
+        switch (unitFlag) {
+            case LENGTH:
+                switch (slT) {
+                    case 0: setTextAndStringFormat(tv_length_output, output_mm); break;
+                    case 1: setTextAndStringFormat(tv_length_output, output_cm); break;
+                    case 2: setTextAndStringFormat(tv_length_output, output_m); break;
+                    case 3: setTextAndStringFormat(tv_length_output, output_km); break;
+                    case 4: setTextAndStringFormat(tv_length_output, output_inch); break;
+                    case 5: setTextAndStringFormat(tv_length_output, output_ft); break;
+                    case 6: setTextAndStringFormat(tv_length_output, output_yd); break;
+                    case 7: setTextAndStringFormat(tv_length_output, output_mile); break;
+                    default: break;
+                } break;
+            case WEIGHT:
+                switch (slT) {
+                    case 0: setTextAndStringFormat(tv_weight_output, output_mg); break;
+                    case 1: setTextAndStringFormat(tv_weight_output, output_g); break;
+                    case 2: setTextAndStringFormat(tv_weight_output, output_kg); break;
+                    case 3: setTextAndStringFormat(tv_weight_output, output_ton); break;
+                    case 4: setTextAndStringFormat(tv_weight_output, output_kt); break;
+                    case 5: setTextAndStringFormat(tv_weight_output, output_lb); break;
+                    case 6: setTextAndStringFormat(tv_weight_output, output_gr); break;
+                    case 7: setTextAndStringFormat(tv_weight_output, output_oz); break;
+                    default: break;
+                } break;
+            case AREA:
+                switch (slT) {
+                    case 0: setTextAndStringFormat(tv_area_output, output_m2); break;
+                    case 1: setTextAndStringFormat(tv_area_output, output_km2); break;
+                    case 2: setTextAndStringFormat(tv_area_output, output_ft2); break;
+                    case 3: setTextAndStringFormat(tv_area_output, output_yd2); break;
+                    case 4: setTextAndStringFormat(tv_area_output, output_a); break;
+                    case 5: setTextAndStringFormat(tv_area_output, output_ha); break;
+                    case 6: setTextAndStringFormat(tv_area_output, output_ac); break;
+                    case 7: setTextAndStringFormat(tv_area_output, output_pyeong); break;
+                    default: break;
+                }
+                break;
+        }
+    }
+
+    /**
+     * 키보드(키패드) 띄우기
+     */
+    public void displayKeypad() {
+        InputMethodManager imm;
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        //imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
 }
