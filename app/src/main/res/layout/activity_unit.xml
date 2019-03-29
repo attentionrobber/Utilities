@@ -8,8 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
         <Button
             android:id="@+id/btn_length"
@@ -41,8 +40,7 @@
     <LinearLayout
         android:id="@+id/layout_length"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="visible" >
         <LinearLayout
@@ -96,7 +94,7 @@
                 android:layout_weight="8"
                 android:background="@drawable/button"
                 android:ems="10"
-                android:gravity="center|right"
+                android:gravity="center|end"
                 android:hint="@string/input_number"
                 android:inputType="number"
                 android:maxLength="12"
@@ -120,7 +118,7 @@
                 android:paddingRight="10dp"
                 android:paddingLeft="10dp"
                 android:background="@drawable/button"
-                android:gravity="center|right"
+                android:gravity="center|end"
                 android:text="0"
                 android:textColor="@color/quantum_orange700"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
@@ -139,14 +137,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" mm" />
                 <TextView
@@ -154,14 +152,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" cm" />
             </TableRow>
@@ -175,14 +173,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" m" />
                 <TextView
@@ -190,14 +188,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" km" />
             </TableRow>
@@ -211,14 +209,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" inch" />
                 <TextView
@@ -226,14 +224,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" ft" />
             </TableRow>
@@ -247,14 +245,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" yd" />
                 <TextView
@@ -262,14 +260,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" mile" />
             </TableRow>
@@ -343,7 +341,7 @@
                 android:ems="10"
                 android:inputType="number"
                 android:maxLength="12"
-                android:gravity="center|right"
+                android:gravity="center|end"
                 android:textCursorDrawable="@null"
                 android:textSize="30sp"
                 android:hint="@string/input_number"/>
@@ -363,7 +361,7 @@
                 android:background="@drawable/button"
                 android:text="0"
                 android:textColor="@color/quantum_orange700"
-                android:gravity="center"
+                android:gravity="center|end"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
         </LinearLayout>
         <TableLayout
@@ -380,14 +378,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" mg" />
                 <TextView
@@ -395,14 +393,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" g" />
             </TableRow>
@@ -416,14 +414,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" kg" />
                 <TextView
@@ -431,14 +429,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" t" />
             </TableRow>
@@ -452,14 +450,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" kt" />
                 <TextView
@@ -467,14 +465,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" lb" />
             </TableRow>
@@ -488,14 +486,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" gr" />
                 <TextView
@@ -503,14 +501,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" oz" />
             </TableRow>
@@ -585,7 +583,7 @@
                 android:ems="10"
                 android:inputType="number"
                 android:maxLength="12"
-                android:gravity="center|right"
+                android:gravity="center|end"
                 android:textCursorDrawable="@null"
                 android:textSize="30sp"
                 android:hint="@string/input_number"/>
@@ -605,7 +603,7 @@
                 android:background="@drawable/button"
                 android:text="0"
                 android:textColor="@color/quantum_orange700"
-                android:gravity="center"
+                android:gravity="center|end"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
         </LinearLayout>
 
@@ -623,14 +621,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" ㎡" />
                 <TextView
@@ -638,14 +636,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" ㎢" />
             </TableRow>
@@ -659,14 +657,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" ft²" />
                 <TextView
@@ -674,14 +672,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" yd²" />
             </TableRow>
@@ -695,14 +693,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" a" />
                 <TextView
@@ -710,14 +708,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" ha" />
             </TableRow>
@@ -731,14 +729,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" ac" />
                 <TextView
@@ -746,14 +744,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="4"
-                    android:gravity="center|right"
+                    android:gravity="center|end"
                     android:textSize="20sp"
                     android:textColor="@color/quantum_orange700"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:gravity="center|left"
+                    android:gravity="center|start"
                     android:textSize="20sp"
                     android:text=" 평" />
             </TableRow>

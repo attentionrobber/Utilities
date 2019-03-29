@@ -1,15 +1,13 @@
 package com.example.utilities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
 import com.example.utilities.Gallery.GalleryActivity;
+import com.example.utilities.Gallery.PicsViewActivity;
 import com.example.utilities.Memo.MemoActivity;
-
-import java.io.File;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -101,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.button_gallery:
-                intent = new Intent(MainActivity.this, GalleryActivity.class);
+                intent = new Intent(MainActivity.this, PicsViewActivity.class);
                 startActivity(intent);
                 break;
         }

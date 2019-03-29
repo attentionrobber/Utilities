@@ -1,92 +1,125 @@
 package com.example.utilities.Gallery;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
+import android.graphics.Bitmap;
+import android.os.Environment;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.Toast;
 
 import com.example.utilities.R;
+import com.example.utilities.Util_Class.Logger;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GalleryActivity extends AppCompatActivity {
+public class GalleryActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount = 3;
+    final String TAG = "GalleryActivityTEST";
 
-    RecyclerView recyclerView;
-    GalleryRecyclerViewAdapter adapter;
+    GridView gridView;
 
+    List<GridViewItem> gridItems;
 
+    final String SD_PATH = "/storage/sdcard/DCIM/";
+    final String DCIM_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+    final String PICS_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
 
-    private static View view = null;
-
-    List<String> imgdatas = new ArrayList<>(); // 사진정보 데이터 저장소
-    Uri fileUri = null; // Image // 사진 촬영 후 임시로 저장할 공간
-
-    private final int REQ_PERMISSION = 100; // 권한 요청 코드
-    private final int REQ_CAMERA = 101; // 카매라 요청 코드
-    private final int REQ_GALLERY = 102; // 갤러리 요청 코드
-
-    Button btn_camera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        setWidget();
-        imgdatas = loadData();
-        init(); //어댑터 세팅
+        setGridAdapter(PICS_PATH);
     }
 
-    private void setWidget() {
-        recyclerView = findViewById(R.id.rv_gallery);
+
+    /**
+     * This will create our GridViewItems and set the adapter
+     *
+     * @param path
+     *            The directory in which to search for images
+     */
+    private void setGridAdapter(String path) {
+        // Create a new grid adapter
+        gridItems = createGridItems(path);
+        MyGridAdapter adapter = new MyGridAdapter(this, gridItems);
+
+        // Set the grid adapter
+        gridView = findViewById(R.id.gridView);
+        gridView.setAdapter(adapter);
+
+        gridView.setOnItemClickListener(this);
     }
 
-    private void init() {
-        adapter = new GalleryRecyclerViewAdapter(this, imgdatas);  // Adapter 생성하기
 
-        recyclerView.setAdapter(adapter); // Recycler View에 Adapter 세팅하기
-        //recyclerView.setLayoutManager(new LinearLayoutManager(this)); // Recycler View 매니저 등록하기(View의 모양(Grid, 일반, 비대칭Grid)을 결정한다.)
-        if (mColumnCount <= 1) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        } else {
-            recyclerView.setLayoutManager(new GridLayoutManager(this, mColumnCount));
-        }
-    }
+    /**
+     * Go through the specified directory, and create items to display in our
+     * GridView
+     */
+    private List<GridViewItem> createGridItems(String directoryPath) {
 
-    private List<String> loadData() {
+        List<GridViewItem> items = new ArrayList<>();
 
-        List<String> datas = new ArrayList<>();
+        // List all the items within the folder.
+        File[] files = new File(directoryPath).listFiles(new ImageFileFilter());
 
-        // 폰에서 이미지를 가져온 후 datas에 세팅한다.
-        ContentResolver resolver = getContentResolver();
-        // 1. 데이터 URI 정의
-        Uri target = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        // 2. Projection 정의
-        String projection[] = { MediaStore.Images.Media.DATA }; // DATA : image 경로가 있는 컬럼명
-        // 정렬 추가
-        String order = MediaStore.MediaColumns.DATE_ADDED + " DESC";
-        // 3. 데이터 가져오기
-        Cursor cursor = resolver.query(target, projection, null, null, order);
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                //int idx = cursor.getColumnIndex(projection[0]);
-                String uriStr = cursor.getString(0);
-                datas.add(uriStr);
+        for (File file : files) {
+            // Add the directories containing images or sub-directories
+            if (file.isDirectory() && file.listFiles(new ImageFileFilter()).length > 0) {
+                items.add(new GridViewItem(file.getAbsolutePath(), true, null));
             }
-            cursor.close();
+            else { // Add the images
+                Bitmap image = BitmapHelper.decodeBitmapFromFile(file.getAbsolutePath(), 50, 50);
+                items.add(new GridViewItem(file.getAbsolutePath(), false, image));
+            }
         }
-        return datas;
+
+        return items;
     }
+
+
+    /**
+     * Checks the file to see if it has a compatible extension.
+     */
+    private boolean isImageFile(String filePath) {
+        // Add to possible other formats WANTS
+        // jpg 이거나 png 형식일 경우 true 리턴한다.
+        return filePath.endsWith(".jpg") || filePath.endsWith(".png");
+    }
+
+    /**
+     * This can be used to filter files.
+     */
+    private class ImageFileFilter implements FileFilter {
+        @Override
+        public boolean accept(File file) {
+            if (file.isDirectory()) {
+                return true;
+            }
+            else if (isImageFile(file.getAbsolutePath())) {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        if (gridItems.get(position).isDirectory()) { // 폴더일 경우
+            setGridAdapter(gridItems.get(position).getPath());
+        }
+        else {
+            // TODO: Bigger Display the image
+        }
+    }
+
 }
