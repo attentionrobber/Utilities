@@ -40,4 +40,7 @@ dependencies {
 
     implementation 'com.j256.ormlite:ormlite-core:5.0' // Memo 기능에서 DB 사용할 떄
     implementation 'com.j256.ormlite:ormlite-android:5.0' // Memo 기능에서 DB 사용할 떄
+
+    implementation 'com.github.bumptech.glide:glide:4.9.0' // Image 처리 관련
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 }

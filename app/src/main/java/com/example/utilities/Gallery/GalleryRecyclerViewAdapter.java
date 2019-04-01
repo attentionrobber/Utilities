@@ -22,9 +22,9 @@ import java.util.List;
 public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecyclerViewAdapter.ViewHolder> {
 
     private final Context context;
-    private List<String> datas;
+    private List<GridViewItem> datas;
 
-    GalleryRecyclerViewAdapter(Context context, List<String> datas) {
+    GalleryRecyclerViewAdapter(Context context, List<GridViewItem> datas) {
         this.context = context;
         this.datas = datas;
     }
@@ -38,9 +38,9 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        viewHolder.imageUri = datas.get(position);
+        //viewHolder.imageUri = datas.get(position);
         //holder.imageView.setImageURI(holder.imageUri);
-        Glide.with(context).load(viewHolder.imageUri).into(viewHolder.imageView);
+        Glide.with(context).load(datas.get(position).getPath()).into(viewHolder.imageView);
     }
 
     @Override
@@ -51,11 +51,9 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
     class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
-        String imageUri;
 
         ViewHolder(View view) {
             super(view);
-            imageUri = null;
 
             DisplayMetrics metrics = new DisplayMetrics();
             WindowManager windowManager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
