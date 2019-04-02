@@ -1,6 +1,7 @@
 package com.example.utilities.Gallery;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -39,6 +40,7 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
 
 
     List<ImageBucket> buckets; // 사진이 있는 폴더를 담는 버켓
+    List<String> images = new ArrayList<>(); // bucket 안에 있는 이미지들
     GalleryFolderAdapter adapter; // 버켓에 적용할 어댑터
     GalleryRecyclerViewAdapter picsAdapter;
 
@@ -53,6 +55,7 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
         adapter = new GalleryFolderAdapter(this, buckets);
         gridView = findViewById(R.id.gridView);
         gridView.setAdapter(adapter);
+        gridView.setOnItemClickListener(this);
 
     }
 
@@ -184,13 +187,14 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-//        if (gridItems.get(position).isDirectory()) { // 폴더일 경우
-//            setGridAdapter(gridItems.get(position).getPath());
-//        }
-//        else {
-//            // TODO: Bigger Display the image
-//        }
-        Toast.makeText(this, ""+buckets.get(position), Toast.LENGTH_LONG);
+        images = getImagesByBucket(buckets.get(position).getFirstImageContainedPath());
+        //picsAdapter = new GalleryRecyclerViewAdapter();
+
+        Intent intent = new Intent(GalleryActivity.this, PicsViewActivity.class);
+        intent.putStringArrayListExtra("imageList", (ArrayList<String>)images);
+        startActivity(intent);
+
+        Logger.print(TAG, ""+buckets.get(position));
     }
 
 }
