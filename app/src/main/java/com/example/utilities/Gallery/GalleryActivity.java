@@ -46,6 +46,10 @@ public class GalleryActivity extends AppCompatActivity {
     GalleryFolderAdapter adapter; // Adapter to apply to buckets. 버켓에 적용할 어댑터
     GalleryRecyclerViewAdapter imgAdapter; // Adapter to apply to images. images 에 적용할 어댑터.
 
+    Uri fileUri = null; // Image // 사진 촬영 후 임시로 저장할 공간
+    private final int REQ_PERMISSION = 100; // 권한 요청 코드
+    private final int REQ_CAMERA = 101; // 카매라 요청 코드
+    private final int REQ_GALLERY = 102; // 갤러리 요청 코드
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
