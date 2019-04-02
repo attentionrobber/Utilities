@@ -1,6 +1,8 @@
 package com.example.utilities.Gallery;
 
-public class ImageItem {
+import java.io.Serializable;
+
+public class ImageItem implements Serializable {
 
     private String path;
 

@@ -14,15 +14,14 @@ import com.example.utilities.R;
 import java.util.List;
 
 public class GalleryFolderAdapter extends BaseAdapter {
+
     LayoutInflater inflater;
     List<ImageBucket> items;
-
 
     public GalleryFolderAdapter(Context context, List<ImageBucket> items) {
         this.items = items;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
-
 
     @Override
     public int getCount() {

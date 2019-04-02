@@ -1,6 +1,7 @@
 package com.example.utilities.Gallery;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,11 +12,13 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.bumptech.glide.Glide;
 import com.example.utilities.R;
+import com.example.utilities.Util_Class.Logger;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -31,7 +34,8 @@ public class PicsViewActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     GalleryRecyclerViewAdapter adapter;
-    List<GridViewItem> imgdatas = new ArrayList<>(); // 사진정보 데이터 저장소
+    List<ImageItem> imgdatas = new ArrayList<>(); // 사진정보 데이터 저장소
+    List<String> images = new ArrayList<>();
     Uri fileUri = null; // Image // 사진 촬영 후 임시로 저장할 공간
 
     private final int REQ_PERMISSION = 100; // 권한 요청 코드
@@ -40,7 +44,6 @@ public class PicsViewActivity extends AppCompatActivity {
 
     final String SD_PATH = "/storage/sdcard/DCIM/";
     final String DCIM_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
-    final String PICS_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
 
 
     @Override
@@ -49,7 +52,8 @@ public class PicsViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pics_view);
 
         setWidget();
-        imgdatas = loadData();
+        //imgdatas = loadData();
+        images = getIntent().getStringArrayListExtra("images");
         init(); // 어댑터 세팅
     }
 
@@ -58,7 +62,7 @@ public class PicsViewActivity extends AppCompatActivity {
     }
 
     private void init() {
-        adapter = new GalleryRecyclerViewAdapter(this, imgdatas);  // Adapter 생성하기
+        adapter = new GalleryRecyclerViewAdapter(this, images);  // Adapter 생성하기
         recyclerView.setAdapter(adapter); // RecyclerView 에 Adapter 세팅하기
 
         if (mColumnCount <= 1) {
@@ -68,9 +72,9 @@ public class PicsViewActivity extends AppCompatActivity {
         }
     }
 
-    private List<GridViewItem> loadData() {
+    private List<ImageItem> loadData() {
 
-        List<GridViewItem> datas = new ArrayList<>();
+        List<ImageItem> datas = new ArrayList<>();
 
         // List all the items within the folder.
         File[] files = new File(DCIM_PATH+"/CAMERA").listFiles(new PicsViewActivity.ImageFileFilter());
@@ -80,11 +84,11 @@ public class PicsViewActivity extends AppCompatActivity {
         for (File file : files) {
             // Add the directories containing images or sub-directories
             if (file.isDirectory() && file.listFiles(new PicsViewActivity.ImageFileFilter()).length > 0) {
-                datas.add(new GridViewItem(file.getAbsolutePath(), true));
+                datas.add(new ImageItem(file.getAbsolutePath()));
             }
             else { // Add the images
                 //Bitmap image = BitmapHelper.decodeBitmapFromFile(file.getAbsolutePath(), 50, 50);
-                datas.add(new GridViewItem(file.getAbsolutePath(), false));
+                datas.add(new ImageItem(file.getAbsolutePath()));
 
             }
         }
