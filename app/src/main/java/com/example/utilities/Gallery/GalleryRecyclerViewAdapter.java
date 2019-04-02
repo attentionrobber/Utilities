@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.example.utilities.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,11 +23,11 @@ import java.util.List;
 public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecyclerViewAdapter.ViewHolder> {
 
     private final Context context;
-    private List<String> datas;
+    private List<ImageItem> items;
 
-    GalleryRecyclerViewAdapter(Context context, List<String> datas) {
+    GalleryRecyclerViewAdapter(Context context, List<ImageItem> items) {
         this.context = context;
-        this.datas = datas;
+        this.items = items;
     }
 
     @NonNull
@@ -40,12 +41,12 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         //viewHolder.imageUri = datas.get(position);
         //holder.imageView.setImageURI(holder.imageUri);
-        Glide.with(context).load(datas.get(position)).into(viewHolder.imageView);
+        Glide.with(context).load(items.get(position).getPath()).into(viewHolder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return datas.size();
+        return items.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -67,11 +68,13 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
             imageView.setLayoutParams(params);
 
             imageView.setOnClickListener(v -> {
-                // 클릭시 큰이미지로 보여주기
-//                Intent intent = new Intent(context, DetailActivity.class);
-//                intent.putExtra("image", imageUri);
-//                context.startActivity(intent);
+                // TODO : 클릭시 큰이미지로 보여주기
+                Intent intent = new Intent(context, ImageDetailViewActivity.class);
+                intent.putExtra("image", items.get(getAdapterPosition()).getPath());
+                context.startActivity(intent);
             });
         }
+
+
     }
 }

@@ -17,6 +17,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -31,7 +32,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GalleryActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class GalleryActivity extends AppCompatActivity {
 
     final String TAG = "TAGGalleryActivity";
 
@@ -41,7 +42,7 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
     RecyclerView recyclerView; // 폴더에 있는 이미지를 표현하는 뷰
 
     List<ImageBucket> buckets; // Bucket containing folders with images. 사진이 있는 폴더를 담는 버켓
-    List<String> images; // Images in bucket. bucket 안의 이미지
+    List<ImageItem> images; // Images in bucket. bucket 안의 이미지
     GalleryFolderAdapter adapter; // Adapter to apply to buckets. 버켓에 적용할 어댑터
     GalleryRecyclerViewAdapter imgAdapter; // Adapter to apply to images. images 에 적용할 어댑터.
 
@@ -56,20 +57,26 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
         buckets = getImageBuckets(this); // 이미지를 담고있는 폴더를 List 에 담는다.
         adapter = new GalleryFolderAdapter(this, buckets);
         gridView.setAdapter(adapter);
-        gridView.setOnItemClickListener(this);
     }
 
     private void setWidget() {
         gridView = findViewById(R.id.gridView);
         recyclerView = findViewById(R.id.rv_gallery);
+
+        gridView.setOnItemClickListener(this::onItemClick);
+        //recyclerView.setOnClickListener(this); // RecyclerView 의 ClickListener 는 GalleryRecyclerViewAdapter 에 있음.
     }
 
+    /**
+     * URI 로 Image 를 필터링 하고 Image 가 속해 있는 폴더 이름 별로
+     * Bucket List 에 담는다. => 이미지가 있는 폴더를 찾아 Bucket 에 담는 함수.
+     */
     public List<ImageBucket> getImageBuckets(Context mContext){
 
         List<ImageBucket> buckets = new ArrayList<>();
         List<String> bucketSet = new ArrayList<>(); // List of Image folder name
 
-        String bucketName, fisrtImage; // 이미지가 속한 폴더 이름, 대표 이미지
+        String bucketName, firstImage; // 이미지가 속한 폴더 이름, 대표 이미지
 
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String [] projection = { MediaStore.Images.Media.BUCKET_DISPLAY_NAME, // image folder name
@@ -81,11 +88,11 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
             File file;
             while (cursor.moveToNext()){
                 bucketName = cursor.getString(cursor.getColumnIndex(projection[0]));
-                fisrtImage = cursor.getString(cursor.getColumnIndex(projection[1]));
-                file = new File(fisrtImage);
+                firstImage = cursor.getString(cursor.getColumnIndex(projection[1]));
+                file = new File(firstImage);
                 if (file.exists() && !bucketSet.contains(bucketName)) {
                     bucketSet.add(bucketName);
-                    buckets.add(new ImageBucket(bucketName, fisrtImage));
+                    buckets.add(new ImageBucket(bucketName, firstImage));
                 }
             }
             cursor.close();
@@ -98,38 +105,45 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
 //            // Add the directories containing images or sub-directories
 //            if ( file.isDirectory() && (file.listFiles(new ImageFileFilter()).length > 0) ) {
 //                buckets.add(new Bucket(file.getName(), file.getAbsolutePath()));
-//
 //            }
 //        }
 
         return buckets;
     }
 
-    public List<String> getImagesByBucket(@NonNull String bucketPath){
+    /**
+     * Buckets 에 있는 image 들을 String List 에 담는다.
+     */
+    public List<ImageItem> getImagesByBucket(@NonNull String bucketPath){
+
+        List<ImageItem> images = new ArrayList<>();
+        String path, title, date, size;
 
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String [] projection = {MediaStore.Images.Media.DATA};
+        String [] projection = {MediaStore.Images.Media.DATA, // uri(path)
+                                MediaStore.Images.Media.TITLE, // name
+                                MediaStore.Images.Media.DATE_ADDED,
+                                MediaStore.Images.Media.SIZE };
         String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME+" =?";
         String orderBy = MediaStore.Images.Media.DATE_ADDED+" DESC";
 
-        List<String> images = new ArrayList<>();
-
         Cursor cursor = getContentResolver().query(uri, projection, selection, new String[]{bucketPath}, orderBy);
-
         if(cursor != null){
             File file;
             while (cursor.moveToNext()){
-                String path = cursor.getString(cursor.getColumnIndex(projection[0]));
+                path = cursor.getString(cursor.getColumnIndex(projection[0]));
+                title = cursor.getString(cursor.getColumnIndex(projection[1]));
+                date = cursor.getString(cursor.getColumnIndex(projection[2]));
+                size = cursor.getString(cursor.getColumnIndex(projection[3]));
                 file = new File(path);
                 if (file.exists() && !images.contains(path)) {
-                    images.add(path);
+                    images.add(new ImageItem(path, title, date, size));
                 }
             }
             cursor.close();
         }
         return images;
     }
-
 
     /**
      * Checks the file to see if it has a compatible extension.
@@ -156,7 +170,9 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
         }
     }
 
-    @Override
+    /**
+     * Bucket(이미지를 담는 폴더) 클릭 시 이벤트
+     */
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         images = getImagesByBucket(buckets.get(position).getName());
@@ -172,7 +188,8 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
             recyclerView.setLayoutManager(new GridLayoutManager(this, mColumnCount));
         }
 
-//        Intent intent = new Intent(getApplicationContext(), PicsViewActivity.class);
+        // Intent 형태로 Image 목록 띄우기
+//        Intent intent = new Intent(getApplicationContext(), ImageDetailViewActivity.class);
 //        intent.putStringArrayListExtra("images", (ArrayList<String>) images);
 //        startActivity(intent);
     }

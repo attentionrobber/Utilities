@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Gallery.GalleryActivity"></activity>
-        <activity android:name=".Gallery.PicsViewActivity" />
+        <activity android:name=".Gallery.ImageDetailViewActivity" />
         <activity android:name=".Memo.MemoModifyActivity" />
         <activity android:name=".Memo.MemoViewActivity" />
         <activity android:name=".Memo.MemoNewActivity" />

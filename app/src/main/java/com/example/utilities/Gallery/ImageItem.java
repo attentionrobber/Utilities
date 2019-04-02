@@ -1,24 +1,35 @@
 package com.example.utilities.Gallery;
 
-import java.io.Serializable;
-
-public class ImageItem implements Serializable {
+/**
+ * 각 Image 의 정보
+ */
+public class ImageItem {
 
     private String path;
+    private String title;
+    private String date;
+    private String size;
 
-
-    public ImageItem(String path) {
+    public ImageItem(String path, String title, String date, String size) {
         this.path = path;
+        this.title = title;
+        this.date = date;
+        this.size = size;
     }
-
 
     public String getPath() {
         return path;
     }
 
+    public String getTitle() {
+        return title;
+    }
 
-    //public boolean isDirectory() { return isDirectory; }
+    public String getDate() {
+        return date;
+    }
 
-
-    //public Bitmap getImage() { return image; }
+    public String getSize() {
+        return size;
+    }
 }
