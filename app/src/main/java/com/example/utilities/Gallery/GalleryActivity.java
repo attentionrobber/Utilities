@@ -30,7 +30,7 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
 
     GridView gridView;
 
-    List<GridViewItem> gridItems;
+    //List<GridViewItem> gridItems;
 
     String ROOT_DIR = Environment.getExternalStorageDirectory().getAbsolutePath();
     final String DCIM_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
@@ -40,6 +40,7 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
 
     List<ImageBucket> buckets; // 사진이 있는 폴더를 담는 버켓
     GalleryFolderAdapter adapter; // 버켓에 적용할 어댑터
+    GalleryRecyclerViewAdapter picsAdapter;
 
 
     @Override
@@ -183,12 +184,13 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        if (gridItems.get(position).isDirectory()) { // 폴더일 경우
-            //setGridAdapter(gridItems.get(position).getPath());
-        }
-        else {
-            // TODO: Bigger Display the image
-        }
+//        if (gridItems.get(position).isDirectory()) { // 폴더일 경우
+//            setGridAdapter(gridItems.get(position).getPath());
+//        }
+//        else {
+//            // TODO: Bigger Display the image
+//        }
+        Toast.makeText(this, ""+buckets.get(position), Toast.LENGTH_LONG);
     }
 
 }
