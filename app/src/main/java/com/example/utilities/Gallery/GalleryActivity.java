@@ -13,6 +13,9 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,7 +35,10 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
 
     final String TAG = "TAGGalleryActivity";
 
-    GridView gridView;
+    private int mColumnCount = 3;
+
+    GridView gridView; // 폴더를 표현하는 뷰
+    RecyclerView recyclerView; // 폴더에 있는 이미지를 표현하는 뷰
 
     List<ImageBucket> buckets; // Bucket containing folders with images. 사진이 있는 폴더를 담는 버켓
     List<String> images; // Images in bucket. bucket 안의 이미지
@@ -45,12 +51,17 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        buckets = getImageBuckets(this);
+        setWidget();
+
+        buckets = getImageBuckets(this); // 이미지를 담고있는 폴더를 List 에 담는다.
         adapter = new GalleryFolderAdapter(this, buckets);
-        gridView = findViewById(R.id.gridView);
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(this);
+    }
 
+    private void setWidget() {
+        gridView = findViewById(R.id.gridView);
+        recyclerView = findViewById(R.id.rv_gallery);
     }
 
     public List<ImageBucket> getImageBuckets(Context mContext){
@@ -150,14 +161,32 @@ public class GalleryActivity extends AppCompatActivity implements AdapterView.On
 
         images = getImagesByBucket(buckets.get(position).getName());
 
-        //imgAdapter = new GalleryRecyclerViewAdapter(this, images);
+        gridView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
 
+        imgAdapter = new GalleryRecyclerViewAdapter(this, images);
+        recyclerView.setAdapter(imgAdapter);
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(this)); // Recycler View 매니저 등록하기(View의 모양(Grid, 일반, 비대칭Grid)을 결정한다.)
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(this, mColumnCount));
+        }
 
-        Intent intent = new Intent(getApplicationContext(), PicsViewActivity.class);
-        intent.putStringArrayListExtra("images", (ArrayList<String>) images);
-        startActivity(intent);
-
-
+//        Intent intent = new Intent(getApplicationContext(), PicsViewActivity.class);
+//        intent.putStringArrayListExtra("images", (ArrayList<String>) images);
+//        startActivity(intent);
     }
 
+    /**
+     * Event when BackButton is clicked
+     * 백버튼 클릭 시 이벤트
+     */
+    @Override
+    public void onBackPressed() {
+        if (gridView.getVisibility() == View.VISIBLE) {
+            super.onBackPressed();
+        }
+        gridView.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+    }
 }

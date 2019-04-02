@@ -58,7 +58,7 @@ public class PicsViewActivity extends AppCompatActivity {
     }
 
     private void setWidget() {
-        recyclerView = findViewById(R.id.rv_gallery);
+        recyclerView = findViewById(R.id.rv_pics_view);
     }
 
     private void init() {

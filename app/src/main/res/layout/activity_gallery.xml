@@ -7,6 +7,7 @@
     tools:context="com.example.utilities.Gallery.GalleryActivity">
 
     <GridView
+        android:visibility="visible"
         android:id="@+id/gridView"
         android:numColumns="auto_fit"
         android:gravity="center"
@@ -15,5 +16,13 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
     </GridView>
+
+    <android.support.v7.widget.RecyclerView
+        android:visibility="gone"
+        android:id="@+id/rv_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/rv_list_item">
+    </android.support.v7.widget.RecyclerView>
 </LinearLayout>
 
