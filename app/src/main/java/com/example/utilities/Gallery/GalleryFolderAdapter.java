@@ -14,15 +14,18 @@ import com.example.utilities.R;
 import java.util.List;
 
 /**
+ * 이미지가 들어있는 폴더를 표현하는 어댑터
  * Used by : GalleryActivity
  */
 public class GalleryFolderAdapter extends BaseAdapter {
 
-    LayoutInflater inflater;
-    List<ImageBucket> items;
+    private List<ImageBucket> items;
+    private List<Integer> countOfEachBuckets;
+    private LayoutInflater inflater;
 
-    public GalleryFolderAdapter(Context context, List<ImageBucket> items) {
+    GalleryFolderAdapter(Context context, List<ImageBucket> items, List<Integer> countOfEachBuckets) {
         this.items = items;
+        this.countOfEachBuckets = countOfEachBuckets;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -45,17 +48,18 @@ public class GalleryFolderAdapter extends BaseAdapter {
 
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
 
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.gallery_folder_item, null);
+        if (view == null) {
+            view = inflater.inflate(R.layout.gallery_folder_item, null);
         }
 
-        TextView text = convertView.findViewById(R.id.tv_img_name);
-        text.setText(items.get(position).getName());
+        TextView text = view.findViewById(R.id.tv_img_name);
+        text.setText(items.get(position).getName() + " (" + countOfEachBuckets.get(position) + ")");
 
-        ImageView imageView = convertView.findViewById(R.id.imageView_gallery);
-        Glide.with(convertView).load(items.get(position).getFirstImageContainedPath()).into(imageView);
+        ImageView imageView = view.findViewById(R.id.imageView_folder);
+        Glide.with(view).load(items.get(position).getFirstImageContainedPath()).into(imageView);
+
 //        Bitmap image = items.get(position).getImage();
 //
 //        if (image != null){
@@ -66,7 +70,7 @@ public class GalleryFolderAdapter extends BaseAdapter {
 //            imageView.setImageResource(R.drawable.button);
 //        }
 
-        return convertView;
+        return view;
     }
 
 }

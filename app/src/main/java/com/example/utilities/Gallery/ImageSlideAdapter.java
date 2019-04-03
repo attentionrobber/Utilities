@@ -14,6 +14,9 @@ import com.example.utilities.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Used by : ImageDetailViewActivity
+ */
 public class ImageSlideAdapter extends PagerAdapter {
 
     private Context context;

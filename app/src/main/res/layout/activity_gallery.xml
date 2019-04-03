@@ -14,7 +14,7 @@
         android:columnWidth="150dp"
         android:stretchMode="columnWidth"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent">
     </GridView>
 
     <android.support.v7.widget.RecyclerView
@@ -22,7 +22,7 @@
         android:id="@+id/rv_gallery"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/rv_list_item">
+        tools:listitem="@layout/item_image_recyclerview">
     </android.support.v7.widget.RecyclerView>
 </LinearLayout>
 

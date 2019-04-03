@@ -30,8 +30,16 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+/**
+ * 핸드폰에 있는 모든 이미지를 폴더별로 나타낸다.
+ * Shows all images on mobile phone by folder
+ */
 public class GalleryActivity extends AppCompatActivity {
 
     final String TAG = "TAGGalleryActivity";
@@ -42,6 +50,7 @@ public class GalleryActivity extends AppCompatActivity {
     RecyclerView recyclerView; // 폴더에 있는 이미지를 표현하는 뷰
 
     List<ImageBucket> buckets; // Bucket containing folders with images. 사진이 있는 폴더를 담는 버켓
+    List<Integer> countOfEachBuckets = new ArrayList<>(); // 각 버켓(폴더) 안의 이미지 갯수
     List<ImageItem> images; // Images in bucket. bucket 안의 이미지
     GalleryFolderAdapter adapter; // Adapter to apply to buckets. 버켓에 적용할 어댑터
     GalleryRecyclerViewAdapter imgAdapter; // Adapter to apply to images. images 에 적용할 어댑터.
@@ -58,8 +67,8 @@ public class GalleryActivity extends AppCompatActivity {
 
         setWidget();
 
-        buckets = getImageBuckets(this); // 이미지를 담고있는 폴더를 List 에 담는다.
-        adapter = new GalleryFolderAdapter(this, buckets);
+        buckets = getImageBuckets(this); // 이미지가 들어있는 폴더들의 List 를 생성한다.
+        adapter = new GalleryFolderAdapter(this, buckets, countOfEachBuckets);
         gridView.setAdapter(adapter);
     }
 
@@ -78,28 +87,37 @@ public class GalleryActivity extends AppCompatActivity {
     public List<ImageBucket> getImageBuckets(Context mContext){
 
         List<ImageBucket> buckets = new ArrayList<>();
-        List<String> bucketSet = new ArrayList<>(); // List of Image folder name
+        List<String> bucketSet = new ArrayList<>(); // List of Image folder name. 이미지가 들어있는 폴더명의 List.
+        List<String> bucketCount = new ArrayList<>(); // List to find count of images in Folder. 폴더 안의 이미지 갯수를 구하기 위한 List.
 
         String bucketName, firstImage; // 이미지가 속한 폴더 이름, 대표 이미지
 
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String [] projection = { MediaStore.Images.Media.BUCKET_DISPLAY_NAME, // image folder name
-                                 MediaStore.Images.Media.DATA}; // image
+        String [] projection = { MediaStore.Images.Media.BUCKET_DISPLAY_NAME, // Name of image Folder
+                                 MediaStore.Images.Media.DATA }; // image
         String orderBy = MediaStore.Images.Media.DATE_ADDED + " DESC";
 
         Cursor cursor = mContext.getContentResolver().query(uri, projection, null, null, orderBy);
         if(cursor != null){
             File file;
-            while (cursor.moveToNext()){
+            while (cursor.moveToNext()) {
                 bucketName = cursor.getString(cursor.getColumnIndex(projection[0]));
                 firstImage = cursor.getString(cursor.getColumnIndex(projection[1]));
+                bucketCount.add(bucketName); // 이미지가 속해있는 폴더명(bucketName)을 이미지 개수만큼 add 한다.
                 file = new File(firstImage);
-                if (file.exists() && !bucketSet.contains(bucketName)) {
-                    bucketSet.add(bucketName);
-                    buckets.add(new ImageBucket(bucketName, firstImage));
+                if (file.exists() && !bucketSet.contains(bucketName)) { // 이미지가 존재하는 파일이면서 BucketName 이 중복되지 않을 경우
+                    bucketSet.add(bucketName); // 중복되지 않는 bucketName 일 경우 bucketSet 에 add 한다. -> 폴더명만 추출할 수 있다.
+                    buckets.add(new ImageBucket(bucketName, firstImage)); // 폴더명과 폴더의 첫이미지 객체를 생성한다.
                 }
             }
             cursor.close();
+        }
+        /*
+           bucketCount 에서 같은 폴더이름을 가진 것들의 개수를 구한다.
+           -> 각 폴더에 들어있는 이미지의 개수를 구할 수 있다.
+         */
+        for (int i = 0; i < bucketSet.size(); i++) {
+            countOfEachBuckets.add( Collections.frequency(bucketCount, bucketSet.get(i)) );
         }
 
 //        File[] files = new File(ROOT_DIR).listFiles(new ImageFileFilter());

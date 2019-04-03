@@ -8,16 +8,20 @@ package com.example.utilities.Gallery;
 public class ImageBucket {
 
     private String name; // 속해 있는 폴더 이름
+    //private int count; // 폴더 안의 이미지 개수
     private String firstImageContainedPath; // 폴더 안의 첫번째 이미지 경로
 
-    public ImageBucket(String name, String firstImageContainedPath) {
+    ImageBucket(String name, String firstImageContainedPath) {
         this.name = name;
+        //this.count = count;
         this.firstImageContainedPath = firstImageContainedPath;
     }
 
     public String getName() {
         return name;
     }
+
+    //public int getCount() { return count; }
 
     public String getFirstImageContainedPath() {
         return firstImageContainedPath;

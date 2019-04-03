@@ -1,27 +1,27 @@
 package com.example.utilities.Gallery;
 
-import android.content.Intent;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.os.Environment;
-import android.support.constraint.solver.widgets.Helper;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.example.utilities.R;
 import com.example.utilities.Util_Class.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Called from : GalleryActivity 에서 호출되는 액티비티
+ * 이미지 크게 보기,
+ */
 public class ImageDetailViewActivity extends AppCompatActivity implements View.OnTouchListener {
 
     ViewPager viewPager;

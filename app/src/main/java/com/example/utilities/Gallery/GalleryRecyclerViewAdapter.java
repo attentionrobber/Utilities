@@ -16,7 +16,6 @@ import com.bumptech.glide.Glide;
 import com.example.utilities.R;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,7 +34,7 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.rv_list_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_image_recyclerview, viewGroup, false);
         return new ViewHolder(view);
     }
 
