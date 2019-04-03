@@ -13,6 +13,9 @@ import com.example.utilities.R;
 
 import java.util.List;
 
+/**
+ * Used by : GalleryActivity
+ */
 public class GalleryFolderAdapter extends BaseAdapter {
 
     LayoutInflater inflater;

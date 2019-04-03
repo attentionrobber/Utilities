@@ -2,6 +2,7 @@ package com.example.utilities.Gallery;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -14,11 +15,12 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.example.utilities.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Used by : GalleryActivity,
  */
 public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecyclerViewAdapter.ViewHolder> {
 
@@ -67,10 +69,12 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
 
             imageView.setLayoutParams(params);
 
-            imageView.setOnClickListener(v -> {
-                // TODO : 클릭시 큰이미지로 보여주기
+            imageView.setOnClickListener(v -> { // ImageView 클릭시 ImageDetailViewActivity 로 넘어감.
                 Intent intent = new Intent(context, ImageDetailViewActivity.class);
-                intent.putExtra("image", items.get(getAdapterPosition()).getPath());
+                Bundle extras = new Bundle();
+                extras.putSerializable("images", (Serializable) items);
+                extras.putInt("position", getAdapterPosition());
+                intent.putExtras(extras);
                 context.startActivity(intent);
             });
         }

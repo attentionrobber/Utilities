@@ -3,6 +3,7 @@ package com.example.utilities.Gallery;
 /**
  * 이미지가 들어있는 모든 폴더를 나타냄
  * Image 가 속해 있는 디렉토리를 객체화함
+ * Used by : GalleryActivity,
  */
 public class ImageBucket {
 

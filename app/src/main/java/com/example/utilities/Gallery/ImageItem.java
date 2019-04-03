@@ -1,9 +1,12 @@
 package com.example.utilities.Gallery;
 
+import java.io.Serializable;
+
 /**
  * 각 Image 의 정보
+ * Used by : GalleryActivity
  */
-public class ImageItem {
+public class ImageItem implements Serializable {
 
     private String path;
     private String title;
