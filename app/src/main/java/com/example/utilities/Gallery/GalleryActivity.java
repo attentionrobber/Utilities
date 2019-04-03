@@ -55,10 +55,10 @@ public class GalleryActivity extends AppCompatActivity {
     GalleryFolderAdapter adapter; // Adapter to apply to buckets. 버켓에 적용할 어댑터
     GalleryRecyclerViewAdapter imgAdapter; // Adapter to apply to images. images 에 적용할 어댑터.
 
-    Uri fileUri = null; // Image // 사진 촬영 후 임시로 저장할 공간
-    private final int REQ_PERMISSION = 100; // 권한 요청 코드
-    private final int REQ_CAMERA = 101; // 카매라 요청 코드
-    private final int REQ_GALLERY = 102; // 갤러리 요청 코드
+//    Uri fileUri = null; // Image // 사진 촬영 후 임시로 저장할 공간 // TODO : 카메라 버튼 추가
+//    private final int REQ_PERMISSION = 100; // 권한 요청 코드
+//    private final int REQ_CAMERA = 101; // 카매라 요청 코드
+//    private final int REQ_GALLERY = 102; // 갤러리 요청 코드
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +136,7 @@ public class GalleryActivity extends AppCompatActivity {
     /**
      * Buckets 에 있는 image 들을 String List 에 담는다.
      */
-    public List<ImageItem> getImagesByBucket(@NonNull String bucketPath){
+    public List<ImageItem> getImagesByBucket(@NonNull String bucketName){
 
         List<ImageItem> images = new ArrayList<>();
         String path, title, date, size;
@@ -146,10 +146,10 @@ public class GalleryActivity extends AppCompatActivity {
                                 MediaStore.Images.Media.TITLE, // name
                                 MediaStore.Images.Media.DATE_ADDED,
                                 MediaStore.Images.Media.SIZE };
-        String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME+" =?";
+        String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME+" =?"; // 폴더명으로 선별(bucketName)
         String orderBy = MediaStore.Images.Media.DATE_ADDED+" DESC";
 
-        Cursor cursor = getContentResolver().query(uri, projection, selection, new String[]{bucketPath}, orderBy);
+        Cursor cursor = getContentResolver().query(uri, projection, selection, new String[]{bucketName}, orderBy);
         if(cursor != null){
             File file;
             while (cursor.moveToNext()){
@@ -158,7 +158,7 @@ public class GalleryActivity extends AppCompatActivity {
                 date = cursor.getString(cursor.getColumnIndex(projection[2]));
                 size = cursor.getString(cursor.getColumnIndex(projection[3]));
                 file = new File(path);
-                if (file.exists() && !images.contains(path)) {
+                if (file.exists() && !images.contains(path)) { // images 에 path 가 없을 경우( = 같은 파일이 아닐 경우)
                     images.add(new ImageItem(path, title, date, size));
                 }
             }
@@ -209,11 +209,6 @@ public class GalleryActivity extends AppCompatActivity {
         } else {
             recyclerView.setLayoutManager(new GridLayoutManager(this, mColumnCount));
         }
-
-        // Intent 형태로 Image 목록 띄우기
-//        Intent intent = new Intent(getApplicationContext(), ImageDetailViewActivity.class);
-//        intent.putStringArrayListExtra("images", (ArrayList<String>) images);
-//        startActivity(intent);
     }
 
     /**
