@@ -27,7 +27,7 @@ public class ImageDetailViewActivity extends AppCompatActivity implements View.O
 
     ViewPager viewPager;
     ImageView imageDetailView;
-    //LinearLayout layout_top_tools, layout_bot_tools;
+    LinearLayout layout_top_tools, layout_bot_tools;
 
     List<ImageItem> images = new ArrayList<>(); // 사진정보 데이터 저장소
 
@@ -83,25 +83,51 @@ public class ImageDetailViewActivity extends AppCompatActivity implements View.O
         viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(new ImageSlideAdapter(this, images));
         viewPager.setCurrentItem(position);
-        //viewPager.setListener(v -> clickListener(v));
+        viewPager.setOnTouchListener(touchListener);
+        viewPager.setOnClickListener(this::clickListener);
         //imageDetailView = findViewById(R.id.imageDetailView);
         //imageDetailView.setOnTouchListener(this);
 
-        //layout_top_tools = findViewById(R.id.layout_top_tools);
-        //layout_bot_tools = findViewById(R.id.layout_bot_tools);
+        layout_top_tools = findViewById(R.id.layout_top_tools);
+        layout_bot_tools = findViewById(R.id.layout_bot_tools);
     }
-//    private void clickListener(View view) {
-//        Logger.print(TAG, "TOUCHED");
-//        if (!touched) {
-//            layout_top_tools.setVisibility(View.VISIBLE);
-//            layout_top_tools.setVisibility(View.VISIBLE);
-//            touched = true;
-//        } else {
-//            layout_top_tools.setVisibility(View.GONE);
-//            layout_top_tools.setVisibility(View.GONE);
-//        }
-//    }
 
+    /**
+     * ViewPager 에 ClickListener 를 달기 위함
+     * touchListener, clickListener
+     */
+    View.OnTouchListener touchListener = new View.OnTouchListener() {
+        private boolean moved = false;
+        @Override
+        public boolean onTouch(View view, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                moved = true;
+            } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                moved = false;
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (!moved) {
+                    view.performClick();
+                }
+            }
+            return false;
+        }
+    };
+    private void clickListener(View view) {
+        Logger.print(TAG, "TOUCHED");
+            if (!touched) {
+                layout_top_tools.setVisibility(View.VISIBLE);
+                layout_bot_tools.setVisibility(View.VISIBLE);
+                touched = true;
+            } else {
+                layout_top_tools.setVisibility(View.GONE);
+                layout_bot_tools.setVisibility(View.GONE);
+                touched = false;
+            }
+    }
+
+    /**
+     * Listener of Related Zoom
+     */
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 

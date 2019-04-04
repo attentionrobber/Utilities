@@ -16,7 +16,7 @@
             android:src="@mipmap/ic_launcher"
             android:scaleType="fitCenter" />
     </LinearLayout>
-
+    <!--
     <LinearLayout
         android:visibility="gone"
         android:id="@+id/layout_top_tools"
@@ -34,4 +34,5 @@
         android:layout_gravity="bottom"
         android:orientation="horizontal"
         android:background="#FFFFFF"/>
+        -->
 </FrameLayout>

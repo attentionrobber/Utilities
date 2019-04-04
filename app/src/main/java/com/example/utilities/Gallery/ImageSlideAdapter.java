@@ -31,8 +31,6 @@ public class ImageSlideAdapter extends PagerAdapter {
     private List<ImageItem> images;
     private LayoutInflater inflater;
 
-    private boolean touched = false;
-
 
     public ImageSlideAdapter(Context context, List<ImageItem> images) {
         this.context = context;
@@ -51,23 +49,8 @@ public class ImageSlideAdapter extends PagerAdapter {
 
         assert imageLayout != null;
         final ImageView imageView = imageLayout.findViewById(R.id.image);
-        final LinearLayout layout_top_tools = imageLayout.findViewById(R.id.layout_top_tools);
-        final LinearLayout layout_bot_tools = imageLayout.findViewById(R.id.layout_bot_tools);
 
         Glide.with(context).load(images.get(position).getPath()).into(imageView); // placeholder()는 디폴트 이미지를 지정해줄 수 있다.
-
-        imageView.setOnClickListener(v -> {
-            Logger.print("TOUCH_TEST","TOUCHED");
-            if (!touched) {
-                layout_top_tools.setVisibility(View.VISIBLE);
-                layout_bot_tools.setVisibility(View.VISIBLE);
-                touched = true;
-            } else {
-                layout_top_tools.setVisibility(View.GONE);
-                layout_bot_tools.setVisibility(View.GONE);
-                touched = false;
-            }
-        });
 
         view.addView(imageLayout, 0); // 생성한 뷰를 컨테이너에 담아준다. 컨테이너 = 뷰페이저를 생성한 최외곽 레이아웃 개념
         return imageLayout;
