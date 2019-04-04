@@ -43,6 +43,7 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
         //viewHolder.imageUri = datas.get(position);
         //holder.imageView.setImageURI(holder.imageUri);
         Glide.with(context).load(items.get(position).getPath()).into(viewHolder.imageView);
+
     }
 
     @Override

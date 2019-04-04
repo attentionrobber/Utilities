@@ -8,31 +8,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#000000">
+        <!--
         <ImageView
-            android:id="@+id/image"
+            android:id="@+id/image_detailView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:src="@mipmap/ic_launcher"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter" /> -->
+        <com.example.utilities.Gallery.ZoomViewPagerImageView
+            android:id="@+id/image_detailView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY">
+        </com.example.utilities.Gallery.ZoomViewPagerImageView>
     </LinearLayout>
-    <!--
-    <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/layout_top_tools"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_gravity="top"
-        android:orientation="horizontal"
-        android:background="#FFFFFF"/>
 
     <LinearLayout
         android:visibility="gone"
-        android:id="@+id/layout_bot_tools"
+        android:id="@+id/layout_imgPreview"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_gravity="bottom"
         android:orientation="horizontal"
         android:background="#FFFFFF"/>
-        -->
+
 </FrameLayout>
