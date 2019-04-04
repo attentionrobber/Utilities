@@ -20,7 +20,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.utilities.R;
@@ -46,6 +49,9 @@ public class GalleryActivity extends AppCompatActivity {
 
     private int mColumnCount = 3;
 
+    TextView tv_galleryTitle;
+    ImageButton btn_camera;
+
     GridView gridView; // 폴더를 표현하는 뷰
     RecyclerView recyclerView; // 폴더에 있는 이미지를 표현하는 뷰
 
@@ -57,7 +63,7 @@ public class GalleryActivity extends AppCompatActivity {
 
 //    Uri fileUri = null; // Image // 사진 촬영 후 임시로 저장할 공간 // TODO : 카메라 버튼 추가
 //    private final int REQ_PERMISSION = 100; // 권한 요청 코드
-//    private final int REQ_CAMERA = 101; // 카매라 요청 코드
+    private final int REQ_CAMERA = 101; // 카매라 요청 코드
 //    private final int REQ_GALLERY = 102; // 갤러리 요청 코드
 
     @Override
@@ -66,18 +72,24 @@ public class GalleryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gallery);
 
         setWidget();
-
-        buckets = getImageBuckets(this); // 이미지가 들어있는 폴더들의 List 를 생성한다.
-        adapter = new GalleryFolderAdapter(this, buckets, countOfEachBuckets);
-        gridView.setAdapter(adapter);
+        init();
     }
 
     private void setWidget() {
+        tv_galleryTitle = findViewById(R.id.tv_galleryTitle);
+        btn_camera = findViewById(R.id.btn_camera);
         gridView = findViewById(R.id.gridView);
         recyclerView = findViewById(R.id.rv_gallery);
 
+        btn_camera.setOnClickListener(this::btnClickListener);
         gridView.setOnItemClickListener(this::onItemClick);
         //recyclerView.setOnClickListener(this); // RecyclerView 의 ClickListener 는 GalleryRecyclerViewAdapter 에 있음.
+    }
+
+    private void init() {
+        buckets = getImageBuckets(this); // 이미지가 들어있는 폴더들의 List 를 생성한다.
+        adapter = new GalleryFolderAdapter(this, buckets, countOfEachBuckets);
+        gridView.setAdapter(adapter);
     }
 
     /**
@@ -129,7 +141,6 @@ public class GalleryActivity extends AppCompatActivity {
 //                buckets.add(new Bucket(file.getName(), file.getAbsolutePath()));
 //            }
 //        }
-
         return buckets;
     }
 
@@ -201,6 +212,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         gridView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
+        tv_galleryTitle.setText(buckets.get(position).getName()+" ("+countOfEachBuckets.get(position)+")");
 
         imgAdapter = new GalleryRecyclerViewAdapter(this, images);
         recyclerView.setAdapter(imgAdapter);
@@ -208,6 +220,27 @@ public class GalleryActivity extends AppCompatActivity {
             recyclerView.setLayoutManager(new LinearLayoutManager(this)); // Recycler View 매니저 등록하기(View의 모양(Grid, 일반, 비대칭Grid)을 결정한다.)
         } else {
             recyclerView.setLayoutManager(new GridLayoutManager(this, mColumnCount));
+        }
+    }
+
+    /**
+     * Camera Button Event
+     */
+    private void btnClickListener(View view) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQ_CAMERA);
+    }
+    //startActivityForResult() 후에 실행되는 메소드
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_CAMERA:
+                if (resultCode == RESULT_OK) // resultCode OK이면 완료되었다는 뜻.
+                    init();
+                Logger.print("TAG", "Activity Result");
+                break;
         }
     }
 
@@ -220,6 +253,7 @@ public class GalleryActivity extends AppCompatActivity {
         if (gridView.getVisibility() == View.VISIBLE) {
             super.onBackPressed();
         }
+        tv_galleryTitle.setText("GALLERY");
         gridView.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
     }
