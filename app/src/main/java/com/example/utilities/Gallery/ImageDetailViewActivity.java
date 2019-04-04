@@ -11,6 +11,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.example.utilities.R;
 import com.example.utilities.Util_Class.Logger;
@@ -26,6 +27,7 @@ public class ImageDetailViewActivity extends AppCompatActivity implements View.O
 
     ViewPager viewPager;
     ImageView imageDetailView;
+    //LinearLayout layout_top_tools, layout_bot_tools;
 
     List<ImageItem> images = new ArrayList<>(); // 사진정보 데이터 저장소
 
@@ -60,6 +62,8 @@ public class ImageDetailViewActivity extends AppCompatActivity implements View.O
     private static int currentPage = 0;
     private static int NUM_PAGES = 0;
     private int position = 0; // Choose Image. 선택한 이미지
+    //----- Related Top, Bottom Tools ---------------------------------
+    private boolean touched = false;
 
 
     @Override
@@ -67,26 +71,36 @@ public class ImageDetailViewActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_detail_view);
 
-        setWidget();
         //String uri = getIntent().getStringExtra("image");
         Bundle extras = getIntent().getExtras();
         images = (List<ImageItem>) extras.getSerializable("images");
         position = extras.getInt("position");
 
-        initViewPager();
+        setWidget();
     }
 
     private void setWidget() {
         viewPager = findViewById(R.id.viewPager);
-        //imageDetailView = findViewById(R.id.imageDetailView);
-        //imageDetailView.setOnTouchListener(this);
-    }
-
-    private void initViewPager() {
         viewPager.setAdapter(new ImageSlideAdapter(this, images));
         viewPager.setCurrentItem(position);
-    }
+        //viewPager.setListener(v -> clickListener(v));
+        //imageDetailView = findViewById(R.id.imageDetailView);
+        //imageDetailView.setOnTouchListener(this);
 
+        //layout_top_tools = findViewById(R.id.layout_top_tools);
+        //layout_bot_tools = findViewById(R.id.layout_bot_tools);
+    }
+//    private void clickListener(View view) {
+//        Logger.print(TAG, "TOUCHED");
+//        if (!touched) {
+//            layout_top_tools.setVisibility(View.VISIBLE);
+//            layout_top_tools.setVisibility(View.VISIBLE);
+//            touched = true;
+//        } else {
+//            layout_top_tools.setVisibility(View.GONE);
+//            layout_top_tools.setVisibility(View.GONE);
+//        }
+//    }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
