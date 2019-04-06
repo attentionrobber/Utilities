@@ -8,19 +8,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#000000">
-        <!--
-        <ImageView
-            android:id="@+id/image_detailView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:src="@mipmap/ic_launcher"
-            android:scaleType="fitCenter" /> -->
+
         <com.example.utilities.Gallery.ZoomViewPagerImageView
             android:id="@+id/image_detailView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY">
+            android:scaleType="center">
         </com.example.utilities.Gallery.ZoomViewPagerImageView>
     </LinearLayout>
 

@@ -1,22 +1,22 @@
 package com.example.utilities.Gallery;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.widget.ImageView;
+import android.support.v7.widget.AppCompatImageView;
 
 /**
  * ViewPager 에 있는 ImageView 를 Zoom 할 수 있도록 만든 클래스
  * Class that can zoom ImageView in ViewPager
  */
-public class ZoomViewPagerImageView extends android.support.v7.widget.AppCompatImageView {
+public class ZoomViewPagerImageView extends AppCompatImageView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
     Matrix matrix;
 
@@ -53,9 +53,14 @@ public class ZoomViewPagerImageView extends android.support.v7.widget.AppCompatI
         sharedConstructing(context);
     }
 
+    GestureDetector mGestureDetector;
+
     private void sharedConstructing(Context context) {
         super.setClickable(true);
         this.context = context;
+        mGestureDetector = new GestureDetector(context, this);
+        mGestureDetector.setOnDoubleTapListener(this);
+
         mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
         matrix = new Matrix();
         m = new float[9];
@@ -67,6 +72,8 @@ public class ZoomViewPagerImageView extends android.support.v7.widget.AppCompatI
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 mScaleDetector.onTouchEvent(event);
+                mGestureDetector.onTouchEvent(event);
+
                 PointF curr = new PointF(event.getX(), event.getY());
 
                 switch (event.getAction()) {
@@ -115,6 +122,81 @@ public class ZoomViewPagerImageView extends android.support.v7.widget.AppCompatI
         maxScale = x;
     }
 
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        // Double tap is detected
+
+        float origScale = saveScale;
+        float doubleTapMaxScale = 2f;
+        float mScaleFactor;
+
+        // Origin
+//        if (saveScale == doubleTapMaxScale) {
+//            saveScale = minScale;
+//            mScaleFactor = minScale / origScale; // Zoom out
+//            Log.i("MAIN_TAG", "IF Double tap detected");
+//        } else {
+//            saveScale = doubleTapMaxScale;
+//            mScaleFactor = doubleTapMaxScale / origScale; // Zoom in
+//            Log.i("MAIN_TAG", "ELSE Double tap detected");
+//        }
+        // Modify 조금이라도 확대된 상태면 기본, 기본이면 확대
+        if (saveScale == minScale) {
+            saveScale = doubleTapMaxScale;
+            mScaleFactor = doubleTapMaxScale / origScale; // Zoom in
+            Log.i("MAIN_TAG", "ELSE Double tap detected");
+        } else {
+            saveScale = minScale;
+            mScaleFactor = minScale / origScale; // Zoom out
+            Log.i("MAIN_TAG", "IF Double tap detected");
+        }
+
+        matrix.postScale(mScaleFactor, mScaleFactor, viewWidth/2, viewHeight/2);
+
+        fixTrans();
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        return false;
+    }
+
     private class ScaleListener extends
             ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
@@ -136,10 +218,12 @@ public class ZoomViewPagerImageView extends android.support.v7.widget.AppCompatI
                 mScaleFactor = minScale / origScale;
             }
 
-            if (origWidth * saveScale <= viewWidth || origHeight * saveScale <= viewHeight)
+            if (origWidth * saveScale <= viewWidth
+                    || origHeight * saveScale <= viewHeight)
                 matrix.postScale(mScaleFactor, mScaleFactor, viewWidth / 2, viewHeight / 2);
             else
-                matrix.postScale(mScaleFactor, mScaleFactor, detector.getFocusX(), detector.getFocusY());
+                matrix.postScale(mScaleFactor, mScaleFactor,
+                        detector.getFocusX(), detector.getFocusY());
 
             fixTrans();
             return true;
@@ -152,7 +236,8 @@ public class ZoomViewPagerImageView extends android.support.v7.widget.AppCompatI
         float transY = m[Matrix.MTRANS_Y];
 
         float fixTransX = getFixTrans(transX, viewWidth, origWidth * saveScale);
-        float fixTransY = getFixTrans(transY, viewHeight, origHeight * saveScale);
+        float fixTransY = getFixTrans(transY, viewHeight, origHeight
+                * saveScale);
 
         if (fixTransX != 0 || fixTransY != 0)
             matrix.postTranslate(fixTransX, fixTransY);
@@ -192,7 +277,8 @@ public class ZoomViewPagerImageView extends android.support.v7.widget.AppCompatI
         //
         // Rescales image on rotation
         //
-        if (oldMeasuredHeight == viewWidth && oldMeasuredHeight == viewHeight || viewWidth == 0 || viewHeight == 0)
+        if (oldMeasuredHeight == viewWidth && oldMeasuredHeight == viewHeight
+                || viewWidth == 0 || viewHeight == 0)
             return;
         oldMeasuredHeight = viewHeight;
         oldMeasuredWidth = viewWidth;
@@ -202,7 +288,8 @@ public class ZoomViewPagerImageView extends android.support.v7.widget.AppCompatI
             float scale;
 
             Drawable drawable = getDrawable();
-            if (drawable == null || drawable.getIntrinsicWidth() == 0 || drawable.getIntrinsicHeight() == 0)
+            if (drawable == null || drawable.getIntrinsicWidth() == 0
+                    || drawable.getIntrinsicHeight() == 0)
                 return;
             int bmWidth = drawable.getIntrinsicWidth();
             int bmHeight = drawable.getIntrinsicHeight();
@@ -214,9 +301,11 @@ public class ZoomViewPagerImageView extends android.support.v7.widget.AppCompatI
             scale = Math.min(scaleX, scaleY);
             matrix.setScale(scale, scale);
 
-            //Center the image
-            float redundantYSpace = (float) viewHeight - (scale * (float) bmHeight);
-            float redundantXSpace = (float) viewWidth - (scale * (float) bmWidth);
+            // Center the image
+            float redundantYSpace = (float) viewHeight
+                    - (scale * (float) bmHeight);
+            float redundantXSpace = (float) viewWidth
+                    - (scale * (float) bmWidth);
             redundantYSpace /= (float) 2;
             redundantXSpace /= (float) 2;
 
