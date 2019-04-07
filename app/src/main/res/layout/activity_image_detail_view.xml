@@ -15,23 +15,28 @@
     </android.support.v4.view.ViewPager>
 
     <LinearLayout
-        android:id="@+id/layout_top_tools"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_gravity="top"
-        android:orientation="horizontal"
-        android:background="#FFFFFF">
+        android:layout_height="80dp"
+        android:layout_gravity="bottom">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_bot_tools"
-        android:visibility="gone"
+    <!--
+    <HorizontalScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        android:background="#FFFFFF">
-    </LinearLayout>
+        android:layout_height="80dp"
+        android:layout_gravity="bottom">
+        <LinearLayout
+            android:id="@+id/layout_scrollView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+        </LinearLayout>
+    </HorizontalScrollView>
+    -->
 
 </FrameLayout>

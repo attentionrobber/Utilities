@@ -87,10 +87,8 @@ public class ZoomViewPagerImageView extends AppCompatImageView implements Gestur
                         if (mode == DRAG) {
                             float deltaX = curr.x - last.x;
                             float deltaY = curr.y - last.y;
-                            float fixTransX = getFixDragTrans(deltaX, viewWidth,
-                                    origWidth * saveScale);
-                            float fixTransY = getFixDragTrans(deltaY, viewHeight,
-                                    origHeight * saveScale);
+                            float fixTransX = getFixDragTrans(deltaX, viewWidth, origWidth * saveScale);
+                            float fixTransY = getFixDragTrans(deltaY, viewHeight, origHeight * saveScale);
                             matrix.postTranslate(fixTransX, fixTransY);
                             fixTrans();
                             last.set(curr.x, curr.y);
@@ -114,7 +112,6 @@ public class ZoomViewPagerImageView extends AppCompatImageView implements Gestur
                 invalidate();
                 return true; // indicate event was handled
             }
-
         });
     }
 
@@ -124,13 +121,15 @@ public class ZoomViewPagerImageView extends AppCompatImageView implements Gestur
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
+        Log.i("TOUCHED", "SINGLE TAP CONFIRMED");
+
+
         return false;
     }
 
     @Override
     public boolean onDoubleTap(MotionEvent e) {
         // Double tap is detected
-
         float origScale = saveScale;
         float doubleTapMaxScale = 2f;
         float mScaleFactor;
@@ -149,11 +148,9 @@ public class ZoomViewPagerImageView extends AppCompatImageView implements Gestur
         if (saveScale == minScale) {
             saveScale = doubleTapMaxScale;
             mScaleFactor = doubleTapMaxScale / origScale; // Zoom in
-            Log.i("MAIN_TAG", "ELSE Double tap detected");
         } else {
             saveScale = minScale;
             mScaleFactor = minScale / origScale; // Zoom out
-            Log.i("MAIN_TAG", "IF Double tap detected");
         }
 
         matrix.postScale(mScaleFactor, mScaleFactor, viewWidth/2, viewHeight/2);
@@ -197,8 +194,7 @@ public class ZoomViewPagerImageView extends AppCompatImageView implements Gestur
         return false;
     }
 
-    private class ScaleListener extends
-            ScaleGestureDetector.SimpleOnScaleGestureListener {
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
             mode = ZOOM;
@@ -218,12 +214,10 @@ public class ZoomViewPagerImageView extends AppCompatImageView implements Gestur
                 mScaleFactor = minScale / origScale;
             }
 
-            if (origWidth * saveScale <= viewWidth
-                    || origHeight * saveScale <= viewHeight)
+            if (origWidth * saveScale <= viewWidth || origHeight * saveScale <= viewHeight)
                 matrix.postScale(mScaleFactor, mScaleFactor, viewWidth / 2, viewHeight / 2);
             else
-                matrix.postScale(mScaleFactor, mScaleFactor,
-                        detector.getFocusX(), detector.getFocusY());
+                matrix.postScale(mScaleFactor, mScaleFactor, detector.getFocusX(), detector.getFocusY());
 
             fixTrans();
             return true;
@@ -236,8 +230,7 @@ public class ZoomViewPagerImageView extends AppCompatImageView implements Gestur
         float transY = m[Matrix.MTRANS_Y];
 
         float fixTransX = getFixTrans(transX, viewWidth, origWidth * saveScale);
-        float fixTransY = getFixTrans(transY, viewHeight, origHeight
-                * saveScale);
+        float fixTransY = getFixTrans(transY, viewHeight, origHeight * saveScale);
 
         if (fixTransX != 0 || fixTransY != 0)
             matrix.postTranslate(fixTransX, fixTransY);
@@ -277,8 +270,7 @@ public class ZoomViewPagerImageView extends AppCompatImageView implements Gestur
         //
         // Rescales image on rotation
         //
-        if (oldMeasuredHeight == viewWidth && oldMeasuredHeight == viewHeight
-                || viewWidth == 0 || viewHeight == 0)
+        if (oldMeasuredHeight == viewWidth && oldMeasuredHeight == viewHeight || viewWidth == 0 || viewHeight == 0)
             return;
         oldMeasuredHeight = viewHeight;
         oldMeasuredWidth = viewWidth;
@@ -288,8 +280,7 @@ public class ZoomViewPagerImageView extends AppCompatImageView implements Gestur
             float scale;
 
             Drawable drawable = getDrawable();
-            if (drawable == null || drawable.getIntrinsicWidth() == 0
-                    || drawable.getIntrinsicHeight() == 0)
+            if (drawable == null || drawable.getIntrinsicWidth() == 0 || drawable.getIntrinsicHeight() == 0)
                 return;
             int bmWidth = drawable.getIntrinsicWidth();
             int bmHeight = drawable.getIntrinsicHeight();
@@ -302,10 +293,8 @@ public class ZoomViewPagerImageView extends AppCompatImageView implements Gestur
             matrix.setScale(scale, scale);
 
             // Center the image
-            float redundantYSpace = (float) viewHeight
-                    - (scale * (float) bmHeight);
-            float redundantXSpace = (float) viewWidth
-                    - (scale * (float) bmWidth);
+            float redundantYSpace = (float) viewHeight - (scale * (float) bmHeight);
+            float redundantXSpace = (float) viewWidth - (scale * (float) bmWidth);
             redundantYSpace /= (float) 2;
             redundantXSpace /= (float) 2;
 

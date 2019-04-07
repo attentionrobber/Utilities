@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,6 +30,7 @@ public class ImageSlideAdapter extends PagerAdapter {
 
     //----- tools
     private boolean touched = false;
+    private MotionEvent event;
 
     ImageSlideAdapter(Context context, List<ImageItem> images) {
         this.context = context;
@@ -41,7 +43,6 @@ public class ImageSlideAdapter extends PagerAdapter {
         return images.size();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup viewGroup, int position) {
