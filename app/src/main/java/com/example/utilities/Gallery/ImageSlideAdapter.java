@@ -20,6 +20,7 @@ import com.example.utilities.Util_Class.Logger;
 import java.util.List;
 
 /**
+ * 이미지 크게 보기에 사용되는 한장씩 표현하는 PagerAdapter
  * Used by : ImageDetailViewActivity
  */
 public class ImageSlideAdapter extends PagerAdapter {

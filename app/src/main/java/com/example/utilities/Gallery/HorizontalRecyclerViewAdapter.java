@@ -1,36 +1,34 @@
 package com.example.utilities.Gallery;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.utilities.R;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
+ * 이미지 크게 보기에서 하단부에 있는 Preview
+ * 수평으로 스크롤되는 RecyclerView 로 적용되는 RecyclerViewAdapter
  * Used by : ImageDetailViewActivity
  */
-public class ScrollViewAdapter extends RecyclerView.Adapter<ScrollViewAdapter.ViewHolder> {
+public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<HorizontalRecyclerViewAdapter.ViewHolder> {
 
     private Context context;
     private List<ImageItem> items;
+    private SynchronizeAdapter syncAdapter;
 
-    ScrollViewAdapter(Context context, List<ImageItem> items) {
+    HorizontalRecyclerViewAdapter(Context context, List<ImageItem> items, SynchronizeAdapter syncAdapter) {
         this.context = context;
         this.items = items;
+        this.syncAdapter = syncAdapter;
     }
 
     @NonNull
@@ -68,8 +66,10 @@ public class ScrollViewAdapter extends RecyclerView.Adapter<ScrollViewAdapter.Vi
 
             imageView.setLayoutParams(params);
 
-            imageView.setOnClickListener(v -> { // ImageView 클릭시 ImageDetailViewActivity 로 넘어감.
-                // TODO :
+            imageView.setOnClickListener(v -> { // ImageView Item 클릭시 큰이미지(PagerAdapter)도 변경
+                // String path = items.get(position).getPath();
+                //int position = getAdapterPosition();
+                syncAdapter.setPagerAdapter(getAdapterPosition());
             });
         }
     }

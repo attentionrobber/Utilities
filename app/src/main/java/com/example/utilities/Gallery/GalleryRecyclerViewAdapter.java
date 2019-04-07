@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * 폴더에 들어있는 이미지들을 3줄로 나타내는 어댑터
  * Used by : GalleryActivity,
  */
 public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecyclerViewAdapter.ViewHolder> {
