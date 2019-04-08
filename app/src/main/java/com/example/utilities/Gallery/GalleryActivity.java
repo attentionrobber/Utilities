@@ -49,10 +49,10 @@ public class GalleryActivity extends AppCompatActivity {
     List<ImageBucket> buckets; // Bucket containing folders with images. 사진이 있는 폴더를 담는 버켓
     List<Integer> countOfEachBuckets = new ArrayList<>(); // 각 버켓(폴더) 안의 이미지 갯수
     List<ImageItem> images; // Images in bucket. bucket 안의 이미지
-    GalleryFolderAdapter adapter; // Adapter to apply to buckets. 버켓에 적용할 어댑터
+    GalleryFolderAdapter folderAdapter; // Adapter to apply to buckets. 버켓에 적용할 어댑터
     GalleryRecyclerViewAdapter imgAdapter; // Adapter to apply to images. images 에 적용할 어댑터.
 
-//    Uri fileUri = null; // Image // 사진 촬영 후 임시로 저장할 공간 // TODO : 카메라 버튼 추가
+//    Uri fileUri = null; // Image // 사진 촬영 후 임시로 저장할 공간
 //    private final int REQ_PERMISSION = 100; // 권한 요청 코드
     private final int REQ_CAMERA = 101; // 카매라 요청 코드
 //    private final int REQ_GALLERY = 102; // 갤러리 요청 코드
@@ -79,8 +79,8 @@ public class GalleryActivity extends AppCompatActivity {
 
     private void init() {
         buckets = getImageBuckets(this); // 이미지가 들어있는 폴더들의 List 를 생성한다.
-        adapter = new GalleryFolderAdapter(this, buckets, countOfEachBuckets);
-        gridView.setAdapter(adapter);
+        folderAdapter = new GalleryFolderAdapter(this, buckets, countOfEachBuckets);
+        gridView.setAdapter(folderAdapter);
     }
 
     /**
@@ -142,6 +142,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         List<ImageItem> images = new ArrayList<>();
         String path, title, date, size;
+        int position = -1;
 
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String [] projection = {MediaStore.Images.Media.DATA, // uri(path)
@@ -161,7 +162,7 @@ public class GalleryActivity extends AppCompatActivity {
                 size = cursor.getString(cursor.getColumnIndex(projection[3]));
                 file = new File(path);
                 if (file.exists() && !images.contains(path)) { // images 에 path 가 없을 경우( = 같은 파일이 아닐 경우)
-                    images.add(new ImageItem(path, title, date, size));
+                    images.add(new ImageItem(path, title, date, size, position++));
                 }
             }
             cursor.close();

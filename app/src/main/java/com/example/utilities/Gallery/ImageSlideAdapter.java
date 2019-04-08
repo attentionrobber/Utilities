@@ -31,7 +31,6 @@ public class ImageSlideAdapter extends PagerAdapter {
 
     //----- tools
     private boolean touched = false;
-    private MotionEvent event;
 
     ImageSlideAdapter(Context context, List<ImageItem> images) {
         this.context = context;

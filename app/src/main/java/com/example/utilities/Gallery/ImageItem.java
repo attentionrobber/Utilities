@@ -12,12 +12,14 @@ public class ImageItem implements Serializable {
     private String title;
     private String date;
     private String size;
+    private int position;
 
-    public ImageItem(String path, String title, String date, String size) {
+    ImageItem(String path, String title, String date, String size, int position) {
         this.path = path;
         this.title = title;
         this.date = date;
         this.size = size;
+        this.position = position;
     }
 
     public String getPath() {
@@ -35,4 +37,6 @@ public class ImageItem implements Serializable {
     public String getSize() {
         return size;
     }
+
+    public int getPosition() { return position; }
 }

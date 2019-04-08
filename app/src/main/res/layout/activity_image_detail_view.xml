@@ -14,16 +14,37 @@
         android:background="#000000">
     </android.support.v4.view.ViewPager>
 
+    <!--
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom"
+        android:fillViewport="true"
+        android:scrollbars="horizontal">
+        <GridView
+            android:id="@+id/gridView_horizontal"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:columnWidth="80dp"
+            android:scrollbars="horizontal"
+            android:stretchMode="spacingWidthUniform">
+        </GridView>
+    </HorizontalScrollView>
+    -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_gravity="bottom">
+        android:layout_gravity="bottom"
+        android:background="#FFFFFF">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>
     </LinearLayout>
+
     <!--
     <HorizontalScrollView
         android:id="@+id/scrollView"
