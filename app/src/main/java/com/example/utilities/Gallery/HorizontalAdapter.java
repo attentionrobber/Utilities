@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.utilities.R;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
     private Context context;
     private List<ImageItem> items;
     private SynchronizeAdapter syncAdapter;
+
     private int selectedPosition = 0;
 
     HorizontalAdapter(Context context, List<ImageItem> items, SynchronizeAdapter syncAdapter) {
@@ -47,23 +49,26 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         if (selectedPosition == position)
-            viewHolder.layout.setBackgroundResource(R.drawable.button); // Highlight selected Item
+            //viewHolder.layout.setBackgroundResource(R.drawable.button); // Highlight selected Item
+            viewHolder.layout.setBackgroundColor(Color.CYAN); // Highlight selected Item
         else
             viewHolder.layout.setBackgroundResource(0);
 
-        viewHolder.imageView.setOnClickListener(v -> { // ImageView Item 클릭시 큰이미지(PagerAdapter)도 변경
-            // String path = items.get(getAdapterPosition()).getPath();
-            syncAdapter.setPagerAdapter(position);
-            selectedPosition = position;
-            notifyDataSetChanged();
-        });
-
-        Glide.with(context).load(items.get(position).getPath()).into(viewHolder.imageView);
+        //Glide.with(context).load(items.get(position).getPath()).thumbnail(0.1f).into(viewHolder.imageView);
+        Glide.with(context)
+                .load(items.get(position).getPath())
+                .thumbnail(0.1f)
+                .dontAnimate()
+                .into(viewHolder.imageView);
     }
 
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    void setCurrentPosition(int position) {
+        selectedPosition = position;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -80,12 +85,12 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
             ViewGroup.LayoutParams params = imageView.getLayoutParams();
             imageView.setLayoutParams(params);
 
-//            imageView.setOnClickListener(v -> { // ImageView Item 클릭시 큰이미지(PagerAdapter)도 변경
-//                // String path = items.get(getAdapterPosition()).getPath();
-//                syncAdapter.setPagerAdapter(getAdapterPosition());
-//                selectedPosition = getAdapterPosition();
-//                notifyDataSetChanged();
-//            });
+            imageView.setOnClickListener(v -> { // ImageView Item 클릭시 큰이미지(PagerAdapter)도 변경
+                // String path = items.get(getAdapterPosition()).getPath();
+                syncAdapter.setPagerAdapter(getAdapterPosition());
+                selectedPosition = getAdapterPosition();
+                //notifyDataSetChanged();
+            });
         }
     }
 }

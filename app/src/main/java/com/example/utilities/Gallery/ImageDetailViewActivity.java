@@ -68,12 +68,7 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
         //gridView_horizontal = findViewById(R.id.gridView_horizontal);
         rv_horizontal = findViewById(R.id.rv_horizontal);
     }
-    View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Log.i("TOUCHED", "ImageDetailViewActivity");
-        }
-    };
+    View.OnClickListener clickListener = v -> Log.i("TOUCHED", "ImageDetailViewActivity");
     ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int i, float v, int i1) {
@@ -87,11 +82,16 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    horizontalAdapter.setCurrentPosition(position); // viewPager 가 선택한 아이템과 recyclerView 가 선택한 아이템이 같도록 설정
+                    //horizontalAdapter.notifyItemChanged(position);
+                    horizontalAdapter.notifyDataSetChanged();
                     rv_horizontal.scrollToPosition(position);
                 }
             }, 200);
 
             Log.i("POSITION", ""+position);
+
+
         }
 
         @Override
@@ -122,7 +122,7 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
     }
 
     @Override
-    public void setRecyclerView() {
+    public void setRecyclerView(int position) {
 
     }
 
