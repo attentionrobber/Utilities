@@ -51,7 +51,8 @@ public class ImageSlideAdapter extends PagerAdapter {
 
         //ImageView image_detailView = itemView.findViewById(R.id.image_detailView);
         final ZoomViewPagerImageView image_detailView = itemView.findViewById(R.id.image_detailView);
-        final LinearLayout layout_preview = itemView.findViewById(R.id.layout_imgPreview);
+        final LinearLayout layout_preview = itemView.findViewById(R.id.layout_imgTools);
+        // TODO : Image Tools 추가(상단바)
 
         Glide.with(context).load(images.get(position).getPath()).into(image_detailView);  // placeholder()는 디폴트 이미지를 지정해줄 수 있다.
 

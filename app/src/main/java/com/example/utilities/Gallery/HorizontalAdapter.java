@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -49,8 +50,8 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         if (selectedPosition == position)
-            //viewHolder.layout.setBackgroundResource(R.drawable.button); // Highlight selected Item
-            viewHolder.layout.setBackgroundColor(Color.CYAN); // Highlight selected Item
+            viewHolder.layout.setBackgroundResource(R.drawable.image_preview_highlight); // Highlight selected Item
+            //viewHolder.layout.setBackgroundColor(Color.CYAN); // Highlight selected Item
         else
             viewHolder.layout.setBackgroundResource(0);
 
@@ -74,6 +75,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
     class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
+        //FrameLayout layout;
         RelativeLayout layout;
 
         ViewHolder(View view) {

@@ -43,8 +43,12 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         //viewHolder.imageUri = datas.get(position);
         //holder.imageView.setImageURI(holder.imageUri);
-        Glide.with(context).load(items.get(position).getPath()).into(viewHolder.imageView);
-
+        Glide.with(context)
+                .load(items.get(position).getPath())
+                .thumbnail(0.5f)
+                .dontAnimate()
+                .placeholder(android.R.drawable.ic_menu_gallery) // android:src="@android:drawable/ic_menu_gallery"
+                .into(viewHolder.imageView);
     }
 
     @Override
