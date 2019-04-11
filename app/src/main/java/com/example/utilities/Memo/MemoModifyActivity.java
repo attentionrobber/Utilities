@@ -228,8 +228,8 @@ public class MemoModifyActivity extends AppCompatActivity {
                     } else {
 
                     }
-                } else { // reulstCode가 uri가 남아있는데 삭제처리해야함.
-
+                } else {
+                    // TODO: reulstCode가 uri가 남아있는데 삭제처리해야함.
                 }
                 break;
             case REQ_GALLERY :

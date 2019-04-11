@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -46,9 +47,10 @@ public class GalleryActivity extends AppCompatActivity {
     GridView gridView; // 폴더를 표현하는 뷰
     RecyclerView recyclerView; // 폴더에 있는 이미지를 표현하는 뷰
 
-    List<ImageBucket> buckets; // Bucket containing folders with images. 사진이 있는 폴더를 담는 버켓
+    List<ImageBucket> buckets = new ArrayList<>(); // Bucket containing folders with images. 사진이 있는 폴더를 담는 버켓
     List<Integer> countOfEachBuckets = new ArrayList<>(); // 각 버켓(폴더) 안의 이미지 갯수
-    List<ImageItem> images; // Images in bucket. bucket 안의 이미지
+    List<ImageItem> images = new ArrayList<>(); // Images in bucket. bucket 안의 이미지
+    String bucketName = ""; // 선택된 버켓(폴더) 이름
     GalleryFolderAdapter folderAdapter; // Adapter to apply to buckets. 버켓에 적용할 어댑터
     GalleryRecyclerViewAdapter imgAdapter; // Adapter to apply to images. images 에 적용할 어댑터.
 
@@ -78,9 +80,22 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     private void init() {
+        if (!buckets.isEmpty() && !images.isEmpty() && !countOfEachBuckets.isEmpty()) { // refresh 될 때 초기화
+            countOfEachBuckets.clear();
+            buckets.clear();
+            images.clear();
+        }
+
         buckets = getImageBuckets(this); // 이미지가 들어있는 폴더들의 List 를 생성한다.
         folderAdapter = new GalleryFolderAdapter(this, buckets, countOfEachBuckets);
+        //folderAdapter.notifyDataSetChanged();
         gridView.setAdapter(folderAdapter);
+
+        if (!bucketName.equals("")) { // bucketName 이 초기화 됐을 경우
+            images = getImagesByBucket(bucketName);
+            imgAdapter = new GalleryRecyclerViewAdapter(this, images);
+            recyclerView.setAdapter(imgAdapter);
+        }
     }
 
     /**
@@ -121,6 +136,7 @@ public class GalleryActivity extends AppCompatActivity {
          */
         for (int i = 0; i < bucketSet.size(); i++) {
             countOfEachBuckets.add( Collections.frequency(bucketCount, bucketSet.get(i)) );
+            Logger.print("TAG", i+" COUNT: "+countOfEachBuckets.get(i).toString());
         }
 
 //        File[] files = new File(ROOT_DIR).listFiles(new ImageFileFilter());
@@ -171,6 +187,26 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     /**
+     * Bucket(이미지를 담는 폴더) 클릭 시 이벤트
+     */
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        bucketName = buckets.get(position).getName();
+        images = getImagesByBucket(bucketName);
+
+        gridView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+        tv_galleryTitle.setText(bucketName + " (" + countOfEachBuckets.get(position) + ")");
+
+        imgAdapter = new GalleryRecyclerViewAdapter(this, images);
+        recyclerView.setAdapter(imgAdapter);
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(this)); // Recycler View 매니저 등록하기(View의 모양(Grid, 일반, 비대칭Grid)을 결정한다.)
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(this, mColumnCount));
+        }
+    }
+
+    /**
      * Checks the file to see if it has a compatible extension.
      * Add to possible other formats WANTS
      */
@@ -196,26 +232,6 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     /**
-     * Bucket(이미지를 담는 폴더) 클릭 시 이벤트
-     */
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        images = getImagesByBucket(buckets.get(position).getName());
-
-        gridView.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.VISIBLE);
-        tv_galleryTitle.setText(buckets.get(position).getName()+" ("+countOfEachBuckets.get(position)+")");
-
-        imgAdapter = new GalleryRecyclerViewAdapter(this, images);
-        recyclerView.setAdapter(imgAdapter);
-        if (mColumnCount <= 1) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(this)); // Recycler View 매니저 등록하기(View의 모양(Grid, 일반, 비대칭Grid)을 결정한다.)
-        } else {
-            recyclerView.setLayoutManager(new GridLayoutManager(this, mColumnCount));
-        }
-    }
-
-    /**
      * Camera Button Event
      */
     private void btnClickListener(View view) {
@@ -229,9 +245,10 @@ public class GalleryActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case REQ_CAMERA:
-                if (resultCode == RESULT_OK) // resultCode OK이면 완료되었다는 뜻.
+                if (resultCode == RESULT_OK) {// resultCode OK이면 완료되었다는 뜻.
                     init();
-                Logger.print("TAG", "Activity Result");
+                    Logger.print("TAG", "Activity Result");
+                }
                 break;
         }
     }
@@ -248,5 +265,11 @@ public class GalleryActivity extends AppCompatActivity {
         tv_galleryTitle.setText("GALLERY");
         gridView.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        init();
     }
 }

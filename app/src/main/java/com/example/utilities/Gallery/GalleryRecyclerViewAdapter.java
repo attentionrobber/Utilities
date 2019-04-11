@@ -45,7 +45,8 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
         //holder.imageView.setImageURI(holder.imageUri);
         Glide.with(context)
                 .load(items.get(position).getPath())
-                .thumbnail(0.5f)
+                .thumbnail(0.5f)// 50%의 비율로 로드
+                .override(150) // 강제 사이즈 제한
                 .dontAnimate()
                 .placeholder(android.R.drawable.ic_menu_gallery) // android:src="@android:drawable/ic_menu_gallery"
                 .into(viewHolder.imageView);

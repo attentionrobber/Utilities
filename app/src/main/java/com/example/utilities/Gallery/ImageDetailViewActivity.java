@@ -1,8 +1,10 @@
 package com.example.utilities.Gallery;
 
+import android.content.DialogInterface;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,9 +14,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.GridView;
+import android.widget.ImageButton;
 
 import com.example.utilities.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +28,12 @@ import java.util.List;
  */
 public class ImageDetailViewActivity extends AppCompatActivity implements SynchronizeAdapter {
 
-    ViewPager viewPager;
-    ImageSlideAdapter slideAdapter;
-    RecyclerView rv_horizontal;
-    //GridView gridView_horizontal;
-    HorizontalAdapter horizontalAdapter;
+    ViewPager viewPager; // View Large, Detail Image
+    ImageSlideAdapter slideAdapter; // ViewPager's Adapter
+    RecyclerView rv_horizontal; // Bottom Preview Images
+    HorizontalAdapter horizontalAdapter; // RecyclerView's Adapter
+
+    ImageButton btn_img_delete, btn_img_detail;
 
     List<ImageItem> images = new ArrayList<>(); // 사진정보 데이터 저장소
 
@@ -49,15 +54,27 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_detail_view);
 
+        // TODO: 갤러리 작업 중 파일이 추가됐을때 Data Refresh
         Bundle extras = getIntent().getExtras();
         images = (List<ImageItem>) extras.getSerializable("images");
         position = extras.getInt("position");
-
 
         setWidget();
         init();
 
         //initScrollView();
+    }
+
+    private void init() {
+        slideAdapter = new ImageSlideAdapter(this, images);
+        viewPager.setAdapter(slideAdapter);
+        viewPager.setCurrentItem(position);
+
+        horizontalAdapter = new HorizontalAdapter(this, images, this);
+        rv_horizontal.setAdapter(horizontalAdapter);
+        rv_horizontal.scrollToPosition(position);
+        rv_horizontal.setLayoutManager(new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL, false)); // RecyclerView 를 수평 방향으로 스크롤되게 함.
     }
 
     private void setWidget() {
@@ -67,8 +84,50 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
 
         //gridView_horizontal = findViewById(R.id.gridView_horizontal);
         rv_horizontal = findViewById(R.id.rv_horizontal);
+        btn_img_delete = findViewById(R.id.btn_img_delete);
+        btn_img_detail = findViewById(R.id.btn_img_detail);
+        btn_img_delete.setOnClickListener(clickListener);
+        btn_img_detail.setOnClickListener(clickListener);
     }
-    View.OnClickListener clickListener = v -> Log.i("TOUCHED", "ImageDetailViewActivity");
+
+    /**
+     * 갤러리 작업 중 이미지 파일이 추가됐을때 목록을 refresh, update 해줌
+     */
+    private void updateRefresh() {
+        //images.add()
+
+    }
+
+    View.OnClickListener clickListener = v -> {
+        AlertDialog.Builder builder;
+        switch (v.getId()) {
+            case R.id.btn_img_delete:
+                builder = new AlertDialog.Builder(this);
+                builder.setTitle("Delete Image");
+                builder.setMessage("Are you sure DELETE this image?");
+                builder.setPositiveButton("OK", (dialog, which) -> {
+                    // todo 삭제
+                    File file = new File(images.get(position).getPath());
+                    boolean delete = file.delete();
+                });
+                builder.setNegativeButton("CANCEL", (dialog, which) -> dialog.cancel());
+                builder.show();
+
+                break;
+            case R.id.btn_img_detail:
+                builder = new AlertDialog.Builder(this);
+                builder.setTitle("Delete Image");
+                builder.setMessage("Are you sure DELETE this image?");
+                builder.setPositiveButton("OK", (dialog, which) -> {
+                    // todo 상세정보
+
+                });
+                builder.setNegativeButton("CANCEL", (dialog, which) -> dialog.cancel());
+                builder.show();
+                break;
+            default: break;
+        }
+    };
     ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int i, float v, int i1) {
@@ -77,8 +136,7 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
 
         @Override
         public void onPageSelected(int position) {
-            // TODO : rv_horizontal selected item 변경
-            //rv_horizontal.scrollToPosition(position);
+            // TODO : rv_horizontal selected item 중앙에 오도록 변경
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -100,32 +158,17 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
         }
     };
 
-    private void init() {
-        slideAdapter = new ImageSlideAdapter(this, images);
-        viewPager.setAdapter(slideAdapter);
-        viewPager.setCurrentItem(position);
-
-        // TODO : BaseAdapter 로 변경해보기
-        horizontalAdapter = new HorizontalAdapter(this, images, this);
-        rv_horizontal.setAdapter(horizontalAdapter);
-        rv_horizontal.scrollToPosition(position);
-        //Log.i("POSITION", ""+position);
-        rv_horizontal.setLayoutManager(new LinearLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL, false)); // RecyclerView 를 수평 방향으로 스크롤되게 함.
-//        horizontalAdapter = new HorizontalAdapter(this, images, this);
-//        gridView_horizontal.setAdapter(horizontalAdapter);
-    }
-
+    /**
+     * Interface for Synchronizing ViewPager and Bottom Preview
+     */
     @Override
     public void setPagerAdapter(int position) {
         viewPager.setCurrentItem(position);
     }
-
     @Override
     public void setRecyclerView(int position) {
 
     }
-
 
 //    private void initScrollView() {
 //        for (int i = 0; i < images.size(); i++) {

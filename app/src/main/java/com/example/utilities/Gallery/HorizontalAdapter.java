@@ -58,7 +58,8 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
         //Glide.with(context).load(items.get(position).getPath()).thumbnail(0.1f).into(viewHolder.imageView);
         Glide.with(context)
                 .load(items.get(position).getPath())
-                .thumbnail(0.1f)
+                .thumbnail(0.1f) // 10%의 비율로 로드
+                .override(80) // 강제 사이즈 제한
                 .dontAnimate()
                 .into(viewHolder.imageView);
     }
