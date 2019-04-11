@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -35,6 +36,7 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
     ImageSlideAdapter slideAdapter; // ViewPager's Adapter
     RecyclerView rv_horizontal; // Bottom Preview Images
     HorizontalAdapter horizontalAdapter; // RecyclerView's Adapter
+    LinearLayoutManager horizontalLayoutManger;
 
     ImageButton btn_img_delete, btn_img_detail;
 
@@ -75,9 +77,9 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
 
         horizontalAdapter = new HorizontalAdapter(this, images, this);
         rv_horizontal.setAdapter(horizontalAdapter);
-        rv_horizontal.scrollToPosition(position);
-        rv_horizontal.setLayoutManager(new LinearLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL, false)); // RecyclerView 를 수평 방향으로 스크롤되게 함.
+        horizontalLayoutManger = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        rv_horizontal.setLayoutManager(horizontalLayoutManger); // RecyclerView 를 수평 방향으로 스크롤되게 함.
+        scrollToCenter(rv_horizontal, position); // Replace rv_horizontal.scrollToPosition(position);
     }
 
     private void setWidget() {
@@ -103,7 +105,19 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
 
         horizontalAdapter = new HorizontalAdapter(this, images, this);
         rv_horizontal.setAdapter(horizontalAdapter);
-        rv_horizontal.scrollToPosition(position);
+        scrollToCenter(rv_horizontal, position); // Replace rv_horizontal.scrollToPosition(position);
+    }
+
+    /**
+     * Center the Selected Position(Highlight) at Horizontal RecyclerView(Bottom Preview)
+     * 하단부 프리뷰의 하이라이트를 정중앙에 오도록 하는 함수
+     * (recyclerView.scrollToPosition() 을 대체함)
+     */
+    private void scrollToCenter(View v, int position) {
+        int layoutSize = v.getWidth() / 2;
+        int itemSize = horizontalAdapter.getLayoutSize() / 2;
+        int offSet = layoutSize - itemSize;
+        horizontalLayoutManger.scrollToPositionWithOffset(position, offSet);
     }
 
     View.OnClickListener clickListener = v -> {
@@ -111,13 +125,13 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
         switch (v.getId()) {
             case R.id.btn_img_delete:
                 builder = new AlertDialog.Builder(this);
-                builder.setTitle("Delete Image");
+                builder.setTitle("DELETE IMAGE");
                 builder.setMessage("Are you sure DELETE this image?");
                 builder.setPositiveButton("OK", (dialog, which) -> {
-                    // todo 삭제
                     File file = new File(images.get(viewPager.getCurrentItem()).getPath());
                     boolean delete = file.delete();
-                    images.remove(viewPager.getCurrentItem());
+                    if (delete) images.remove(viewPager.getCurrentItem());
+
                     updateRefresh(viewPager.getCurrentItem());
                 });
                 builder.setNegativeButton("CANCEL", (dialog, which) -> dialog.cancel());
@@ -125,15 +139,8 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
 
                 break;
             case R.id.btn_img_detail:
-                builder = new AlertDialog.Builder(this);
-                builder.setTitle("Delete Image");
-                builder.setMessage("Are you sure DELETE this image?");
-                builder.setPositiveButton("OK", (dialog, which) -> {
                     // todo 상세정보
 
-                });
-                builder.setNegativeButton("CANCEL", (dialog, which) -> dialog.cancel());
-                builder.show();
                 break;
             default: break;
         }
@@ -146,20 +153,15 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
 
         @Override
         public void onPageSelected(int position) {
-            // TODO : rv_horizontal selected item 중앙에 오도록 변경
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     horizontalAdapter.setCurrentPosition(position); // viewPager 가 선택한 아이템과 recyclerView 가 선택한 아이템이 같도록 설정
                     //horizontalAdapter.notifyItemChanged(position);
                     horizontalAdapter.notifyDataSetChanged();
-                    rv_horizontal.scrollToPosition(position);
+                    scrollToCenter(rv_horizontal, position); // Replace rv_horizontal.scrollToPosition(position);
                 }
             }, 200);
-
-            Log.i("POSITION", ""+position);
-
-
         }
 
         @Override

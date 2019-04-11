@@ -33,6 +33,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
     private SynchronizeAdapter syncAdapter;
 
     private int selectedPosition = 0;
+    private int layoutWidth;
 
     HorizontalAdapter(Context context, List<ImageItem> items, SynchronizeAdapter syncAdapter) {
         this.context = context;
@@ -44,6 +45,8 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_scroll_view_image, viewGroup, false);
+        layoutWidth = view.getWidth();
+        Log.i("TESTT", ""+layoutWidth);
         return new ViewHolder(view);
     }
 
@@ -62,6 +65,8 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
                 .override(80) // 강제 사이즈 제한
                 .dontAnimate()
                 .into(viewHolder.imageView);
+
+        layoutWidth = viewHolder.getImageView().getWidth();
     }
 
     @Override
@@ -71,6 +76,10 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
 
     void setCurrentPosition(int position) {
         selectedPosition = position;
+    }
+
+    int getLayoutSize() { // Used by : scrollToCenter() in ImageDetailViewActivity
+        return layoutWidth;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -94,6 +103,10 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
                 selectedPosition = getAdapterPosition();
                 //notifyDataSetChanged();
             });
+        }
+
+        public ImageView getImageView() {
+            return imageView;
         }
     }
 }
