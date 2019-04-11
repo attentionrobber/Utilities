@@ -235,7 +235,7 @@ public class GalleryActivity extends AppCompatActivity {
      * Camera Button Event
      */
     private void btnClickListener(View view) {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent intent = new Intent(MediaStore.INTENT_ACTION_VIDEO_CAMERA);
         startActivityForResult(intent, REQ_CAMERA);
     }
     //startActivityForResult() 후에 실행되는 메소드

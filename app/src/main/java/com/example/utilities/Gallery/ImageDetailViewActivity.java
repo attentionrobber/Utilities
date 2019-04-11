@@ -17,6 +17,7 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 
 import com.example.utilities.R;
+import com.example.utilities.Util_Class.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ import java.util.List;
  * 이미지 크게 보기,
  */
 public class ImageDetailViewActivity extends AppCompatActivity implements SynchronizeAdapter {
+
+    final String TAG = "TAG_ImageDetailViewActivity";
 
     ViewPager viewPager; // View Large, Detail Image
     ImageSlideAdapter slideAdapter; // ViewPager's Adapter
@@ -93,9 +96,14 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
     /**
      * 갤러리 작업 중 이미지 파일이 추가됐을때 목록을 refresh, update 해줌
      */
-    private void updateRefresh() {
-        //images.add()
+    private void updateRefresh(int position) {
+        slideAdapter = new ImageSlideAdapter(this, images);
+        viewPager.setAdapter(slideAdapter);
+        viewPager.setCurrentItem(position);
 
+        horizontalAdapter = new HorizontalAdapter(this, images, this);
+        rv_horizontal.setAdapter(horizontalAdapter);
+        rv_horizontal.scrollToPosition(position);
     }
 
     View.OnClickListener clickListener = v -> {
@@ -107,8 +115,10 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
                 builder.setMessage("Are you sure DELETE this image?");
                 builder.setPositiveButton("OK", (dialog, which) -> {
                     // todo 삭제
-                    File file = new File(images.get(position).getPath());
+                    File file = new File(images.get(viewPager.getCurrentItem()).getPath());
                     boolean delete = file.delete();
+                    images.remove(viewPager.getCurrentItem());
+                    updateRefresh(viewPager.getCurrentItem());
                 });
                 builder.setNegativeButton("CANCEL", (dialog, which) -> dialog.cancel());
                 builder.show();
