@@ -1,21 +1,14 @@
 package com.example.utilities.Gallery;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.utilities.R;
-import com.example.utilities.Util_Class.Logger;
 
 import java.util.List;
 
@@ -30,15 +23,11 @@ public class ImageSlideAdapter extends PagerAdapter {
     private SynchronizeAdapter syncAdapter;
     private LayoutInflater inflater;
 
-    //----- tools
-    private boolean touched = false;
-
     ImageSlideAdapter(Context context, List<ImageItem> images, SynchronizeAdapter syncAdapter) {
         this.context = context;
         this.images = images;
         this.syncAdapter = syncAdapter;
-        inflater = LayoutInflater.from(context);
-        //inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = LayoutInflater.from(context); // As follows: inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
     @Override
     public int getCount() {
@@ -51,23 +40,16 @@ public class ImageSlideAdapter extends PagerAdapter {
         View itemView = inflater.inflate(R.layout.item_image_sliding_adapter, viewGroup, false);
         assert itemView != null;
 
-        //ImageView image_detailView = itemView.findViewById(R.id.image_detailView);
-        //final ZoomViewPagerImageView image_detailView = new ZoomViewPagerImageView(context, syncAdapter);
-        final ZoomViewPagerImageView image_detailView = itemView.findViewById(R.id.image_detailView);
-        final LinearLayout layout_preview = itemView.findViewById(R.id.layout_imgTools);
-        // TODO : Image Tools 추가(상단바)
+        final ZoomViewPagerImageView image_detailView = itemView.findViewById(R.id.image_detailView); // ImageView image_detailView = itemView.findViewById(R.id.image_detailView);
+        image_detailView.syncAdapter = syncAdapter; // TODO: Is this Real? Does it Work WELL? SO SO SO GOOD!!
+                                                    // 놀라운 발견 이게 될지 몰랐음.
+                                                    // Interface 만들고 Activity 에서 implements 한 interface 를
+                                                    // Activity 에서 this 로 넘겨주고
+                                                    // Adapter 에서 생성자로 넘겨받고
+                                                    // Adapter 에서 CustomImageView 에 있는 interface 를 초기화하고
+                                                    // CustomImageView 에서 실행시킴.
 
         Glide.with(context).load(images.get(position).getPath()).into(image_detailView);  // placeholder()는 디폴트 이미지를 지정해줄 수 있다.
-
-//        image_detailView.setOnClickListener(v -> {
-//            if (!touched) {
-//                layout_preview.setVisibility(View.VISIBLE);
-//                touched = true;
-//            } else {
-//                layout_preview.setVisibility(View.GONE);
-//                touched = false;
-//            }
-//        });
 
         viewGroup.addView(itemView, 0); // 생성한 뷰를 컨테이너에 담아준다. 컨테이너 = 뷰페이저를 생성한 최외곽 레이아웃 개념
         return itemView;
@@ -79,7 +61,7 @@ public class ImageSlideAdapter extends PagerAdapter {
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object object) {
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return view.equals(object);
     }
 

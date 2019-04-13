@@ -16,13 +16,4 @@
         </com.example.utilities.Gallery.ZoomViewPagerImageView>
     </LinearLayout>
 
-    <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/layout_imgTools"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_gravity="top"
-        android:orientation="horizontal"
-        android:background="#FFFFFF"/>
-
 </FrameLayout>

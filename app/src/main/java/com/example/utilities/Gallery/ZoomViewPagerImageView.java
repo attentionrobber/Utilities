@@ -123,8 +123,9 @@ public class ZoomViewPagerImageView extends AppCompatImageView implements Gestur
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
-        syncAdapter.onClickTools();
-        Log.i("TOUCHED", "SINGLE TAP CONFIRMED");
+
+        syncAdapter.setVisibleTools(); // GOOD job!
+        //Log.i("TOUCHED", "SINGLE TAP CONFIRMED");
         return false;
     }
 

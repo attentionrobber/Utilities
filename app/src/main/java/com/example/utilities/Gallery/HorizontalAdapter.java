@@ -1,25 +1,18 @@
 package com.example.utilities.Gallery;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.utilities.R;
 
 import java.util.List;
-import java.util.function.LongFunction;
 
 /**
  * 이미지 크게 보기에서 하단부에 있는 Preview
