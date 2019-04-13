@@ -27,14 +27,16 @@ public class ImageSlideAdapter extends PagerAdapter {
 
     private Context context;
     private List<ImageItem> images;
+    private SynchronizeAdapter syncAdapter;
     private LayoutInflater inflater;
 
     //----- tools
     private boolean touched = false;
 
-    ImageSlideAdapter(Context context, List<ImageItem> images) {
+    ImageSlideAdapter(Context context, List<ImageItem> images, SynchronizeAdapter syncAdapter) {
         this.context = context;
         this.images = images;
+        this.syncAdapter = syncAdapter;
         inflater = LayoutInflater.from(context);
         //inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -50,6 +52,7 @@ public class ImageSlideAdapter extends PagerAdapter {
         assert itemView != null;
 
         //ImageView image_detailView = itemView.findViewById(R.id.image_detailView);
+        //final ZoomViewPagerImageView image_detailView = new ZoomViewPagerImageView(context, syncAdapter);
         final ZoomViewPagerImageView image_detailView = itemView.findViewById(R.id.image_detailView);
         final LinearLayout layout_preview = itemView.findViewById(R.id.layout_imgTools);
         // TODO : Image Tools 추가(상단바)

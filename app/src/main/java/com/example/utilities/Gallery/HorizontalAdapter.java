@@ -45,8 +45,6 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_scroll_view_image, viewGroup, false);
-        layoutWidth = view.getWidth();
-        Log.i("TESTT", ""+layoutWidth);
         return new ViewHolder(view);
     }
 

@@ -7,12 +7,17 @@
     android:orientation="vertical"
     tools:context="com.example.utilities.Gallery.ImageDetailViewActivity">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPager"
+    <RelativeLayout
+        android:id="@+id/layout_viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#000000">
-    </android.support.v4.view.ViewPager>
+        android:layout_height="match_parent">
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#000000">
+        </android.support.v4.view.ViewPager>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/layout_top_tools"

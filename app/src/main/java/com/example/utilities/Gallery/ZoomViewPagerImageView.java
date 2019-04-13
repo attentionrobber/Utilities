@@ -43,6 +43,8 @@ public class ZoomViewPagerImageView extends AppCompatImageView implements Gestur
 
     Context context;
 
+    SynchronizeAdapter syncAdapter;
+
     public ZoomViewPagerImageView(Context context) {
         super(context);
         sharedConstructing(context);
@@ -121,9 +123,8 @@ public class ZoomViewPagerImageView extends AppCompatImageView implements Gestur
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
+        syncAdapter.onClickTools();
         Log.i("TOUCHED", "SINGLE TAP CONFIRMED");
-
-
         return false;
     }
 

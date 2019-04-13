@@ -11,11 +11,14 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.example.utilities.R;
 import com.example.utilities.Util_Class.Logger;
@@ -48,9 +51,11 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
     //----- Related Slide Image ---------------------------------------
     private static int currentPage = 0;
     private static int NUM_PAGES = 0;
-    private int position = 0; // Choose Image. 선택한 이미지
+    private int position = 0; // Choose Image. 선택된 이미지
 
     //----- Related Top, Bottom Tools ---------------------------------
+    RelativeLayout layout_viewPager;
+    LinearLayout layout_top_tools, layout_bot_tools;
     private boolean touched = false;
 
 
@@ -59,10 +64,11 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_detail_view);
 
-        // TODO: 갤러리 작업 중 파일이 추가됐을때 Data Refresh
         Bundle extras = getIntent().getExtras();
         images = (List<ImageItem>) extras.getSerializable("images");
         position = extras.getInt("position");
+
+        //ZoomViewPagerImageView zoom = new ZoomViewPagerImageView(this);
 
         setWidget();
         init();
@@ -71,7 +77,7 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
     }
 
     private void init() {
-        slideAdapter = new ImageSlideAdapter(this, images);
+        slideAdapter = new ImageSlideAdapter(this, images, this);
         viewPager.setAdapter(slideAdapter);
         viewPager.setCurrentItem(position);
 
@@ -84,22 +90,27 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
 
     private void setWidget() {
         viewPager = findViewById(R.id.viewPager);
-        viewPager.setOnClickListener(clickListener);
+        //viewPager.setOnClickListener(this::clickListener);
+        //viewPager.setOnTouchListener(this::touchListener);
         viewPager.addOnPageChangeListener(pageChangeListener);
 
-        //gridView_horizontal = findViewById(R.id.gridView_horizontal);
         rv_horizontal = findViewById(R.id.rv_horizontal);
         btn_img_delete = findViewById(R.id.btn_img_delete);
         btn_img_detail = findViewById(R.id.btn_img_detail);
-        btn_img_delete.setOnClickListener(clickListener);
-        btn_img_detail.setOnClickListener(clickListener);
+        btn_img_delete.setOnClickListener(btnClickListener);
+        btn_img_detail.setOnClickListener(btnClickListener);
+
+        layout_viewPager = findViewById(R.id.layout_viewPager);
+        layout_viewPager.setOnClickListener(btnClickListener);
+        layout_top_tools = findViewById(R.id.layout_top_tools);
+        layout_bot_tools = findViewById(R.id.layout_bot_tools);
     }
 
     /**
      * 갤러리 작업 중 이미지 파일이 추가됐을때 목록을 refresh, update 해줌
      */
     private void updateRefresh(int position) {
-        slideAdapter = new ImageSlideAdapter(this, images);
+        slideAdapter = new ImageSlideAdapter(this, images, this);
         viewPager.setAdapter(slideAdapter);
         viewPager.setCurrentItem(position);
 
@@ -120,7 +131,19 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
         horizontalLayoutManger.scrollToPositionWithOffset(position, offSet);
     }
 
-    View.OnClickListener clickListener = v -> {
+    private void clickListener() {
+        if (!touched) {
+            layout_top_tools.setVisibility(View.VISIBLE);
+            layout_bot_tools.setVisibility(View.VISIBLE);
+            touched = true;
+        } else {
+            layout_top_tools.setVisibility(View.GONE);
+            layout_bot_tools.setVisibility(View.GONE);
+            touched = false;
+        }
+        Log.i("TESTT", "clickListenr"+touched);
+    }
+    View.OnClickListener btnClickListener = v -> {
         AlertDialog.Builder builder;
         switch (v.getId()) {
             case R.id.btn_img_delete:
@@ -140,8 +163,19 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
                 break;
             case R.id.btn_img_detail:
                     // todo 상세정보
-
                 break;
+//            case R.id.layout_viewPager:
+//                if (!touched) {
+//                    layout_top_tools.setVisibility(View.VISIBLE);
+//                    layout_bot_tools.setVisibility(View.VISIBLE);
+//                    touched = true;
+//                } else {
+//                    layout_top_tools.setVisibility(View.GONE);
+//                    layout_bot_tools.setVisibility(View.GONE);
+//                    touched = false;
+//                }
+//                Log.i("TESTT", "clickListenr"+touched);
+//                break;
             default: break;
         }
     };
@@ -178,8 +212,17 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
         viewPager.setCurrentItem(position);
     }
     @Override
-    public void setRecyclerView(int position) {
-
+    public void onClickTools() {
+        if (!touched) {
+            layout_top_tools.setVisibility(View.VISIBLE);
+            layout_bot_tools.setVisibility(View.VISIBLE);
+            touched = true;
+        } else {
+            layout_top_tools.setVisibility(View.GONE);
+            layout_bot_tools.setVisibility(View.GONE);
+            touched = false;
+        }
+        Log.i("TOUCHED", "clickListenr"+touched);
     }
 
 //    private void initScrollView() {
