@@ -11,12 +11,20 @@
         android:id="@+id/layout_viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <com.example.utilities.Gallery.CustomViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#000000">
+        </com.example.utilities.Gallery.CustomViewPager>
+        <!--
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#000000">
         </android.support.v4.view.ViewPager>
+        -->
     </RelativeLayout>
 
     <RelativeLayout

@@ -3,6 +3,7 @@ package com.example.utilities.Gallery;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +41,8 @@ public class ImageSlideAdapter extends PagerAdapter {
         View itemView = inflater.inflate(R.layout.item_image_sliding_adapter, viewGroup, false);
         assert itemView != null;
 
-        final ZoomViewPagerImageView image_detailView = itemView.findViewById(R.id.image_detailView); // ImageView image_detailView = itemView.findViewById(R.id.image_detailView);
+        final ZoomableImageView image_detailView = itemView.findViewById(R.id.image_detailView); // ImageView image_detailView = itemView.findViewById(R.id.image_detailView);
         image_detailView.syncAdapter = syncAdapter; // TODO: Is this Real? Does it Work WELL? SO SO SO GOOD!!
-                                                    // 놀라운 발견 이게 될지 몰랐음.
                                                     // Interface 만들고 Activity 에서 implements 한 interface 를
                                                     // Activity 에서 this 로 넘겨주고
                                                     // Adapter 에서 생성자로 넘겨받고

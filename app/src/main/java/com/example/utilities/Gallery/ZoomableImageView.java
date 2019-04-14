@@ -15,8 +15,9 @@ import android.support.v7.widget.AppCompatImageView;
 /**
  * ViewPager 에 있는 ImageView 를 Zoom 할 수 있도록 만든 클래스
  * Class that can zoom ImageView in ViewPager
+ * Used by: ImageSlideAdapter
  */
-public class ZoomViewPagerImageView extends AppCompatImageView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
+public class ZoomableImageView extends AppCompatImageView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
     Matrix matrix;
 
@@ -45,12 +46,12 @@ public class ZoomViewPagerImageView extends AppCompatImageView implements Gestur
 
     SynchronizeAdapter syncAdapter;
 
-    public ZoomViewPagerImageView(Context context) {
+    public ZoomableImageView(Context context) {
         super(context);
         sharedConstructing(context);
     }
 
-    public ZoomViewPagerImageView(Context context, AttributeSet attrs) {
+    public ZoomableImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         sharedConstructing(context);
     }

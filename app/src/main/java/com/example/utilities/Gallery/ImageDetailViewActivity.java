@@ -39,7 +39,8 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
 
     final String TAG = "TAG_ImageDetailView";
 
-    ViewPager viewPager; // View Large, Detail Image
+    //ViewPager viewPager; // View Large, Detail Image
+    CustomViewPager viewPager;
     ImageSlideAdapter slideAdapter; // ViewPager's Adapter
     RecyclerView rv_horizontal; // Bottom Preview Images
     HorizontalAdapter horizontalAdapter; // RecyclerView's Adapter
@@ -140,11 +141,14 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
         Log.i(TAG, "layout: "+layoutSize+" item: "+itemSize);
     }
 
+    /**
+     * ClickListener of Top Tools as delete image, info image
+     * 이미지 삭제, 이미지 정보 버튼 클릭리스너
+     */
     View.OnClickListener btnClickListener = v -> {
-        AlertDialog.Builder builder;
         switch (v.getId()) {
             case R.id.btn_img_delete:
-                builder = new AlertDialog.Builder(this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("DELETE IMAGE");
                 builder.setMessage("Are you sure DELETE this image?");
                 builder.setPositiveButton("OK", (dialog, which) -> {
@@ -156,32 +160,30 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
                 });
                 builder.setNegativeButton("CANCEL", (dialog, which) -> dialog.cancel());
                 builder.show();
-
                 break;
             case R.id.btn_img_info:
-                // TODO: modify and complement 레이아웃 없애도록 레이아웃 뜬상태로 page slide 처리 방법
-                //String title = images.get(viewPager.getCurrentItem()).getTitle();
+                // TODO: Image Info 레이아웃 뜬 상태로 Listener 동작 안되도록.
+                // TODO: Zoom 상태로 Slide 안되도록.
                 String size_orig = images.get(viewPager.getCurrentItem()).getSize();
                 String date_orig = images.get(viewPager.getCurrentItem()).getDate();
                 String path = images.get(viewPager.getCurrentItem()).getPath();
-                String title = path.substring(path.lastIndexOf("/")+1);;
+                String title = path.substring(path.lastIndexOf("/")+1);
                 String date = convertAndFormatDate(date_orig);
                 String size = convertAndFormatSize(size_orig);
-
 
                 if (!infoFlag) {
                     layout_imgInfo.setVisibility(View.VISIBLE);
                     infoFlag = true;
-                    viewPager.setEnabled(false);
                     tv_imgInfo_title.append(title);tv_imgInfo_size.append(size);
                     tv_imgInfo_date.append(date);tv_imgInfo_path.append(path);
+                    viewPager.setPagingEnabled(false); // when display image info don't work viewPager
                 } else {
                     layout_imgInfo.setVisibility(View.GONE);
                     infoFlag = false;
                     tv_imgInfo_title.setText(R.string.imgInfo_title);tv_imgInfo_size.setText(R.string.imgInfo_size);
                     tv_imgInfo_date.setText(R.string.imgInfo_date);tv_imgInfo_path.setText(R.string.imgInfo_path);
+                    viewPager.setPagingEnabled(true);
                 }
-
                 break;
             default: break;
         }
@@ -266,6 +268,10 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (infoFlag) layout_imgInfo.setVisibility(View.GONE);
+        if (infoFlag) {
+            layout_imgInfo.setVisibility(View.GONE);
+            tv_imgInfo_title.setText(R.string.imgInfo_title);tv_imgInfo_size.setText(R.string.imgInfo_size);
+            tv_imgInfo_date.setText(R.string.imgInfo_date);tv_imgInfo_path.setText(R.string.imgInfo_path);
+        }
     }
 }
