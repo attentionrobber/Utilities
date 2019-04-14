@@ -64,23 +64,33 @@
         android:layout_width="250dp"
         android:layout_height="300dp"
         android:layout_gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:background="#99000000">
         <TextView
             android:id="@+id/tv_imgInfo_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/imgInfo_title"
+            android:textColor="#FFFFFF" />
         <TextView
             android:id="@+id/tv_imgInfo_size"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/imgInfo_size"
+            android:textColor="#FFFFFF" />
         <TextView
             android:id="@+id/tv_imgInfo_date"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/imgInfo_date"
+            android:textColor="#FFFFFF" />
         <TextView
             android:id="@+id/tv_imgInfo_path"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/imgInfo_path"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
     <!--
     <HorizontalScrollView

@@ -14,4 +14,10 @@
     <string name="btn_area">넓이(AREA)</string>
     <string name="input_number">input number</string>
 
+
+    <string name="imgInfo_title">제목：</string>
+    <string name="imgInfo_size">크기：</string>
+    <string name="imgInfo_date">날짜：</string>
+    <string name="imgInfo_path">경로：</string>
+
 </resources>

@@ -1,5 +1,6 @@
 package com.example.utilities.Gallery;
 
+import android.annotation.SuppressLint;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
@@ -24,7 +25,10 @@ import com.example.utilities.R;
 import com.example.utilities.Util_Class.Logger;
 
 import java.io.File;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -156,17 +160,48 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
                 break;
             case R.id.btn_img_info:
                 // TODO: modify and complement 레이아웃 없애도록 레이아웃 뜬상태로 page slide 처리 방법
-                layout_imgInfo.setVisibility(View.VISIBLE);
-                String title = images.get(viewPager.getCurrentItem()).getTitle();
-                String size = images.get(viewPager.getCurrentItem()).getSize();
-                String date = images.get(viewPager.getCurrentItem()).getDate();
+                //String title = images.get(viewPager.getCurrentItem()).getTitle();
+                String size_orig = images.get(viewPager.getCurrentItem()).getSize();
+                String date_orig = images.get(viewPager.getCurrentItem()).getDate();
                 String path = images.get(viewPager.getCurrentItem()).getPath();
-                tv_imgInfo_title.setText(title);tv_imgInfo_size.setText(size);
-                tv_imgInfo_date.setText(date);tv_imgInfo_path.setText(path);
+                String title = path.substring(path.lastIndexOf("/")+1);;
+                String date = convertAndFormatDate(date_orig);
+                String size = convertAndFormatSize(size_orig);
+
+
+                if (!infoFlag) {
+                    layout_imgInfo.setVisibility(View.VISIBLE);
+                    infoFlag = true;
+                    viewPager.setEnabled(false);
+                    tv_imgInfo_title.append(title);tv_imgInfo_size.append(size);
+                    tv_imgInfo_date.append(date);tv_imgInfo_path.append(path);
+                } else {
+                    layout_imgInfo.setVisibility(View.GONE);
+                    infoFlag = false;
+                    tv_imgInfo_title.setText(R.string.imgInfo_title);tv_imgInfo_size.setText(R.string.imgInfo_size);
+                    tv_imgInfo_date.setText(R.string.imgInfo_date);tv_imgInfo_path.setText(R.string.imgInfo_path);
+                }
+
                 break;
             default: break;
         }
     };
+    private String convertAndFormatDate(String date) {
+        long date_long = Long.parseLong(date) * 1000L;
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm");
+        return sdf.format(new Date(date_long));
+    }
+    private String convertAndFormatSize(String size_orig) {
+        long size = Long.parseLong(size_orig);
+        if (size <= 0)
+            return "0";
+
+        final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+
+        return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
     ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int i, float v, int i1) {
