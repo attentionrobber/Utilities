@@ -60,10 +60,10 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
     private int position = 0; // Choose Image. 선택된 이미지
 
     //----- Related Top, Bottom Tools ---------------------------------
-    RelativeLayout layout_viewPager, layout_top_tools;
+    RelativeLayout layout_top_tools;
     LinearLayout layout_bot_tools, layout_imgInfo;
     TextView tv_imgInfo_title,tv_imgInfo_size, tv_imgInfo_date, tv_imgInfo_path;
-    ImageButton btn_img_delete, btn_img_info;
+    ImageButton btn_img_delete, btn_img_info, btn_imgInfo_close;
     private boolean singleTouched = false; // Check the Tools display or hide
     private boolean infoFlag = false; // Check the Image Info display or hide
 
@@ -97,14 +97,7 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
         viewPager = findViewById(R.id.viewPager);
         //viewPager.setOnClickListener(this::clickListener); // viewPager 의 ClickListener 는 ImageSlideAdapter 의 ZoomViewPagerImageView 에 있음.
         viewPager.addOnPageChangeListener(pageChangeListener);
-
         rv_horizontal = findViewById(R.id.rv_horizontal);
-        btn_img_delete = findViewById(R.id.btn_img_delete);
-        btn_img_info = findViewById(R.id.btn_img_info);
-        btn_img_delete.setOnClickListener(btnClickListener);
-        btn_img_info.setOnClickListener(btnClickListener);
-
-        layout_viewPager = findViewById(R.id.layout_viewPager); // TODO: will be deleted if not needed
 
         layout_top_tools = findViewById(R.id.layout_top_tools);
         layout_bot_tools = findViewById(R.id.layout_bot_tools);
@@ -114,6 +107,12 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
         tv_imgInfo_size = findViewById(R.id.tv_imgInfo_size);
         tv_imgInfo_date = findViewById(R.id.tv_imgInfo_date);
         tv_imgInfo_path = findViewById(R.id.tv_imgInfo_path);
+        btn_img_delete = findViewById(R.id.btn_img_delete);
+        btn_img_info = findViewById(R.id.btn_img_info);
+        btn_imgInfo_close = findViewById(R.id.btn_imgInfoClose);
+        btn_img_delete.setOnClickListener(btnClickListener);
+        btn_img_info.setOnClickListener(btnClickListener);
+        btn_imgInfo_close.setOnClickListener(btnClickListener);
     }
 
     /**
@@ -156,7 +155,9 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
      */
     View.OnClickListener btnClickListener = v -> {
         switch (v.getId()) {
-            case R.id.btn_img_delete:
+
+            case R.id.btn_img_delete: // Image Delete
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("DELETE IMAGE");
                 builder.setMessage("Are you sure DELETE this image?");
@@ -170,8 +171,9 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
                 builder.setNegativeButton("CANCEL", (dialog, which) -> dialog.cancel());
                 builder.show();
                 break;
-            case R.id.btn_img_info:
-                // TODO: Zoom 상태로 Slide 안되도록.
+
+            case R.id.btn_img_info: // Image Detail Information
+
                 String size_orig = images.get(viewPager.getCurrentItem()).getSize();
                 String date_orig = images.get(viewPager.getCurrentItem()).getDate();
                 String path = images.get(viewPager.getCurrentItem()).getPath();
@@ -199,6 +201,10 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
                     rv_horizontal.setVisibility(View.VISIBLE);
                 }
                 break;
+
+            case R.id.btn_imgInfoClose: // Close Image Detail Info.
+                onBackPressed();
+                break;
             default: break;
         }
     };
@@ -217,6 +223,11 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
 
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
+
+    /**
+     * View 를 사용하지 않도록 하는 함수.
+     * View 에 설정된 Listener 종류를 못쓰게 하려고 사용함.
+     */
     private void enableDisableView(View view, boolean enabled) {
         view.setEnabled(enabled);
         if ( view instanceof ViewGroup) {
@@ -228,6 +239,9 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
         }
     }
 
+    /**
+     * ViewPager Page Change Listener
+     */
     ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int i, float v, int i1) {
@@ -254,7 +268,7 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
     };
 
     /**
-     * Interface for Synchronizing ViewPager and Horizontal RecyclerView(Bottom Preview)
+     * Interface's Method for Synchronizing ViewPager and Horizontal RecyclerView(Bottom Preview)
      */
     @Override
     public void setPagerAdapter(int position) {
@@ -271,7 +285,6 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
             layout_bot_tools.setVisibility(View.GONE);
             singleTouched = false;
         }
-        //Log.i("TOUCHED", "clickListener"+touched);
     }
     @Override
     public void enableSwipeViewPager(boolean enabled) {
