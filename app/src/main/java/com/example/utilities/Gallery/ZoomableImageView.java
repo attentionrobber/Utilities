@@ -3,6 +3,7 @@ package com.example.utilities.Gallery;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.support.v7.widget.AppCompatImageView;
+import android.view.ViewGroup;
 
 /**
  * ViewPager 에 있는 ImageView 를 Zoom 할 수 있도록 만든 클래스
@@ -61,6 +63,7 @@ public class ZoomableImageView extends AppCompatImageView implements GestureDete
     private void sharedConstructing(Context context) {
         super.setClickable(true);
         this.context = context;
+
         mGestureDetector = new GestureDetector(context, this);
         mGestureDetector.setOnDoubleTapListener(this);
 
@@ -70,53 +73,57 @@ public class ZoomableImageView extends AppCompatImageView implements GestureDete
         setImageMatrix(matrix);
         setScaleType(ScaleType.MATRIX);
 
-        setOnTouchListener(new OnTouchListener() {
+        setOnTouchListener((v, event) -> {
+            mScaleDetector.onTouchEvent(event);
+            mGestureDetector.onTouchEvent(event);
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mScaleDetector.onTouchEvent(event);
-                mGestureDetector.onTouchEvent(event);
+            PointF curr = new PointF(event.getX(), event.getY());
 
-                PointF curr = new PointF(event.getX(), event.getY());
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    Log.i("MotionEvent", "ACTION_DOWN");
+                    last.set(curr);
+                    start.set(last);
+                    mode = DRAG;
+                    break;
 
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        last.set(curr);
-                        start.set(last);
-                        mode = DRAG;
-                        break;
+                case MotionEvent.ACTION_MOVE:
+                    Log.i("MotionEvent", "ACTION_MOVE");
+                    if (mode == DRAG) {
+                        float deltaX = curr.x - last.x;
+                        float deltaY = curr.y - last.y;
+                        float fixTransX = getFixDragTrans(deltaX, viewWidth, origWidth * saveScale);
+                        float fixTransY = getFixDragTrans(deltaY, viewHeight, origHeight * saveScale);
 
-                    case MotionEvent.ACTION_MOVE:
-                        if (mode == DRAG) {
-                            float deltaX = curr.x - last.x;
-                            float deltaY = curr.y - last.y;
-                            float fixTransX = getFixDragTrans(deltaX, viewWidth, origWidth * saveScale);
-                            float fixTransY = getFixDragTrans(deltaY, viewHeight, origHeight * saveScale);
-                            matrix.postTranslate(fixTransX, fixTransY);
-                            fixTrans();
-                            last.set(curr.x, curr.y);
-                        }
-                        break;
+                        syncAdapter.enableSwipeViewPager(false);
+                        if (saveScale == 1) syncAdapter.enableSwipeViewPager(true); // 원본 크기 일 경우에만 Swipe 가능하도록 설정.
 
-                    case MotionEvent.ACTION_UP:
-                        mode = NONE;
-                        int xDiff = (int) Math.abs(curr.x - start.x);
-                        int yDiff = (int) Math.abs(curr.y - start.y);
-                        if (xDiff < CLICK && yDiff < CLICK)
-                            performClick();
-                        break;
+                        matrix.postTranslate(fixTransX, fixTransY);
+                        fixTrans();
+                        last.set(curr.x, curr.y);
+                    }
+                    break;
 
-                    case MotionEvent.ACTION_POINTER_UP:
-                        mode = NONE;
-                        break;
-                }
+                case MotionEvent.ACTION_UP:
+                    Log.i("MotionEvent", "ACTION_UP");
+                    mode = NONE;
+                    int xDiff = (int) Math.abs(curr.x - start.x);
+                    int yDiff = (int) Math.abs(curr.y - start.y);
+                    if (xDiff < CLICK && yDiff < CLICK)
+                        performClick();
+                    break;
 
-                setImageMatrix(matrix);
-                invalidate();
-                return true; // indicate event was handled
+                case MotionEvent.ACTION_POINTER_UP:
+                    Log.i("MotionEvent", "ACTION_POINTER_UP");
+                    mode = NONE;
+                    break;
             }
+
+            setImageMatrix(matrix);
+            invalidate();
+            return true; // indicate event was handled
         });
-    }
+    } // sharedConstructing
 
     public void setMaxZoom(float x) {
         maxScale = x;
@@ -124,18 +131,20 @@ public class ZoomableImageView extends AppCompatImageView implements GestureDete
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
-
+        Log.i("MotionEvent", "Single TAP");
         syncAdapter.setVisibleTools(); // GOOD job!
-        //Log.i("TOUCHED", "SINGLE TAP CONFIRMED");
         return false;
     }
 
     @Override
     public boolean onDoubleTap(MotionEvent e) {
+        Log.i("MotionEvent", "Double TAP");
         // Double tap is detected
         float origScale = saveScale;
         float doubleTapMaxScale = 2f;
         float mScaleFactor;
+
+       // int[] point = getBitmapOffset(this, false);
 
         // Origin
 //        if (saveScale == doubleTapMaxScale) {
@@ -151,15 +160,41 @@ public class ZoomableImageView extends AppCompatImageView implements GestureDete
         if (saveScale == minScale) {
             saveScale = doubleTapMaxScale;
             mScaleFactor = doubleTapMaxScale / origScale; // Zoom in
+            //Log.i("Point", "width: "+viewWidth/2f+" height: "+viewHeight/2f);
         } else {
             saveScale = minScale;
-            mScaleFactor = minScale / origScale; // Zoom out
+            mScaleFactor = minScale / origScale; // Zoom out // TODO: 확대 후 움직이고나서 더블탭으로 축소했을 때 이미지 위치가 제자리가 아님.
+//            matrix.postTranslate(point[0], point[1]);
+//            Log.i("Point", "top: "+point[0]+" left: "+point[1]);
         }
 
-        matrix.postScale(mScaleFactor, mScaleFactor, viewWidth/2, viewHeight/2);
-
+        matrix.postScale(mScaleFactor, mScaleFactor, viewWidth / 2f, viewHeight / 2f);
         fixTrans();
         return false;
+    } // onDoubleTap
+
+    /**
+     * ImageView 가 이미지를 담았을 때 여백을 찾는 함수.
+     */
+    public int[] getBitmapOffset(ZoomableImageView img,  Boolean includeLayout) {
+        int[] offset = new int[2];
+        float[] values = new float[9];
+
+        Matrix m = img.getImageMatrix();
+        m.getValues(values);
+
+        offset[0] = (int) values[5];
+        offset[1] = (int) values[2];
+
+        if (includeLayout) {
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) img.getLayoutParams();
+            int paddingTop = img.getPaddingTop();
+            int paddingLeft = img.getPaddingLeft();
+
+            offset[0] += paddingTop + lp.topMargin;
+            offset[1] += paddingLeft + lp.leftMargin;
+        }
+        return offset;
     }
 
     @Override
@@ -218,14 +253,14 @@ public class ZoomableImageView extends AppCompatImageView implements GestureDete
             }
 
             if (origWidth * saveScale <= viewWidth || origHeight * saveScale <= viewHeight)
-                matrix.postScale(mScaleFactor, mScaleFactor, viewWidth / 2, viewHeight / 2);
+                matrix.postScale(mScaleFactor, mScaleFactor, viewWidth / 2f, viewHeight / 2f);
             else
                 matrix.postScale(mScaleFactor, mScaleFactor, detector.getFocusX(), detector.getFocusY());
 
             fixTrans();
             return true;
         }
-    }
+    } // class ScaleListener
 
     void fixTrans() {
         matrix.getValues(m);

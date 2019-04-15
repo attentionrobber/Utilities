@@ -1,6 +1,7 @@
 package com.example.utilities.Gallery;
 
 import android.annotation.SuppressLint;
+import android.graphics.Point;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
@@ -13,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.GridView;
@@ -23,6 +25,8 @@ import android.widget.TextView;
 
 import com.example.utilities.R;
 import com.example.utilities.Util_Class.Logger;
+
+import org.checkerframework.checker.signature.qual.FieldDescriptor;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -40,28 +44,26 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
     final String TAG = "TAG_ImageDetailView";
 
     //ViewPager viewPager; // View Large, Detail Image
-    CustomViewPager viewPager;
+    CustomViewPager viewPager; // View Large, Detail Image
     ImageSlideAdapter slideAdapter; // ViewPager's Adapter
     RecyclerView rv_horizontal; // Bottom Preview Images
     HorizontalAdapter horizontalAdapter; // RecyclerView's Adapter
     LinearLayoutManager horizontalLayoutManger;
 
-    ImageButton btn_img_delete, btn_img_info;
 
     List<ImageItem> images = new ArrayList<>(); // 사진정보 데이터 저장소
 
-    final String SD_PATH = "/storage/sdcard/DCIM/";
-    final String DCIM_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+    //final String SD_PATH = "/storage/sdcard/DCIM/";
+    //private final String DCIM_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
 
     //----- Related Slide Image ---------------------------------------
-    private static int currentPage = 0;
-    private static int NUM_PAGES = 0;
     private int position = 0; // Choose Image. 선택된 이미지
 
     //----- Related Top, Bottom Tools ---------------------------------
     RelativeLayout layout_viewPager, layout_top_tools;
     LinearLayout layout_bot_tools, layout_imgInfo;
     TextView tv_imgInfo_title,tv_imgInfo_size, tv_imgInfo_date, tv_imgInfo_path;
+    ImageButton btn_img_delete, btn_img_info;
     private boolean singleTouched = false; // Check the Tools display or hide
     private boolean infoFlag = false; // Check the Image Info display or hide
 
@@ -102,8 +104,8 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
         btn_img_delete.setOnClickListener(btnClickListener);
         btn_img_info.setOnClickListener(btnClickListener);
 
-        layout_viewPager = findViewById(R.id.layout_viewPager);
-        layout_viewPager.setOnClickListener(btnClickListener);
+        layout_viewPager = findViewById(R.id.layout_viewPager); // TODO: will be deleted if not needed
+
         layout_top_tools = findViewById(R.id.layout_top_tools);
         layout_bot_tools = findViewById(R.id.layout_bot_tools);
 
@@ -133,12 +135,19 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
      * (recyclerView.scrollToPosition() 을 대체함)
      */
     private void scrollToCenter(View v, int position) {
+        Point size = new Point();
+        getWindowManager().getDefaultDisplay().getSize(size);
+
         int layoutSize = v.getWidth() / 2;
+        if (layoutSize == 0) layoutSize = size.x / 2; // layoutSize 가 측정되지 않으면 스크린 사이즈로 함.
+
         int itemSize = horizontalAdapter.getLayoutSize() / 2;
+        if (itemSize == 0) itemSize = (int) (layoutSize / 4.5); // 4.5 는 80dp 기준임. 추후 바꿔야함.
+
         int offSet = layoutSize - itemSize;
-        if (offSet == 0) offSet = (int) (layoutSize / 4.5);
+
         horizontalLayoutManger.scrollToPositionWithOffset(position, offSet);
-        Log.i(TAG, "layout: "+layoutSize+" item: "+itemSize);
+        //Log.i("scrollToCenter", "layout: "+layoutSize+" item: "+itemSize+" position: "+position);
     }
 
     /**
@@ -162,12 +171,11 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
                 builder.show();
                 break;
             case R.id.btn_img_info:
-                // TODO: Image Info 레이아웃 뜬 상태로 Listener 동작 안되도록.
                 // TODO: Zoom 상태로 Slide 안되도록.
                 String size_orig = images.get(viewPager.getCurrentItem()).getSize();
                 String date_orig = images.get(viewPager.getCurrentItem()).getDate();
                 String path = images.get(viewPager.getCurrentItem()).getPath();
-                String title = path.substring(path.lastIndexOf("/")+1);
+                String title = path.substring(path.lastIndexOf("/")+1); // 경로에서 마지막의 파일이름만 가져옴.
                 String date = convertAndFormatDate(date_orig);
                 String size = convertAndFormatSize(size_orig);
 
@@ -176,13 +184,19 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
                     infoFlag = true;
                     tv_imgInfo_title.append(title);tv_imgInfo_size.append(size);
                     tv_imgInfo_date.append(date);tv_imgInfo_path.append(path);
+
                     viewPager.setPagingEnabled(false); // when display image info don't work viewPager
+                    enableDisableView(viewPager, false); // when display image info don't work viewPager
+                    rv_horizontal.setVisibility(View.GONE);
                 } else {
                     layout_imgInfo.setVisibility(View.GONE);
                     infoFlag = false;
                     tv_imgInfo_title.setText(R.string.imgInfo_title);tv_imgInfo_size.setText(R.string.imgInfo_size);
                     tv_imgInfo_date.setText(R.string.imgInfo_date);tv_imgInfo_path.setText(R.string.imgInfo_path);
+
                     viewPager.setPagingEnabled(true);
+                    enableDisableView(viewPager, true);
+                    rv_horizontal.setVisibility(View.VISIBLE);
                 }
                 break;
             default: break;
@@ -202,6 +216,16 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
         int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
 
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+    private void enableDisableView(View view, boolean enabled) {
+        view.setEnabled(enabled);
+        if ( view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup)view;
+
+            for ( int idx = 0 ; idx < group.getChildCount() ; idx++ ) {
+                enableDisableView(group.getChildAt(idx), enabled);
+            }
+        }
     }
 
     ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -249,6 +273,10 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
         }
         //Log.i("TOUCHED", "clickListener"+touched);
     }
+    @Override
+    public void enableSwipeViewPager(boolean enabled) {
+        viewPager.setPagingEnabled(enabled);
+    }
 
 //    private void initScrollView() {
 //        for (int i = 0; i < images.size(); i++) {
@@ -267,11 +295,15 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        if (infoFlag) {
+        if (layout_imgInfo.getVisibility() == View.VISIBLE) {
             layout_imgInfo.setVisibility(View.GONE);
             tv_imgInfo_title.setText(R.string.imgInfo_title);tv_imgInfo_size.setText(R.string.imgInfo_size);
             tv_imgInfo_date.setText(R.string.imgInfo_date);tv_imgInfo_path.setText(R.string.imgInfo_path);
+            viewPager.setPagingEnabled(true);
+            enableDisableView(viewPager, true);
+            rv_horizontal.setVisibility(View.VISIBLE);
+        } else {
+            super.onBackPressed();
         }
     }
 }

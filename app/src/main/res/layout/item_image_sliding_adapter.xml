@@ -2,18 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="1dip" >
+    android:padding="1dp" >
 
-    <LinearLayout
+    <com.example.utilities.Gallery.ZoomableImageView
+        android:id="@+id/image_detailView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000">
-        <com.example.utilities.Gallery.ZoomableImageView
-            android:id="@+id/image_detailView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="center">
-        </com.example.utilities.Gallery.ZoomableImageView>
-    </LinearLayout>
+        android:scaleType="center" >
+    </com.example.utilities.Gallery.ZoomableImageView>
 
 </FrameLayout>

@@ -8,4 +8,5 @@ package com.example.utilities.Gallery;
 public interface SynchronizeAdapter {
     void setPagerAdapter(int position); // RecyclerView 에서 호출하며 RecyclerView Item 클릭시 ViewPager 와 동기화됨.
     void setVisibleTools(); // ViewPager 클릭시 상단, 하단 layout 나타남.
+    void enableSwipeViewPager(boolean enabled); // When zoom state disable Swiping ViewPager. 줌 상태일 때 뷰페이저 스와이프 안되도록 설정.
 }
