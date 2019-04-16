@@ -8,32 +8,36 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/btn_length"
-            android:text="@string/btn_length"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_simple" />
+            android:text="@string/btn_length"
+            android:textSize="20sp"
+            android:background="@drawable/bg_button_dark_ripple" />
         <Button
             android:id="@+id/btn_weight"
-            android:text="@string/btn_weight"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_simple" />
+            android:text="@string/btn_weight"
+            android:textSize="20sp"
+            android:background="@drawable/bg_button_ripple" />
         <Button
             android:id="@+id/btn_area"
-            android:text="@string/btn_area"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_simple" />
+            android:text="@string/btn_area"
+            android:textSize="20sp"
+            android:background="@drawable/bg_button_ripple" />
     </LinearLayout>
 
 

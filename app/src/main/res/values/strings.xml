@@ -31,9 +31,9 @@
     <!-- Unit Converter -->
     <string name="app_name">Utilities</string>
     <string name="title_activity_maps">Map</string>
-    <string name="btn_length">길이(LENGTH)</string>
-    <string name="btn_weight">무게(WEIGHT)</string>
-    <string name="btn_area">넓이(AREA)</string>
+    <string name="btn_length">길이\n(LENGTH)</string>
+    <string name="btn_weight">무게\n(WEIGHT)</string>
+    <string name="btn_area">넓이\n(AREA)</string>
     <string name="input_number">input number</string>
 
     <!-- Gallery -->

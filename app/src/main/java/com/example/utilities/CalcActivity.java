@@ -14,7 +14,7 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
 
     boolean sign_toggle = false; // 기호가 눌렸는지 안눌렸는지 체크하는 토글
 
-    ArrayList<String> list = new ArrayList<String>();
+    ArrayList<String> list = new ArrayList<>();
 
 
     @Override

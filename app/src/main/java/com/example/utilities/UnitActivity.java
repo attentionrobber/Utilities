@@ -1,8 +1,6 @@
 package com.example.utilities;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -34,14 +32,14 @@ public class UnitActivity extends AppCompatActivity {
     String spinner_area[] = {"제곱미터(m^2)", "제곱키로미터(km^2)", "제곱피트(ft^2)", "제곱야드(yd^2)", "아르(a)", "헥타르(ha)", "에이커(ac)", "평"};
     String spinner_weight[] = {"밀리그램(mg)", "그램(g)", "킬로그램(kg)", "톤(t)", "킬로톤(kt)", "파운드(lb)", "그레인(gr)", "온스(oz)"};
 
-    double output_mm, output_cm, output_m, output_km, output_inch, output_ft, output_yd, output_mile;
-    double output_mg, output_g, output_kg, output_ton, output_kt, output_lb, output_gr, output_oz;
-    double output_m2, output_km2, output_ft2, output_yd2, output_a, output_ha, output_ac, output_pyeong;
+    private double output_mm, output_cm, output_m, output_km, output_inch, output_ft, output_yd, output_mile;
+    private double output_mg, output_g, output_kg, output_ton, output_kt, output_lb, output_gr, output_oz;
+    private double output_m2, output_km2, output_ft2, output_yd2, output_a, output_ha, output_ac, output_pyeong;
 
-    final String LENGTH = "LENGTH";
-    final String WEIGHT = "WEIGHT";
-    final String AREA = "AREA";
-    String unitFlag = "LENGTH"; // 어떤 종류의 단위를 선택했는지 나타내는 상태 변수
+    private final String LENGTH = "LENGTH";
+    private final String WEIGHT = "WEIGHT";
+    private final String AREA = "AREA";
+    private String unitFlag = "LENGTH"; // 어떤 종류의 단위를 선택했는지 나타내는 상태 변수
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,18 +145,27 @@ public class UnitActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch(v.getId()) {
                 case R.id.btn_length:
+                    btn_length.setBackgroundResource(R.drawable.bg_button_dark_ripple);
+                    btn_weight.setBackgroundResource(R.drawable.bg_button_ripple);
+                    btn_area.setBackgroundResource(R.drawable.bg_button_ripple);
                     layout_length.setVisibility(View.VISIBLE);
                     layout_area.setVisibility(View.GONE);
                     layout_weight.setVisibility(View.GONE);
                     unitFlag = LENGTH;
                     break;
                 case R.id.btn_weight:
+                    btn_length.setBackgroundResource(R.drawable.bg_button_ripple);
+                    btn_weight.setBackgroundResource(R.drawable.bg_button_dark_ripple);
+                    btn_area.setBackgroundResource(R.drawable.bg_button_ripple);
                     layout_length.setVisibility(View.GONE);
                     layout_area.setVisibility(View.GONE);
                     layout_weight.setVisibility(View.VISIBLE);
                     unitFlag = WEIGHT;
                     break;
                 case R.id.btn_area:
+                    btn_length.setBackgroundResource(R.drawable.bg_button_ripple);
+                    btn_weight.setBackgroundResource(R.drawable.bg_button_ripple);
+                    btn_area.setBackgroundResource(R.drawable.bg_button_dark_ripple);
                     layout_length.setVisibility(View.GONE);
                     layout_area.setVisibility(View.VISIBLE);
                     layout_weight.setVisibility(View.GONE);
@@ -207,7 +214,7 @@ public class UnitActivity extends AppCompatActivity {
     }; // textWatcher
 
     /**
-     *  앞쪽에 있는 Spinner를 선택했을 때(바뀔 때)의 Listener
+     *  앞쪽에 있는 Spinner 를 선택했을 때(바뀔 때)의 Listener
      */
     AdapterView.OnItemSelectedListener itemSelectedListener;
     {
@@ -235,7 +242,7 @@ public class UnitActivity extends AppCompatActivity {
     } // itemSelectedListener
 
     /**
-     * 뒷쪽에 있는 Spinner를 선택했을 때(바뀔 때)의 Listener
+     * 뒷쪽에 있는 Spinner 를 선택했을 때(바뀔 때)의 Listener
      */
     AdapterView.OnItemSelectedListener toItemSelectedListener;
     {
