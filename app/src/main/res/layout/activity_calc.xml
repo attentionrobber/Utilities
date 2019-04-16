@@ -8,6 +8,22 @@
     android:orientation="vertical"
     tools:context=".CalcActivity">
 
+    <EditText
+        android:id="@+id/tv_preview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="15"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:background="@drawable/bg_simple"
+        android:gravity="center|end"
+        android:textSize="45sp"
+        android:textCursorDrawable="@null"
+        android:cursorVisible="true"
+        android:inputType="number"
+        android:hint="@string/input_number"
+        android:clickable="false"/>
+    <!--
     <TextView
         android:id="@+id/tv_preview"
         android:layout_width="match_parent"
@@ -17,20 +33,19 @@
         android:paddingLeft="5dp"
         android:background="@drawable/bg_simple"
         android:gravity="right"
-        android:textSize="40sp" />
+        android:textSize="40sp"/> -->
 
     <TextView
         android:id="@+id/tv_result"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="25"
-        android:paddingRight="5dp"
-        android:paddingLeft="5dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
         android:background="@drawable/bg_simple"
-        android:gravity="right"
-        android:text="0"
+        android:gravity="end"
+        android:text="@string/btn_0"
         android:textColor="#000000"
-        android:textScaleX="1"
         android:textSize="60sp" />
 
     <TableLayout

@@ -52,9 +52,9 @@ public class UnitActivity extends AppCompatActivity {
     }
 
     private void setWidget() {
-        btn_length = findViewById(R.id.btn_length);
-        btn_area = findViewById(R.id.btn_area);
-        btn_weight = findViewById(R.id.btn_weight);
+        findViewById(R.id.btn_length).setOnClickListener(clickListener);
+        findViewById(R.id.btn_area).setOnClickListener(clickListener);
+        findViewById(R.id.btn_weight).setOnClickListener(clickListener);
 
         editText_length = findViewById(R.id.editText_length);
         editText_area = findViewById(R.id.editText_area);
@@ -124,10 +124,6 @@ public class UnitActivity extends AppCompatActivity {
     } // setWidget();
 
     private void setListener() {
-        btn_length.setOnClickListener(clickListener);
-        btn_area.setOnClickListener(clickListener);
-        btn_weight.setOnClickListener(clickListener);
-
         editText_area.addTextChangedListener(textWatcher);
         editText_length.addTextChangedListener(textWatcher);
         editText_weight.addTextChangedListener(textWatcher);
@@ -145,7 +141,7 @@ public class UnitActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch(v.getId()) {
                 case R.id.btn_length:
-                    btn_length.setBackgroundResource(R.drawable.bg_button_dark_ripple);
+                    btn_length.setBackgroundResource(R.drawable.bg_button_dark_ripple); // 현재 선택한 단위종류 표시
                     btn_weight.setBackgroundResource(R.drawable.bg_button_ripple);
                     btn_area.setBackgroundResource(R.drawable.bg_button_ripple);
                     layout_length.setVisibility(View.VISIBLE);
@@ -158,8 +154,8 @@ public class UnitActivity extends AppCompatActivity {
                     btn_weight.setBackgroundResource(R.drawable.bg_button_dark_ripple);
                     btn_area.setBackgroundResource(R.drawable.bg_button_ripple);
                     layout_length.setVisibility(View.GONE);
-                    layout_area.setVisibility(View.GONE);
                     layout_weight.setVisibility(View.VISIBLE);
+                    layout_area.setVisibility(View.GONE);
                     unitFlag = WEIGHT;
                     break;
                 case R.id.btn_area:
@@ -167,8 +163,8 @@ public class UnitActivity extends AppCompatActivity {
                     btn_weight.setBackgroundResource(R.drawable.bg_button_ripple);
                     btn_area.setBackgroundResource(R.drawable.bg_button_dark_ripple);
                     layout_length.setVisibility(View.GONE);
-                    layout_area.setVisibility(View.VISIBLE);
                     layout_weight.setVisibility(View.GONE);
+                    layout_area.setVisibility(View.VISIBLE);
                     unitFlag = AREA;
                     break;
             }

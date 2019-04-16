@@ -2,19 +2,25 @@ package com.example.utilities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class CalcActivity extends AppCompatActivity implements View.OnClickListener {
 
-    TextView tv_preview, tv_result;
+    EditText tv_preview;
+    TextView tv_result;
 
     boolean sign_toggle = false; // 기호가 눌렸는지 안눌렸는지 체크하는 토글
+    boolean back_toggle = false; // 백스페이스가 눌렸는지 체크하는 토글
 
-    ArrayList<String> list = new ArrayList<>();
+    ArrayList<String> list = new ArrayList<>(); // 수식(숫자, 기호)을 담는 List
 
 
     @Override
@@ -26,6 +32,9 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setWidget() {
+        tv_preview = findViewById(R.id.tv_preview);
+        tv_result = findViewById(R.id.tv_result);
+
         findViewById(R.id.btn_0).setOnClickListener(this);
         findViewById(R.id.btn_1).setOnClickListener(this);
         findViewById(R.id.btn_2).setOnClickListener(this);
@@ -44,56 +53,45 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_result).setOnClickListener(this);
         findViewById(R.id.btn_dot).setOnClickListener(this);
         findViewById(R.id.btn_back).setOnClickListener(this);
-
-        tv_preview = findViewById(R.id.tv_preview);
-        tv_result = findViewById(R.id.tv_result);
     }
 
     @Override
     public void onClick(View v) {
         // 안드로이드 메이저 컴포넌트(액티비티, 서비스, 컨텐트 프로바이더, 브로드캐스트 리시버)를 로드하기 위해서는
         // intent 를 통해서 로드할 컴포넌트를 지정해야한다.
+        String preview = tv_preview.getText().toString();
+        String result;
         switch (v.getId()) {
-            case R.id.btn_0:
-                addEquation("0"); break;
-            case R.id.btn_1:
-                addEquation("1"); break;
-            case R.id.btn_2:
-                addEquation("2"); break;
-            case R.id.btn_3:
-                addEquation("3"); break;
-            case R.id.btn_4:
-                addEquation("4"); break;
-            case R.id.btn_5:
-                addEquation("5"); break;
-            case R.id.btn_6:
-                addEquation("6"); break;
-            case R.id.btn_7:
-                addEquation("7"); break;
-            case R.id.btn_8:
-                addEquation("8"); break;
-            case R.id.btn_9:
-                addEquation("9"); break;
+            case R.id.btn_0: addEquation("0"); break;
+            case R.id.btn_1: addEquation("1"); break;
+            case R.id.btn_2: addEquation("2"); break;
+            case R.id.btn_3: addEquation("3"); break;
+            case R.id.btn_4: addEquation("4"); break;
+            case R.id.btn_5: addEquation("5"); break;
+            case R.id.btn_6: addEquation("6"); break;
+            case R.id.btn_7: addEquation("7"); break;
+            case R.id.btn_8: addEquation("8"); break;
+            case R.id.btn_9: addEquation("9"); break;
             case R.id.btn_plus:
-                if (lastStrIsNum(tv_preview.getText().toString())) {
+                if (lastStrIsNum(preview)) {
                     addEquation("+");
                     sign_toggle = true;
                 }
                 break;
             case R.id.btn_minus:
-                if (lastStrIsNum(tv_preview.getText().toString())) {
+                if (lastStrIsNum(preview)) {
                     addEquation("-");
                     sign_toggle = true;
                 }
                 break;
             case R.id.btn_multiply:
-                if (lastStrIsNum(tv_preview.getText().toString())) {
+                if (lastStrIsNum(preview)) {
                     addEquation("*");
                     sign_toggle = true;
                 }
                 break;
             case R.id.btn_divide:
-                if (lastStrIsNum(tv_preview.getText().toString())) {
+                if (lastStrIsNum(preview)) {
                     addEquation("/");
                     sign_toggle = true;
                 }
@@ -101,36 +99,31 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_C:
                 tv_preview.setText(" ");
                 tv_result.setText("0");
-                list.clear(); // list.clear()가 처음상태일때 실행되면 앱 다운. -> 초기화를 null에서 new ArrayList<>()로 바꿈으로써 해결
+                list.clear(); // list.clear()가 처음상태일때 실행되면 앱 다운. -> 초기화를 null 에서 new ArrayList<>()로 바꿈으로써 해결
                 break;
             case R.id.btn_result:
-                if ((tv_result.getText().toString().equals(""))) { // 결과창에 값이 없을 경우엔 prev창에 있는 수식의 결과를 뿌린다.
-                    //Toast.makeText(this, "if", Toast.LENGTH_SHORT).show();
-                    showResult(calculate(tv_preview.getText().toString()));
-                } else if (!(tv_result.getText().toString().equals(""))) { // 결과창에 값이 있을 경우엔
-                    //Toast.makeText(this, "else if", Toast.LENGTH_SHORT).show();
-                    //tv_result.getText().toString() // TODO 결과창의 결과를 다시 연산하기 85+6 = 계산 후 *2를 하면 97이 아닌 182가 나오도록
-                    showResult(calculate(tv_preview.getText().toString())); // 결과값과 다시 연산한다.
-                } else {
-                    //Toast.makeText(, "", Toast.LENGTH_SHORT).show();
-                }
+                if (preview.endsWith("+") || preview.endsWith("-") || preview.endsWith("*") || preview.endsWith("/")) // 마지막 문자가 기호인 경우
+                    preview = preview.substring(0, preview.length()-1); // 마지막 문자를 지운다.
+
+                showResult(calculate(preview));
                 break;
             case R.id.btn_dot:
-                if (lastStrIsNum(tv_preview.getText().toString())) { // 수식의 마지막 글자가 숫자일 경우
-                    if (isDotExist(tv_preview.getText().toString()) == false) { // 수식에서 현재 입력중인 숫자에 .(dot)이 없을 경우
+                if (preview.equals("")) {
+                    addEquation("0");
+                    addEquation(".");
+                }
+                if (lastStrIsNum(preview)) { // 수식의 마지막 글자가 숫자일 경우
+                    if ( !isDotExist(preview) ) // 수식에서 현재 입력중인 숫자에 .(dot)이 없을 경우
                         addEquation(".");
-                    }
                 }
                 break;
-            case R.id.btn_back:
-                String str_back = tv_preview.getText().toString();
-                String str_del = "";
-                if ((str_back.length() == 1) || (str_back.length() == 0)) { // tv_preview가 1글자 또는 0글자일 경우
+            case R.id.btn_back: // TODO: 계산후 결과값이 출력된 상태로 백스페이스로 preview 수식 삭제하다가 숫자 입력시 버그
+                back_toggle = true;
+                if ((preview.length() == 1) || (preview.length() == 0)) // tv_preview 가 1글자 또는 0글자일 경우
                     prev_setText(" ");
-                } else {
-                    str_del = str_back.substring(0, str_back.length() - 1);
-                    prev_setText(str_del);
-                }
+                else
+                    prev_setText( preview.substring(0, preview.length()-1) );// substring 으로 마지막 문자를 지운다.
+                tv_preview.setSelection(tv_preview.length()); // EditText 의 Cursor 를 맨뒤로 보낸다.
                 break;
             default : break;
         }
@@ -147,11 +140,11 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
         //String str_split2[] = str.split("\\d"); // 기호 찾기
         String split[] = str.split("(?<=[*/+-])|(?=[*/+-])"); // 기호( +, -, *, / ) 를 구분하는 정규표현식
 
-        list = new ArrayList<String>(); // 숫자, 기호로 나누어 담을 ArrayList 생성.
+        list = new ArrayList<>(); // 숫자, 기호로 나누어 담을 ArrayList 생성.
 
-        int i = 0;
+        int i;
         for(i = 0; i < split.length; i++) {
-            list.add(i, split[i]);  // 수식을 숫자부분과 기호부분으로 나누어 ArrayList에 담는다.
+            list.add(i, split[i]);  // 수식을 숫자부분과 기호부분으로 나누어 ArrayList 에 담는다.
         }
 
         // 수식의 마지막 글자가 기호일 경우 그 기호를 삭제해준다.
@@ -198,7 +191,7 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
                 i = 0;
             }
             if (list.get(i).equals("-")) {
-                pre = Double.parseDouble(list.get(i - 1));
+                pre = Double.parseDouble(list.get(i - 1)); // TODO: -33+33 = error 앞자리가 음수면 계산 불가능한 오류
                 suf = Double.parseDouble(list.get(i + 1));
                 result = pre - suf;
 
@@ -217,27 +210,56 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
      * @param str
      */
     public void showResult(String str) {
-        tv_result.setText(str);
+        double num = Double.parseDouble(str);
+        String result = new DecimalFormat("###,###.#########").format(num);
+
+        tv_result.setText(result);
     }
 
     /**
-     * preview텍스트뷰에 수식(숫자와 기호)을 적을 수 있게 해준다.
+     * preview 텍스트뷰에 수식(숫자와 기호)을 적을 수 있게 해준다.
      * @param str
      */
     public void addEquation(String str) {
-        prev_setText(tv_preview.getText() + str);
+        String preview = tv_preview.getText().toString();
+        String result = tv_result.getText().toString();
+
+        /**
+         * 결과값이 없으면 preview 창에 수식, 숫자 계속 추가
+         * 결과값이 있으면서 누른 버튼이 기호일 때 result 가 preview 로
+         * 결과값이 있으면서 누른 버튼이 숫자일 때 preview 는 reset 된다.
+         */
+        if ( !result.equals("0")) {
+            if (str.equals("+") || str.equals("-") || str.equals("*") || str.equals("/") || back_toggle) { // 결과값이 있으면서 누른 버튼이 기호, 백스페이스일 때
+                result = result.replace(",", ""); // 결과값의 쉼표를 없애준다.
+                prev_setText(result.concat(str)); // 결과 값에 누른 버튼을 추가
+                tv_result.setText("0");
+                back_toggle = false;
+            }
+            else { // 결과 값이 있으면서 누른 버튼이 숫자일 때
+                prev_setText(str);
+                tv_result.setText("0");
+                Log.i("TESTT", str); //TODO: 계산 결과값 나온 후 .(dot) 누르면 0. 이 나오도록 변경
+            }
+        } else
+            prev_setText(preview.concat(str)); // 결과값이 없는 경우 preview 에 누른 버튼값을 추가
+
+        tv_preview.setSelection(tv_preview.length()); // EditText 의 Cursor 를 맨뒤로 보낸다.
     }
 
     /**
-     * preview텍스트뷰에 한 글자씩 입력할 수 있는 함수.
+     * preview 텍스트뷰에 한 글자씩 입력하는 함수.
      * @param str
      */
     public void prev_setText(String str) {
+        if (str.equals("."))
+            tv_preview.setText("0.");
         tv_preview.setText(str);
+        tv_preview.setSelection(tv_preview.length());
     }
 
     /**
-     * tv_preview에서 수식을 넘겨받아
+     * tv_preview 에서 수식을 넘겨받아
      * 맨 끝자리 문자가 숫자인지 아닌지 검사한다. -> 숫자에만 .(dot)을 쓸 수 있도록 함.
      * @param str
      * @return
