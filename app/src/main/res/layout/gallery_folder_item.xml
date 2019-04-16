@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:background="@drawable/button"
+        android:background="@drawable/bg_simple"
         android:padding="1dp"
         android:layout_margin="3dp">
         <ImageView

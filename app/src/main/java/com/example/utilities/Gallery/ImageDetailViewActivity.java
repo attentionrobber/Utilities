@@ -64,7 +64,7 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
     LinearLayout layout_bot_tools, layout_imgInfo;
     TextView tv_imgInfo_title,tv_imgInfo_size, tv_imgInfo_date, tv_imgInfo_path;
     ImageButton btn_img_delete, btn_img_info, btn_imgInfo_close;
-    private boolean singleTouched = false; // Check the Tools display or hide
+    private boolean toolsFlag = true; // Check the Tools display or hide
     private boolean infoFlag = false; // Check the Image Info display or hide
 
 
@@ -276,14 +276,14 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
     }
     @Override
     public void setVisibleTools() {
-        if (!singleTouched) {
-            layout_top_tools.setVisibility(View.VISIBLE);
-            layout_bot_tools.setVisibility(View.VISIBLE);
-            singleTouched = true;
-        } else {
+        if (toolsFlag) {
             layout_top_tools.setVisibility(View.GONE);
             layout_bot_tools.setVisibility(View.GONE);
-            singleTouched = false;
+            toolsFlag = false;
+        } else {
+            layout_top_tools.setVisibility(View.VISIBLE);
+            layout_bot_tools.setVisibility(View.VISIBLE);
+            toolsFlag = true;
         }
     }
     @Override

@@ -1,4 +1,6 @@
 <resources>
+    <!-- Main -->
+    <string name="main_title">UTILITIES</string>
     <string name="calc">계산기\nCALCULATOR</string>
     <string name="memo">메모\nMEMO</string>
     <string name="unit">단위 환산\nUNIT CONVERTER</string>
@@ -6,7 +8,27 @@
     <string name="search">검색\nSEARCH</string>
     <string name="gallery">사진\nGALLERY</string>
 
+    <!-- Calculator -->
+    <string name="btn_C">Ｃ</string>
+    <string name="btn_back">←</string>
+    <string name="btn_plus">＋</string>
+    <string name="btn_7">７</string>
+    <string name="btn_8">８</string>
+    <string name="btn_9">９</string>
+    <string name="btn_minus">－</string>
+    <string name="btn_4">４</string>
+    <string name="btn_5">５</string>
+    <string name="btn_6">６</string>
+    <string name="btn_multiply">×</string>
+    <string name="btn_1">１</string>
+    <string name="btn_2">２</string>
+    <string name="btn_3">３</string>
+    <string name="btn_divide">÷</string>
+    <string name="btn_0">０</string>
+    <string name="btn_dot">．</string>
+    <string name="btn_result">＝</string>
 
+    <!-- Unit Converter -->
     <string name="app_name">Utilities</string>
     <string name="title_activity_maps">Map</string>
     <string name="btn_length">길이(LENGTH)</string>
@@ -14,7 +36,8 @@
     <string name="btn_area">넓이(AREA)</string>
     <string name="input_number">input number</string>
 
-
+    <!-- Gallery -->
+    <string name="gallery_title">GALLERY</string>
     <string name="imgInfo">상세 정보</string>
     <string name="imgInfo_title">제목：</string>
     <string name="imgInfo_size">크기：</string>

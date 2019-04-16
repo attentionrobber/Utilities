@@ -10,8 +10,6 @@ import java.util.ArrayList;
 
 public class CalcActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9;
-    Button btnC, btn_plus, btn_minus, btn_multiply, btn_divide, btn_result, btn_dot, btn_back;
     TextView tv_preview, tv_result;
 
     boolean sign_toggle = false; // 기호가 눌렸는지 안눌렸는지 체크하는 토글
@@ -25,87 +23,57 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_calc);
 
         setWidget();
-        setListener();
     }
 
     private void setWidget() {
-        btn0 = findViewById(R.id.btn_0);
-        btn1 = findViewById(R.id.btn_1);
-        btn2 = findViewById(R.id.btn_2);
-        btn3 = findViewById(R.id.btn_3);
-        btn4 = findViewById(R.id.btn_4);
-        btn5 = findViewById(R.id.btn_5);
-        btn6 = findViewById(R.id.btn_6);
-        btn7 = findViewById(R.id.btn_7);
-        btn8 = findViewById(R.id.btn_8);
-        btn9 = findViewById(R.id.btn_9);
-        btnC = findViewById(R.id.btn_C);
-        btn_plus = findViewById(R.id.btn_plus);
-        btn_minus = findViewById(R.id.btn_minus);
-        btn_multiply = findViewById(R.id.btn_multiply);
-        btn_divide = findViewById(R.id.btn_divide);
-        btn_result = findViewById(R.id.btn_result);
-        btn_dot = findViewById(R.id.btn_dot);
-        btn_back = findViewById(R.id.btn_back);
+        findViewById(R.id.btn_0).setOnClickListener(this);
+        findViewById(R.id.btn_1).setOnClickListener(this);
+        findViewById(R.id.btn_2).setOnClickListener(this);
+        findViewById(R.id.btn_3).setOnClickListener(this);
+        findViewById(R.id.btn_4).setOnClickListener(this);
+        findViewById(R.id.btn_5).setOnClickListener(this);
+        findViewById(R.id.btn_6).setOnClickListener(this);
+        findViewById(R.id.btn_7).setOnClickListener(this);
+        findViewById(R.id.btn_8).setOnClickListener(this);
+        findViewById(R.id.btn_9).setOnClickListener(this);
+        findViewById(R.id.btn_C).setOnClickListener(this);
+        findViewById(R.id.btn_plus).setOnClickListener(this);
+        findViewById(R.id.btn_minus).setOnClickListener(this);
+        findViewById(R.id.btn_multiply).setOnClickListener(this);
+        findViewById(R.id.btn_divide).setOnClickListener(this);
+        findViewById(R.id.btn_result).setOnClickListener(this);
+        findViewById(R.id.btn_dot).setOnClickListener(this);
+        findViewById(R.id.btn_back).setOnClickListener(this);
+
         tv_preview = findViewById(R.id.tv_preview);
         tv_result = findViewById(R.id.tv_result);
-    }
-    private void setListener() {
-        btn0.setOnClickListener(this);
-        btn1.setOnClickListener(this);
-        btn2.setOnClickListener(this);
-        btn3.setOnClickListener(this);
-        btn4.setOnClickListener(this);
-        btn5.setOnClickListener(this);
-        btn6.setOnClickListener(this);
-        btn7.setOnClickListener(this);
-        btn8.setOnClickListener(this);
-        btn9.setOnClickListener(this);
-        btnC.setOnClickListener(this);
-        btn_plus.setOnClickListener(this);
-        btn_minus.setOnClickListener(this);
-        btn_multiply.setOnClickListener(this);
-        btn_divide.setOnClickListener(this);
-        btn_result.setOnClickListener(this);
-        btn_dot.setOnClickListener(this);
-        btn_back.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         // 안드로이드 메이저 컴포넌트(액티비티, 서비스, 컨텐트 프로바이더, 브로드캐스트 리시버)를 로드하기 위해서는
-        // intent를 통해서 로드할 컴포넌트를 지정해야한다.
+        // intent 를 통해서 로드할 컴포넌트를 지정해야한다.
         switch (v.getId()) {
             case R.id.btn_0:
-                addEquation("0");
-                break;
+                addEquation("0"); break;
             case R.id.btn_1:
-                addEquation("1");
-                break;
+                addEquation("1"); break;
             case R.id.btn_2:
-                addEquation("2");
-                break;
+                addEquation("2"); break;
             case R.id.btn_3:
-                addEquation("3");
-                break;
+                addEquation("3"); break;
             case R.id.btn_4:
-                addEquation("4");
-                break;
+                addEquation("4"); break;
             case R.id.btn_5:
-                addEquation("5");
-                break;
+                addEquation("5"); break;
             case R.id.btn_6:
-                addEquation("6");
-                break;
+                addEquation("6"); break;
             case R.id.btn_7:
-                addEquation("7");
-                break;
+                addEquation("7"); break;
             case R.id.btn_8:
-                addEquation("8");
-                break;
+                addEquation("8"); break;
             case R.id.btn_9:
-                addEquation("9");
-                break;
+                addEquation("9"); break;
             case R.id.btn_plus:
                 if (lastStrIsNum(tv_preview.getText().toString())) {
                     addEquation("+");
@@ -293,9 +261,9 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
 
         String split[] = str.split("(?<=[*/+-])|(?=[*/+-])");
 
-        if(split[split.length-1].contains(".")) {
+        if(split[split.length-1].contains("."))
             return true;
-        }
+
         return false;
     }
 

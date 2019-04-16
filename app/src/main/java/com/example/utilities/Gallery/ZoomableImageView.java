@@ -33,7 +33,7 @@ public class ZoomableImageView extends AppCompatImageView implements GestureDete
     PointF last = new PointF();
     PointF start = new PointF();
     float minScale = 1f;
-    float maxScale = 3f;
+    float maxScale = 5f;
     float[] m;
 
     int viewWidth, viewHeight;
@@ -95,8 +95,8 @@ public class ZoomableImageView extends AppCompatImageView implements GestureDete
                         float fixTransX = getFixDragTrans(deltaX, viewWidth, origWidth * saveScale);
                         float fixTransY = getFixDragTrans(deltaY, viewHeight, origHeight * saveScale);
 
-                        syncAdapter.enableSwipeViewPager(false);
-                        if (saveScale == 1) syncAdapter.enableSwipeViewPager(true); // 원본 크기 일 경우에만 Swipe 가능하도록 설정.
+                        syncAdapter.enableSwipeViewPager(false); // I Added it.
+                        if (saveScale == 1) syncAdapter.enableSwipeViewPager(true); // Added. 원본 크기 일 경우에만 Swipe 가능하도록 설정.
 
                         matrix.postTranslate(fixTransX, fixTransY);
                         fixTrans();

@@ -11,8 +11,6 @@ import com.example.utilities.Memo.MemoActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    //private final int REQ_PLACEPICKER = 98; // PlacePicker(장소 선택) 요청 코드
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,36 +30,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * click listener 를 함수 형태로 만듬
-     * View.OnClickListener buttonClicklistener = v -> {}
-     * 위와 같은 기능을 하는 함수
+     * ClickListener 를 함수 형태로 만듬
+     * View.OnClickListener buttonClickListener = v -> {}
      */
     private void buttonClickListener(View v) {
         Intent intent;
         switch (v.getId()) {
             case R.id.button_calc:
-                intent = new Intent(MainActivity.this, CalcActivity.class);
+                intent = new Intent(this, CalcActivity.class);
                 startActivity(intent);
                 break;
             case R.id.button_memo:
-                intent = new Intent(MainActivity.this, MemoActivity.class);
+                intent = new Intent(this, MemoActivity.class);
                 startActivity(intent);
                 break;
             case R.id.button_unit:
-                intent = new Intent(MainActivity.this, UnitActivity.class);
+                intent = new Intent(this, UnitActivity.class);
                 startActivity(intent);
                 break;
             case R.id.button_maps:
-                intent = new Intent(MainActivity.this, MapsActivity.class);
+                intent = new Intent(this, MapsActivity.class);
                 startActivity(intent);
-//                searchByPlacePicker();
+                //searchByPlacePicker(); // Deprecated by Google API(Place API)
                 break;
             case R.id.button_search:
-                intent = new Intent(MainActivity.this, SearchActivity.class);
+                intent = new Intent(this, SearchActivity.class);
                 startActivity(intent);
                 break;
             case R.id.button_gallery:
-                intent = new Intent(MainActivity.this, GalleryActivity.class);
+                intent = new Intent(this, GalleryActivity.class);
                 startActivity(intent);
 //                // 사진 관련 앱(사용할 앱을 선택하세요.) 선택 창 띄우는 방법
 //                final int OPEN_GALLERY = 1;

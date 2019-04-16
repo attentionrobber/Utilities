@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:color="@color/quantum_cyanA400"
+    android:color="#22000000"
     tools:targetApi="lollipop">
     <item android:id="@android:id/mask">
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimaryDark" />
+            <solid android:color="@color/quantum_black_divider" />
         </shape>
     </item>
     <item
         android:id="@android:id/background"
-        android:drawable="#000000" />
+        android:drawable="@drawable/bg_simple" />
 </ripple>

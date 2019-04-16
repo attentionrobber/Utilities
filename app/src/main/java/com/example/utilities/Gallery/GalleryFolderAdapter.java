@@ -67,7 +67,7 @@ public class GalleryFolderAdapter extends BaseAdapter {
 //        }
 //        else {
 //            // If no image is provided, display a folder icon.
-//            imageView.setImageResource(R.drawable.button);
+//            imageView.setImageResource(R.drawable.bg_simple);
 //        }
 
         return view;

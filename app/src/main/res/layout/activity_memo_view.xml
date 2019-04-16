@@ -17,7 +17,7 @@
         android:layout_below="@+id/textView_title"
         android:textSize="18sp"
         android:padding="10dp"
-        android:background="@drawable/button"
+        android:background="@drawable/bg_simple"
         android:layout_margin="5dp"
         android:inputType="text|textMultiLine|textUri"
         android:autoLink="web|map" />
@@ -38,7 +38,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/button"
+        android:background="@drawable/bg_simple"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp" />
 
@@ -51,7 +51,7 @@
         android:layout_below="@+id/btn_modify"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="@drawable/button"
+        android:background="@drawable/bg_simple"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
@@ -65,7 +65,7 @@
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/btn_delete"
         android:layout_toStartOf="@+id/btn_delete"
-        android:background="@drawable/button"
+        android:background="@drawable/bg_simple"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp" />
 

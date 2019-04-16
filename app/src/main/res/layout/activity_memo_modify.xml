@@ -19,14 +19,14 @@
         android:layout_alignBottom="@+id/btn_OK"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:background="@drawable/button"
+        android:background="@drawable/bg_simple"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp" />
     <ImageButton
         android:id="@+id/imgbtn_location"
         android:layout_height="wrap_content"
         app:srcCompat="@android:drawable/ic_menu_mylocation"
-        android:background="@drawable/button"
+        android:background="@drawable/bg_simple"
         android:layout_above="@+id/textView_title"
         android:layout_toRightOf="@+id/imgbtn_addimg"
         android:paddingLeft="5dp"
@@ -44,7 +44,7 @@
         android:layout_below="@+id/imgbtn_addimg"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="@drawable/button"
+        android:background="@drawable/bg_simple"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
@@ -58,7 +58,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/button"
+        android:background="@drawable/bg_simple"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp" />
 
@@ -73,7 +73,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textView_title"
-        android:background="@drawable/button"
+        android:background="@drawable/bg_simple"
         android:layout_margin="5dp" />
 
     <Button
@@ -84,7 +84,7 @@
         android:layout_toLeftOf="@+id/btn_cancle"
         android:layout_toStartOf="@+id/btn_cancle"
         android:layout_alignBottom="@+id/btn_cancle"
-        android:background="@drawable/button"
+        android:background="@drawable/bg_simple"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp" />
 

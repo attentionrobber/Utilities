@@ -12,7 +12,7 @@
         android:background="#000000">
         <TextView
             android:id="@+id/tv_galleryTitle"
-            android:text="GALLERY"
+            android:text="@string/gallery_title"
             android:textColor="#CCCCCC"
             android:textSize="30sp"
             android:layout_width="wrap_content"
@@ -27,9 +27,11 @@
             android:layout_marginRight="5dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/button"
+            android:background="@drawable/bg_simple"
             android:src="@android:drawable/ic_menu_camera"/>
     </RelativeLayout>
+
+    <!-- View that represents BUCKETS -->
     <GridView
         android:visibility="visible"
         android:id="@+id/gridView"
@@ -41,6 +43,7 @@
         android:layout_height="fill_parent">
     </GridView>
 
+    <!-- View that represents IMAGES in bucket -->
     <android.support.v7.widget.RecyclerView
         android:visibility="gone"
         android:id="@+id/rv_gallery"

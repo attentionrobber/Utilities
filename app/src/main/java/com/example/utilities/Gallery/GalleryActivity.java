@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -23,13 +22,9 @@ import com.example.utilities.Util_Class.Logger;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 핸드폰에 있는 모든 이미지를 폴더별로 나타낸다.
@@ -45,14 +40,14 @@ public class GalleryActivity extends AppCompatActivity {
     ImageButton btn_camera;
 
     GridView gridView; // 폴더를 표현하는 뷰
+    GalleryFolderAdapter folderAdapter; // Adapter to apply to buckets. 폴더(버켓)에 적용할 어댑터
     RecyclerView recyclerView; // 폴더에 있는 이미지를 표현하는 뷰
+    GalleryRecyclerViewAdapter imgAdapter; // Adapter to apply to images. 이미지에 적용할 어댑터
 
     List<ImageBucket> buckets = new ArrayList<>(); // Bucket containing folders with images. 사진이 있는 폴더를 담는 버켓
     List<Integer> countOfEachBuckets = new ArrayList<>(); // 각 버켓(폴더) 안의 이미지 갯수
     List<ImageItem> images = new ArrayList<>(); // Images in bucket. bucket 안의 이미지
     String bucketName = ""; // 선택된 버켓(폴더) 이름
-    GalleryFolderAdapter folderAdapter; // Adapter to apply to buckets. 버켓에 적용할 어댑터
-    GalleryRecyclerViewAdapter imgAdapter; // Adapter to apply to images. images 에 적용할 어댑터.
 
 //    Uri fileUri = null; // Image // 사진 촬영 후 임시로 저장할 공간
 //    private final int REQ_PERMISSION = 100; // 권한 요청 코드
@@ -80,7 +75,7 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     private void init() {
-        if (!buckets.isEmpty() && !images.isEmpty() && !countOfEachBuckets.isEmpty()) { // refresh 될 때 초기화
+        if (!buckets.isEmpty() && !images.isEmpty() && !countOfEachBuckets.isEmpty()) { // refresh 될 때 List 초기화
             countOfEachBuckets.clear();
             buckets.clear();
             images.clear();

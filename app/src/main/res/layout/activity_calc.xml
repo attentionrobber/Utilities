@@ -15,9 +15,9 @@
         android:layout_weight="15"
         android:paddingRight="5dp"
         android:paddingLeft="5dp"
-        android:background="@drawable/button"
+        android:background="@drawable/bg_simple"
         android:gravity="right"
-        android:textSize="30sp" />
+        android:textSize="40sp" />
 
     <TextView
         android:id="@+id/tv_result"
@@ -26,12 +26,12 @@
         android:layout_weight="25"
         android:paddingRight="5dp"
         android:paddingLeft="5dp"
-        android:background="@drawable/button"
+        android:background="@drawable/bg_simple"
         android:gravity="right"
         android:text="0"
         android:textColor="#000000"
         android:textScaleX="1"
-        android:textSize="50sp" />
+        android:textSize="60sp" />
 
     <TableLayout
         android:layout_width="match_parent"
@@ -42,70 +42,68 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
-
             <Button
                 android:id="@+id/btn_C"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:background="@drawable/button"
-                android:text="C"
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_C"
+                android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_back"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/button"
-                android:text="←"
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_back"
+                android:textSize="50sp"/>
             <Button
                 android:id="@+id/btn_plus"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/button"
-                android:text="+"
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_plus"
+                android:textSize="50sp" />
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
-
             <Button
                 android:id="@+id/btn_7"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/button"
-                android:text="7"
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_7"
+                android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_8"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/button"
-                android:text="8"
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_8"
+                android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_9"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/button"
-                android:text="9"
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_9"
+                android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_minus"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/button"
-                android:text="-"
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_minus"
+                android:textSize="50sp" />
         </TableRow>
 
         <TableRow
@@ -117,33 +115,33 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/button"
-                android:text="4"
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_4"
+                android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_5"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/button"
-                android:text="5"
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_5"
+                android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_6"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/button"
-                android:text="6"
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_6"
+                android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_multiply"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/button"
-                android:text="×"
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_multiply"
+                android:textSize="50sp" />
         </TableRow>
 
         <TableRow
@@ -155,33 +153,33 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/button"
-                android:text="1"
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_1"
+                android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/button"
-                android:text="2"
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_2"
+                android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/button"
-                android:text="3"
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_3"
+                android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_divide"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/button"
-                android:text="÷"
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_divide"
+                android:textSize="50sp" />
         </TableRow>
 
         <TableRow
@@ -193,25 +191,25 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:background="@drawable/button"
-                android:text="0"
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_0"
+                android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_dot"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/button"
-                android:text="."
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_dot"
+                android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_result"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/button"
-                android:text="="
-                android:textSize="40sp" />
+                android:background="@drawable/bg_button_ripple"
+                android:text="@string/btn_result"
+                android:textSize="50sp" />
         </TableRow>
     </TableLayout>
 
