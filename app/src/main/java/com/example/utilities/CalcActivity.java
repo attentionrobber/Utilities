@@ -134,7 +134,6 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
                   두번째부턴 일반적인 백스페이스 동작
                  */
                 if (!result.equals("0") && !back_toggle) { // 결과값이 있을 때
-                    Log.i("TESTT", "backspace "+back_toggle+" "+preview);
                     result = result.replace(",", ""); // 결과값의 쉼표를 없애준다.
                     prev_setText(result); // 결과값이 프리뷰로 간다.
                     tv_result.setText("0"); // 결과값은 초기화
@@ -159,7 +158,7 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
      * @param str
      * @return
      */
-    public String calculate(String str) { // TODO: -33+33 = error 앞자리가 음수면 계산 불가능한 오류
+    public String calculate(String str) {
         //String str_split1[] = str.split("\\W"); // 숫자 찾기
         //String str_split2[] = str.split("\\d"); // 기호 찾기
         //String split[] = str.split("(?<=[*/+-])|(?=[*/+-])"); // 기호( +, -, *, / ) 를 구분하는 정규표현식
@@ -177,6 +176,7 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
         if( list.get(list.size()-1).equals(PLUS) || list.get(list.size()-1).equals(MINUS) || list.get(list.size()-1).equals(MULTIPLY) || list.get(list.size()-1).equals(DIVIDE) ) {
             list.remove(list.size()-1);
         }
+
         // 수식의 첫 숫자가 음수일 경우( ex) -23 + 30 = )
         boolean isMinus = false; // 첫 숫자가 음수인지 아닌지 체크하는 변수
         if (list.get(0).equals(MINUS)) {
@@ -184,7 +184,6 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
             isMinus = true;
             //Log.i("TESTS", "in MINUS");
         }
-
 
         double pre, suf; // 수식의 앞숫자(pre)와 뒤숫자(suf)
         double result; // 수식의 결과
@@ -249,7 +248,7 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-        return list.get(0); // 결과 리턴
+        return list.get(0); // 기호의 앞자리수와 뒷자리수를 계산 후 계산값으로 바꾸기를 반복한 결과를 리턴
     }
 
     /**

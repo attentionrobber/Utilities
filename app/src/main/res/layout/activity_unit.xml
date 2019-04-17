@@ -362,10 +362,12 @@
                 android:layout_width="0dp"
                 android:layout_weight="8"
                 android:layout_margin="5dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
                 android:background="@drawable/bg_simple"
+                android:gravity="center|end"
                 android:text="0"
                 android:textColor="@color/quantum_orange700"
-                android:gravity="center|end"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
         </LinearLayout>
         <TableLayout
@@ -604,10 +606,12 @@
                 android:layout_width="0dp"
                 android:layout_weight="8"
                 android:layout_margin="5dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
                 android:background="@drawable/bg_simple"
+                android:gravity="center|end"
                 android:text="0"
                 android:textColor="@color/quantum_orange700"
-                android:gravity="center|end"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
         </LinearLayout>
 

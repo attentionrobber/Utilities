@@ -52,9 +52,9 @@ public class UnitActivity extends AppCompatActivity {
     }
 
     private void setWidget() {
-        findViewById(R.id.btn_length).setOnClickListener(clickListener);
-        findViewById(R.id.btn_area).setOnClickListener(clickListener);
-        findViewById(R.id.btn_weight).setOnClickListener(clickListener);
+        btn_length = findViewById(R.id.btn_length);
+        btn_weight = findViewById(R.id.btn_weight);
+        btn_area = findViewById(R.id.btn_area);
 
         editText_length = findViewById(R.id.editText_length);
         editText_area = findViewById(R.id.editText_area);
@@ -124,6 +124,10 @@ public class UnitActivity extends AppCompatActivity {
     } // setWidget();
 
     private void setListener() {
+        btn_length.setOnClickListener(clickListener);
+        btn_weight.setOnClickListener(clickListener);
+        btn_area.setOnClickListener(clickListener);
+
         editText_area.addTextChangedListener(textWatcher);
         editText_length.addTextChangedListener(textWatcher);
         editText_weight.addTextChangedListener(textWatcher);
