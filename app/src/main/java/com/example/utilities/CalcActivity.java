@@ -119,13 +119,13 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.btn_C:
-                tv_preview.setText(" ");
+                tv_preview.setText("");
                 tv_result.setText("0");
                 list.clear(); // list.clear()가 처음상태일때 실행되면 앱 다운. -> 초기화를 null 에서 new ArrayList<>()로 바꿈으로써 해결
                 break;
             case R.id.btn_back:
                 if ((preview.length() == 1) || (preview.length() == 0)) // tv_preview 가 1글자 또는 0글자일 경우
-                    prev_setText(" ");
+                    prev_setText("");
                 else
                     prev_setText( preview.substring(0, preview.length()-1) );// substring 으로 마지막 문자를 지운다.
 
@@ -133,12 +133,12 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
                   결과값이 있을 때 백스페이스 한번 누르면 결과값이 프리뷰로 가고
                   두번째부턴 일반적인 백스페이스 동작
                  */
-                if (!preview.equals("0") && !back_toggle) { // 결과값이 있을 때
+                if (!result.equals("0") && !back_toggle) { // 결과값이 있을 때
+                    Log.i("TESTT", "backspace "+back_toggle+" "+preview);
                     result = result.replace(",", ""); // 결과값의 쉼표를 없애준다.
                     prev_setText(result); // 결과값이 프리뷰로 간다.
                     tv_result.setText("0"); // 결과값은 초기화
                     back_toggle = true;
-                    Log.i("TESTT", "backspace");
                 }
 
                 tv_preview.setSelection(tv_preview.length()); // EditText 의 Cursor 를 맨뒤로 보낸다.
@@ -180,18 +180,14 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
         // 수식의 첫 숫자가 음수일 경우( ex) -23 + 30 = )
         boolean isMinus = false; // 첫 숫자가 음수인지 아닌지 체크하는 변수
         if (list.get(0).equals(MINUS)) {
-            Log.i("TESTT", "in MINUS");
             list.remove(0);
             isMinus = true;
-        }
-
-        for (i = 0; i < list.size(); i++) {
-            Log.i("TESTT", ""+list.get(i)+" "+isMinus+" "+list.size());
+            //Log.i("TESTS", "in MINUS");
         }
 
 
-        double pre = 0, suf = 0; // 수식의 앞숫자(pre)와 뒤숫자(suf)
-        double result = 0; // 수식의 결과
+        double pre, suf; // 수식의 앞숫자(pre)와 뒤숫자(suf)
+        double result; // 수식의 결과
 
         // 곱셈(곱하기), 나눗셈(나누기)
         for(i = 0; i < list.size(); i++) {

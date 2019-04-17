@@ -18,6 +18,7 @@
         android:background="@drawable/bg_simple"
         android:gravity="center|end"
         android:textSize="45sp"
+        android:textColor="@color/quantum_grey600"
         android:textCursorDrawable="@null"
         android:cursorVisible="true"
         android:inputType="number"
@@ -46,7 +47,7 @@
         android:gravity="end"
         android:text="@string/btn_0"
         android:textColor="#000000"
-        android:textSize="60sp" />
+        android:textSize="70sp" />
 
     <TableLayout
         android:layout_width="match_parent"
