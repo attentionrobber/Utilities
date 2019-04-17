@@ -18,6 +18,8 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        String searchWord = getIntent().getStringExtra("search"); // MainActivity 의 EditText 에서 받아온 검색어
+
         // 1. 사용할 위젯을 가져온다.
         webView = findViewById(R.id.webView);
 
@@ -31,6 +33,6 @@ public class SearchActivity extends AppCompatActivity {
         // 3.1 둘 다 세팅할 것 : 프로토콜에 따라 클라이언트가 선택되는 것으로 파악됨.
         webView.setWebChromeClient(new WebChromeClient());
 
-        webView.loadUrl("http://www.google.com");
+        webView.loadUrl("http://www.google.com/search?q="+searchWord);
     }
 }

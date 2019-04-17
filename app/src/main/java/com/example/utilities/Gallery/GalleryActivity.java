@@ -242,7 +242,7 @@ public class GalleryActivity extends AppCompatActivity {
             case REQ_CAMERA:
                 if (resultCode == RESULT_OK) {// resultCode OK이면 완료되었다는 뜻.
                     init();
-                    Logger.print("TAG", "Activity Result");
+                    //Logger.print("TAG", "Activity Result");
                 }
                 break;
         }

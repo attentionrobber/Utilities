@@ -11,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
-        android:layout_margin="2dp"
-        android:background="@drawable/bg_simple">
+        android:layout_margin="2dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="100dp"
@@ -35,8 +34,7 @@
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_margin="2dp">
+                android:layout_weight="1">
                 <Button
                     android:id="@+id/button_calc"
                     android:layout_width="match_parent"
@@ -45,42 +43,61 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:padding="5dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/icon_calculator"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_calc4"
                     android:layout_gravity="center_horizontal"/>
                 <TextView
                     android:text="@string/calc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="3dp"
+                    android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:layout_gravity="center|bottom"/>
             </FrameLayout>
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_margin="2dp">
+                android:layout_weight="1" >
                 <Button
-                    android:id="@+id/button_memo"
+                    android:id="@+id/button_search"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="100dp"
                     android:background="?selectableItemBackground"/>
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:padding="5dp"
-                    android:src="@drawable/icon_memo"
+                    android:layout_gravity="center_horizontal"
                     android:scaleType="fitXY"
-                    android:layout_gravity="center_horizontal"/>
+                    android:src="@drawable/icon_search2"/>
                 <TextView
-                    android:text="@string/memo"
+                    android:id="@+id/tv_search"
+                    android:text="@string/search"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="3dp"
+                    android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:layout_gravity="center|bottom"/>
+                <EditText
+                    android:id="@+id/et_search"
+                    android:background="@drawable/bg_simple"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:paddingLeft="5dp"
+                    android:textCursorDrawable="@null"
+                    android:cursorVisible="true"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:layout_gravity="bottom"
+                    android:visibility="gone"/>
+                <ImageButton
+                    android:id="@+id/button_search_small"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="bottom|right"
+                    android:src="@drawable/icon_search_rev"
+                    android:scaleType="fitXY"
+                    android:background="?selectableItemBackground"
+                    android:visibility="gone"/>
             </FrameLayout>
         </TableRow>
 
@@ -91,8 +108,7 @@
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_margin="2dp" >
+                android:layout_weight="1" >
                 <Button
                     android:id="@+id/button_unit"
                     android:layout_width="match_parent"
@@ -101,36 +117,37 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/icon_calculator"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_unit"
                     android:layout_gravity="center_horizontal"/>
                 <TextView
                     android:text="@string/unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:layout_gravity="center|bottom"/>
             </FrameLayout>
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_margin="2dp" >
+                android:layout_weight="1" >
                 <Button
-                    android:id="@+id/button_maps"
+                    android:id="@+id/button_gallery"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?selectableItemBackground"/>
                 <ImageView
-                    android:src="@drawable/icon_map"
+                    android:src="@drawable/icon_gallery2"
                     android:scaleType="fitXY"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center_horizontal"/>
                 <TextView
-                    android:text="@string/maps"
+                    android:text="@string/gallery"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:layout_gravity="center|bottom"/>
             </FrameLayout>
@@ -143,64 +160,61 @@
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_margin="2dp" >
+                android:layout_weight="1" >
                 <Button
-                    android:id="@+id/button_search"
+                    android:id="@+id/button_memo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?selectableItemBackground"/>
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/icon_search"
+                    android:src="@drawable/icon_memo2"
+                    android:scaleType="fitXY"
                     android:layout_gravity="center_horizontal"/>
                 <TextView
-                    android:text="@string/search"
+                    android:text="@string/memo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:layout_gravity="center|bottom"/>
             </FrameLayout>
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_margin="2dp" >
+                android:layout_weight="1" >
                 <Button
-                    android:id="@+id/button_gallery"
+                    android:id="@+id/button_maps"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?selectableItemBackground"/>
                 <ImageView
-                    android:src="@drawable/icon_gallery"
+                    android:src="@drawable/icon_map3"
                     android:scaleType="fitXY"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center_horizontal"/>
                 <TextView
-                    android:text="@string/gallery"
+                    android:text="@string/maps"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:layout_gravity="center|bottom"/>
             </FrameLayout>
         </TableRow>
-
     </TableLayout>
-
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="2dp"
-        android:background="@drawable/bg_simple">
+        android:padding="2dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:text="Utilities"/>
+            android:text="Empty place"/>
     </RelativeLayout>
 
 </LinearLayout>

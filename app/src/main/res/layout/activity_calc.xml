@@ -22,9 +22,7 @@
         android:textCursorDrawable="@null"
         android:cursorVisible="true"
         android:inputType="number"
-        android:hint="@string/input_number"
-        android:clickable="false"/>
-
+        android:hint="@string/input_number" />
     <TextView
         android:id="@+id/tv_result"
         android:layout_width="match_parent"
