@@ -11,11 +11,11 @@
     <!-- Calculator -->
     <string name="btn_C">Ｃ</string>
     <string name="btn_back">←</string>
-    <string name="btn_plus">＋</string>
+    <string name="btn_plus">+</string>
     <string name="btn_7">７</string>
     <string name="btn_8">８</string>
     <string name="btn_9">９</string>
-    <string name="btn_minus">－</string>
+    <string name="btn_minus">-</string>
     <string name="btn_4">４</string>
     <string name="btn_5">５</string>
     <string name="btn_6">６</string>
