@@ -159,24 +159,36 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
      * @param str
      * @return
      */
-    public String calculate(String str) { // TODO: 기호 다른거 눌렀을 때 replace 되도록
-
+    public String calculate(String str) { // TODO: -33+33 = error 앞자리가 음수면 계산 불가능한 오류
         //String str_split1[] = str.split("\\W"); // 숫자 찾기
         //String str_split2[] = str.split("\\d"); // 기호 찾기
         //String split[] = str.split("(?<=[*/+-])|(?=[*/+-])"); // 기호( +, -, *, / ) 를 구분하는 정규표현식
-        String split[] = str.split("(?<=[×÷+-])|(?=[×÷+-])"); // 기호( +, -, *, / ) 를 구분하는 정규표현식
+        String split[] = str.split("(?<=[×÷+-])|(?=[×÷+-])"); // 기호[ +, -, ×, ÷ ] 를 구분하는 정규표현식을 이용해서 숫자, 기호를 split 해줌
 
         list = new ArrayList<>(); // 숫자, 기호로 나누어 담을 ArrayList 생성.
 
         int i;
         for(i = 0; i < split.length; i++) {
-            list.add(i, split[i]);  // 수식을 숫자부분과 기호부분으로 나누어 ArrayList 에 담는다.
+            if (!split[i].equals("")) // 공백이 포함된 리스트 생성 방지
+                list.add(split[i]);  // 수식을 숫자부분과 기호부분으로 나누어 ArrayList 에 담는다.
         }
 
         // 수식의 마지막 글자가 기호일 경우 그 기호를 삭제해준다.
         if( list.get(list.size()-1).equals(PLUS) || list.get(list.size()-1).equals(MINUS) || list.get(list.size()-1).equals(MULTIPLY) || list.get(list.size()-1).equals(DIVIDE) ) {
             list.remove(list.size()-1);
         }
+        // 수식의 첫 숫자가 음수일 경우( ex) -23 + 30 = )
+        boolean isMinus = false; // 첫 숫자가 음수인지 아닌지 체크하는 변수
+        if (list.get(0).equals(MINUS)) {
+            Log.i("TESTT", "in MINUS");
+            list.remove(0);
+            isMinus = true;
+        }
+
+        for (i = 0; i < list.size(); i++) {
+            Log.i("TESTT", ""+list.get(i)+" "+isMinus+" "+list.size());
+        }
+
 
         double pre = 0, suf = 0; // 수식의 앞숫자(pre)와 뒤숫자(suf)
         double result = 0; // 수식의 결과
@@ -184,7 +196,11 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
         // 곱셈(곱하기), 나눗셈(나누기)
         for(i = 0; i < list.size(); i++) {
             if (list.get(i).equals(MULTIPLY)) { // * 기호일 경우
-                pre = Double.parseDouble(list.get(i-1)); // 기호의 앞숫자(pre)와
+                if (isMinus) {
+                    pre = Double.parseDouble(list.get(i-1)) * -1; // 기호의 앞숫자(pre)와
+                    isMinus = false;
+                } else
+                    pre = Double.parseDouble(list.get(i-1)); // 기호의 앞숫자(pre)와
                 suf = Double.parseDouble(list.get(i+1)); // 기호의 뒷숫자(suf)를
                 result = pre * suf; // 곱해준다.
 
@@ -194,12 +210,13 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
                 i = 0;
             }
             if (list.get(i).equals(DIVIDE)) {
-                pre = Double.parseDouble(list.get(i - 1));
-                suf = Double.parseDouble(list.get(i + 1));
+                if (isMinus) pre = Double.parseDouble(list.get(i-1)) * -1;
+                else pre = Double.parseDouble(list.get(i-1));
+                suf = Double.parseDouble(list.get(i+1));
                 result = pre / suf;
 
                 list.set(i, result + "");
-                list.remove(i - 1);
+                list.remove(i-1);
                 list.remove(i);
                 i = 0;
             }
@@ -207,22 +224,30 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
         // 덧셈(더하기), 뺄셈(빼기)
         for(i = 0; i < list.size(); i++) {
             if (list.get(i).equals(PLUS)) {
-                pre = Double.parseDouble(list.get(i - 1));
-                suf = Double.parseDouble(list.get(i + 1));
+                if (isMinus) {
+                    pre = Double.parseDouble(list.get(i-1)) * -1;
+                    isMinus = false;
+                } else
+                    pre = Double.parseDouble(list.get(i-1));
+                suf = Double.parseDouble(list.get(i+1));
                 result = pre + suf;
 
                 list.set(i, result + "");
-                list.remove(i - 1);
+                list.remove(i-1);
                 list.remove(i);
                 i = 0;
             }
             if (list.get(i).equals(MINUS)) {
-                pre = Double.parseDouble(list.get(i - 1)); // TODO: -33+33 = error 앞자리가 음수면 계산 불가능한 오류
-                suf = Double.parseDouble(list.get(i + 1));
+                if (isMinus) {
+                    pre = Double.parseDouble(list.get(i-1)) * -1;
+                    isMinus = false;
+                } else
+                    pre = Double.parseDouble(list.get(i-1));
+                suf = Double.parseDouble(list.get(i+1));
                 result = pre - suf;
 
                 list.set(i, result + "");
-                list.remove(i - 1);
+                list.remove(i-1);
                 list.remove(i);
                 i = 0;
             }
