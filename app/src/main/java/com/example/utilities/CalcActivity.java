@@ -66,7 +66,12 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
         String preview = tv_preview.getText().toString();
         String result = tv_result.getText().toString();
         switch (v.getId()) {
-            case R.id.btn_0: addEquation("0"); break;
+            case R.id.btn_0:
+                addEquation("0");
+                if (preview.equals("0")) {
+                    break;
+                }
+                break;
             case R.id.btn_1: addEquation("1"); break;
             case R.id.btn_2: addEquation("2"); break;
             case R.id.btn_3: addEquation("3"); break;
@@ -275,22 +280,27 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
           결과값이 있으면서 누른 버튼이 기호일 때 result 가 preview 로
           결과값이 있으면서 누른 버튼이 숫자일 때 preview 는 reset 된다.
          */
-        if ( !result.equals("0")) {
+        if ( !result.equals("0") ) { // 결과값이 있는 경우
             if (str.equals(PLUS) || str.equals(MINUS) || str.equals(MULTIPLY) || str.equals(DIVIDE)) { // 결과값이 있으면서 누른 버튼이 기호일때
                 result = result.replace(",", ""); // 결과값의 쉼표를 없애준다.
                 prev_setText(result.concat(str)); // 결과 값에 누른 버튼을 추가
                 tv_result.setText("0");
-                Log.i("TESTT_if if", str);
             }
             else { // 결과 값이 있으면서 누른 버튼이 숫자, .(dot)일 때
                 prev_setText(str);
                 tv_result.setText("0");
-                Log.i("TESTT_if else", str);
+            }
+        } else if(preview.equals("0")) { // preview 의 첫숫자가 0이면 중복입력 방지, 0으로 시작하는 숫자 입력 방지
+            if (str.equals("0")) {
+
+            } else {
+                prev_setText(preview.substring(1).concat(str));
             }
         } else {
             prev_setText(preview.concat(str)); // 결과값이 없는 경우 preview 에 누른 버튼값을 추가
             Log.i("TESTT_else", str);
         }
+
         tv_preview.setSelection(tv_preview.length()); // EditText 의 Cursor 를 맨뒤로 보낸다.
     }
 

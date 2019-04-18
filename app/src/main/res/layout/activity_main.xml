@@ -43,6 +43,7 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:layout_marginTop="5dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/icon_calc4"
                     android:layout_gravity="center_horizontal"/>
@@ -66,6 +67,7 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:layout_marginTop="5dp"
                     android:layout_gravity="center_horizontal"
                     android:scaleType="fitXY"
                     android:src="@drawable/icon_search2"/>
@@ -117,6 +119,7 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:layout_marginTop="5dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/icon_unit"
                     android:layout_gravity="center_horizontal"/>
@@ -142,6 +145,7 @@
                     android:scaleType="fitXY"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:layout_marginTop="5dp"
                     android:layout_gravity="center_horizontal"/>
                 <TextView
                     android:text="@string/gallery"
@@ -169,6 +173,7 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:layout_marginTop="5dp"
                     android:src="@drawable/icon_memo2"
                     android:scaleType="fitXY"
                     android:layout_gravity="center_horizontal"/>
@@ -194,6 +199,7 @@
                     android:scaleType="fitXY"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:layout_marginTop="5dp"
                     android:layout_gravity="center_horizontal"/>
                 <TextView
                     android:text="@string/maps"
@@ -213,7 +219,8 @@
         android:padding="2dp">
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="Empty place"/>
     </RelativeLayout>
 
