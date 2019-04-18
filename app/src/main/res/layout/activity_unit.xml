@@ -19,7 +19,7 @@
             android:layout_weight="1"
             android:text="@string/btn_length"
             android:textSize="20sp"
-            android:background="@drawable/bg_button_dark_ripple" />
+            android:background="@drawable/bg_simple_btn_dark_ripple" />
         <Button
             android:id="@+id/btn_weight"
             android:layout_width="0dp"
@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:text="@string/btn_weight"
             android:textSize="20sp"
-            android:background="@drawable/bg_button_ripple" />
+            android:background="@drawable/bg_simple_btn_ripple" />
         <Button
             android:id="@+id/btn_area"
             android:layout_width="0dp"
@@ -37,7 +37,7 @@
             android:layout_weight="1"
             android:text="@string/btn_area"
             android:textSize="20sp"
-            android:background="@drawable/bg_button_ripple" />
+            android:background="@drawable/bg_simple_btn_ripple" />
     </LinearLayout>
 
 

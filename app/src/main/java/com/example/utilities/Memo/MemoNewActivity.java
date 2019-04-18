@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -40,6 +39,12 @@ public class MemoNewActivity extends AppCompatActivity {
     private static final String TAG = "MemoNewActivity";
     //private boolean keypad_toggle = false;
 
+    // Widget 관련
+    //Button btn_OK, btn_cancel;
+    //ImageButton imgbtn_addimg, imgbtn_location;
+    EditText editText_title, editText_content;
+    ImageView imageView;
+
     // 권한 관련
     private final int PERM_GRANT = 1;
     private final int PERM_DENY = 2;
@@ -58,18 +63,13 @@ public class MemoNewActivity extends AppCompatActivity {
     Intent intent; // 지도 인텐트
     Bundle bundle;
 
-    // Widget 관련
-    //Button btn_OK, btn_cancle;
-    //ImageButton imgbtn_addimg, imgbtn_location;
-    EditText editText_title, editText_content;
-    ImageView imageView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_new);
 
-        setWidget(); // 위젯 세팅
+        displayKeypad();// 키패드(키보드) 자동으로 띄우기
+        setWidget();
         //checkPermission();
     }
 
@@ -80,11 +80,8 @@ public class MemoNewActivity extends AppCompatActivity {
         memo.setContent(editText_content.getText().toString());
         memo.setCurrentDate(new Date(System.currentTimeMillis()));
 
-        if(imageUri != null) {
-            strUri = imageUri.toString();
-        } else {
-            strUri = "";
-        }
+        if(imageUri != null) strUri = imageUri.toString();
+        else strUri = "";
         memo.setImgUri(strUri);
 
         return memo;
@@ -98,11 +95,10 @@ public class MemoNewActivity extends AppCompatActivity {
 
     private void setWidget() {
         editText_title = findViewById(R.id.textView_title);
-        displayKeypad();// 키패드(키보드) 자동으로 띄우기
         editText_content = findViewById(R.id.editText_content);
 
         findViewById(R.id.btn_OK).setOnClickListener(this::clickListener);
-        findViewById(R.id.btn_cancle).setOnClickListener(this::clickListener);
+        findViewById(R.id.btn_cancel).setOnClickListener(this::clickListener);
         findViewById(R.id.imgbtn_addimg).setOnClickListener(this::clickListener);
         findViewById(R.id.imgbtn_location).setOnClickListener(this::clickListener);
         findViewById(R.id.imageView).setOnClickListener(this::clickListener);
@@ -113,20 +109,17 @@ public class MemoNewActivity extends AppCompatActivity {
      * 카메라, 갤러리 둘 중 선택하는 AlertDialog 띄우는 함수
      */
     private void alertAddImage() {
-        // 1. 팝업창 만들기
-        AlertDialog.Builder alert_Imgbtn = new AlertDialog.Builder(MemoNewActivity.this);
-        // 2. 팝업창 제목
-        alert_Imgbtn.setTitle("Input Image");
-        // 3. Items 만들기
-        final CharSequence[] items_Imgbtn = {"Camera", "Gallery"};
-        alert_Imgbtn.setItems(items_Imgbtn, new DialogInterface.OnClickListener() {
+        AlertDialog.Builder alert_AddImg = new AlertDialog.Builder(MemoNewActivity.this);// 1. Dialog 만들기
+        alert_AddImg.setTitle("Input Image"); // 2. Dialog 제목
+        final CharSequence[] items_AddImg = {"Camera", "Gallery"}; // 3. Dialog Items 만들기
+        alert_AddImg.setItems(items_AddImg, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent;
                 switch (which) {
                     case 0 : // Camera
                         intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        // 카메라 촬영 후 미디어 컨텐트 Uri를 생성해서 외부저장소에 저장한다.
+                        // 카메라 촬영 후 미디어 컨텐트 Uri 를 생성해서 외부저장소에 저장한다.
                         // 마시멜로 이상 버전은 아래 코드를 반영해야함.
                         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                             ContentValues values = new ContentValues(1);
@@ -134,7 +127,7 @@ public class MemoNewActivity extends AppCompatActivity {
                             imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                            // 컨텐트 Uri강제 세팅
+                            // 컨텐트 Uri 강제 세팅
                         }
                         startActivityForResult(intent, REQ_CAMERA);
                         break;
@@ -146,33 +139,32 @@ public class MemoNewActivity extends AppCompatActivity {
                 }
             }
         });
-        alert_Imgbtn.show(); // 4. show함수로 팝업창을 띄운다.
+        alert_AddImg.show(); // 4. show함수로 팝업창을 띄운다.
     }
 
     /**
      * ImageView 클릭시 이미지 바꿀지 삭제할지 AlertDialog 띄우는 함수
      */
     private void alertClickImageView() {
-        AlertDialog.Builder alertImageView = new AlertDialog.Builder(MemoNewActivity.this);
-        alertImageView.setTitle("Image Option");
-        final CharSequence[] items_ImageView = {"Change", "Delete"};
-        alertImageView.setItems(items_ImageView, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        if (imageUri != null) { // 이미지가 삽입되었을때만 작동
+            AlertDialog.Builder alertImageView = new AlertDialog.Builder(MemoNewActivity.this);
+            alertImageView.setTitle("Image Option");
+            final CharSequence[] items_ImageView = {"Change", "Delete"};
+            alertImageView.setItems(items_ImageView, (dialog, which) -> {
                 switch (which) {
-                    case 0 : // Change
+                    case 0: // Image Change
                         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         intent.setType("image/*"); // 외부저장소에 있는 이미지만 가져오기위한 필터링.
                         startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQ_GALLERY); // createChooser로 타이틀을 붙여줄 수 있다.
                         break;
-                    case 1 : // Delete
+                    case 1: // Image Delete
                         imageView.setImageResource(0);
                         imageUri = null;
                         break;
                 }
-            }
-        });
-        alertImageView.show(); // show함수로 팝업창을 띄운다.
+            });
+            alertImageView.show(); // 팝업창을 띄운다.
+        }
     }
 
     /**
@@ -180,21 +172,19 @@ public class MemoNewActivity extends AppCompatActivity {
      * 현재 위치 추가할지, 장소 검색 후 위치 추가할지 선택하는 AlertDialog
      */
     private void alertDialogLocation() {
-        AlertDialog.Builder alertImageView = new AlertDialog.Builder(MemoNewActivity.this);
-        alertImageView.setTitle("Location Option");
+        AlertDialog.Builder alertLocation = new AlertDialog.Builder(MemoNewActivity.this);
+        alertLocation.setTitle("Location Option");
         final CharSequence[] items_Location = {"Current Location", "Search Location"};
-        alertImageView.setItems(items_Location, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0 : // Current Location 선택시 구글맵으로 현재 위치를 띄워준다.
-                        intent = new Intent(MemoNewActivity.this, MapsActivity.class);
-                        intent.putExtra("case", 0);
-                        startActivityForResult(intent, REQ_LOCATION);
-                        break;
-                    case 1 : // Search Location 선택시 구글맵으로 검색할 수 있게 한다.
-                        // TODO 권한 요청하기
-                        searchByPlacePicker();
+        alertLocation.setItems(items_Location, (dialog, which) -> {
+            switch (which) {
+                case 0 : // Current Location 선택시 구글맵으로 현재 위치를 띄워준다.
+                    intent = new Intent(MemoNewActivity.this, MapsActivity.class);
+                    intent.putExtra("case", 0);
+                    startActivityForResult(intent, REQ_LOCATION);
+                    break;
+                case 1 : // Search Location 선택시 구글맵으로 검색할 수 있게 한다.
+                    // TODO 권한 요청하기
+                    searchByPlacePicker();
 //                        checkPermission(REQ_PLACE_PICKER);
 //                        if(PERM_RESULT == PERM_GRANT) {
 //
@@ -202,11 +192,10 @@ public class MemoNewActivity extends AppCompatActivity {
 //                        intent = new Intent(MemoNewActivity.this, MapsActivity.class);
 //                        intent.putExtra("case", 1);
 //                        startActivityForResult(intent, REQ_LOCATION);
-                        break;
-                }
+                    break;
             }
         });
-        alertImageView.show(); // show함수로 팝업창을 띄운다.
+        alertLocation.show(); // show함수로 팝업창을 띄운다.
     }
 
     private void searchByPlacePicker(){
@@ -236,25 +225,16 @@ public class MemoNewActivity extends AppCompatActivity {
                 }
                 finish();
                 break;
-            case R.id.btn_cancle :
+            case R.id.btn_cancel :
                 hideKeypad();
                 // 제목이나 내용을 작성했을 경우에만 AlertDialog 나타나게함.
                 if( !(editText_title.getText().toString().equals("")) || !(editText_content.getText().toString().equals(""))) {
-                    AlertDialog.Builder alert_delete = new AlertDialog.Builder(MemoNewActivity.this);
-                    alert_delete.setTitle("FINISH WRITING A NOTE");
-                    alert_delete.setMessage("Exit without saving.");
-                    alert_delete.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            MemoNewActivity.super.onBackPressed();
-                        }
-                    });
-                    alert_delete.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-                    alert_delete.show();
+                    AlertDialog.Builder alert_cancel = new AlertDialog.Builder(MemoNewActivity.this);
+                    alert_cancel.setTitle("CANCEL WRITING A NOTE");
+                    alert_cancel.setMessage("Exit without saving.");
+                    alert_cancel.setPositiveButton("OK", (dialog, which) -> MemoNewActivity.super.onBackPressed());
+                    alert_cancel.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                    alert_cancel.show();
                 } else {
                     MemoNewActivity.super.onBackPressed();
                 }
@@ -329,8 +309,6 @@ public class MemoNewActivity extends AppCompatActivity {
                     }
                     if (imageUri != null) {
                         Glide.with(this).load(imageUri).into(imageView);
-                    } else {
-
                     }
                 } else { // resultCode가 uri가 남아있는데 삭제처리해야함.
                     //imageUri = null;
@@ -393,6 +371,23 @@ public class MemoNewActivity extends AppCompatActivity {
         }
 //        else if(requestCode == REQ_CAMERA) {
 //        }
+    }
+
+    /**
+     * 백버튼 입력시
+     */
+    @Override
+    public void onBackPressed() {
+        // 제목이나 내용이 입력됐을 경우
+        if( !(editText_title.getText().toString().equals("")) || !(editText_content.getText().toString().equals(""))) {
+            AlertDialog.Builder alert_cancel = new AlertDialog.Builder(MemoNewActivity.this);
+            alert_cancel.setTitle("CANCEL WRITING A NOTE");
+            alert_cancel.setMessage("Exit without saving.");
+            alert_cancel.setPositiveButton("OK", (dialog, which) -> MemoNewActivity.super.onBackPressed());
+            alert_cancel.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+            alert_cancel.show();
+        }
+        else super.onBackPressed();
     }
 
     @Override

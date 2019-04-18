@@ -27,6 +27,17 @@ public class Memo {
     @DatabaseField
     String imgUri;
 
+    public Memo() {
+
+    }
+
+    // create시에 사용할 생성자
+    public Memo(String title, String content, Date currentDate, String imgUri) {
+        this.title = title;
+        this.content = content;
+        this.currentDate = currentDate;
+        this.imgUri = imgUri;
+    }
 
     public int getId() {
         return id;
@@ -61,18 +72,6 @@ public class Memo {
     }
 
     public void setImgUri(String imgUri) {
-        this.imgUri = imgUri;
-    }
-
-    public Memo() {
-
-    }
-
-    // create시에 사용할 생성자
-    public Memo(String title, String content, Date currentDate, String imgUri) {
-        this.title = title;
-        this.content = content;
-        this.currentDate = currentDate;
         this.imgUri = imgUri;
     }
 

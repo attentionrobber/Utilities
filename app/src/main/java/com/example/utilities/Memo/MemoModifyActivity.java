@@ -31,6 +31,12 @@ public class MemoModifyActivity extends AppCompatActivity {
 
     private static final String TAG = "MemoNewActivity";
 
+    // Widget 관련
+    EditText editText_title, editText_content;
+    Button btn_OK, btn_cancle;
+    ImageButton imgbtn_addimg;
+    ImageView imageView;
+
     // 권한 관련
     private final int REQ_MYLOCATION = 99; // 내 위치 요청 코드
     private final int REQ_SEARCHLOCATION = 100; // 검색 위치 요청 코드
@@ -52,12 +58,6 @@ public class MemoModifyActivity extends AppCompatActivity {
     // DB 관련
     DBHelper dbHelper;
     Dao<Memo, Integer> memoDao;
-
-    // Widget 관련
-    EditText editText_title, editText_content;
-    Button btn_OK, btn_cancle;
-    ImageButton imgbtn_addimg;
-    ImageView imageView;
 
     // 위치 관련
     private LocationManager manager; // 위치정보 관리자
@@ -146,12 +146,9 @@ public class MemoModifyActivity extends AppCompatActivity {
                     MemoModifyActivity.super.onBackPressed();
                     break;
                 case R.id.imgbtn_addimg :
-                    // 1. 팝업창 만들기
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(MemoModifyActivity.this);
-                    // 2. 팝업창 제목
-                    alertDialog.setTitle("Input Image");
-                    // 3. Items 만들기
-                    final CharSequence[] items = {"Camera", "Gallery"};
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(MemoModifyActivity.this); // 1. 팝업창 만들기
+                    alertDialog.setTitle("Input Image"); // 2. 팝업창 제목
+                    final CharSequence[] items = {"Camera", "Gallery"}; // 3. Items 만들기
                     alertDialog.setItems(items, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

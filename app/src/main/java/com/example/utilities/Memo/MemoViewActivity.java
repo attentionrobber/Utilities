@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,17 +27,21 @@ public class MemoViewActivity extends AppCompatActivity {
 
     private static final String TAG = "MemoViewActivity";
 
+    // Widget
+    TextView textView_title, textView_content;
+    //Button btn_modify, btn_delete;
+    ImageView imageView;
+
+    // 메모 데이터 관련
     List<Memo> datas;
     int position = 0;
 
+    // 이미지 관려
     String strUri;
 
+    // DB 관련
     DBHelper dbHelper;
     Dao<Memo, Integer> memoDao;
-
-    TextView textView_title, textView_content;
-    Button btn_modify, btn_delete;
-    ImageView imageView;
 
 
     @Override
@@ -45,13 +50,22 @@ public class MemoViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_memo_view);
 
         setWidget();
-        setListener();
 
         try {
             setMemo();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setWidget() {
+        findViewById(R.id.btn_modify).setOnClickListener(clickListener);
+        findViewById(R.id.btn_delete).setOnClickListener(clickListener);
+        findViewById(R.id.btn_cancel).setOnClickListener(clickListener);
+        textView_title = findViewById(R.id.textView_title);
+        textView_content = findViewById(R.id.textView_content);
+        textView_content.setMovementMethod(new ScrollingMovementMethod()); // TextView Scrolling
+        imageView = findViewById(R.id.imageView);
     }
 
     private void setMemo() throws SQLException{
@@ -92,26 +106,13 @@ public class MemoViewActivity extends AppCompatActivity {
         intent.putExtra("content", textView_content.getText().toString());
         intent.putExtra("imageUri", strUri);
         // 1. View Activty 닫고
-        finish();
+        //finish();
         startActivity(intent);
     }
 
     private void delete(Memo memo) throws SQLException{
         memoDao.delete(memo);
         finish();
-    }
-
-    private void setWidget() {
-        textView_title = (TextView) findViewById(R.id.textView_title);
-        textView_content = (TextView) findViewById(R.id.textView_content);
-        btn_modify = (Button) findViewById(R.id.btn_modify);
-        btn_delete = (Button) findViewById(R.id.btn_delete);
-        imageView = (ImageView) findViewById(R.id.imageView);
-    }
-
-    private void setListener() {
-        btn_modify.setOnClickListener(clickListener);
-        btn_delete.setOnClickListener(clickListener);
     }
 
     /**
@@ -121,14 +122,15 @@ public class MemoViewActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.btn_modify :
+                case R.id.btn_modify:
                     try {
                         modify();
+                        // TODO: 수정이 완료된 후 refresh 해주기
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                     break;
-                case R.id.btn_delete :
+                case R.id.btn_delete:
                     AlertDialog.Builder alert_delete = new AlertDialog.Builder(MemoViewActivity.this);
                     alert_delete.setTitle("DELETE");
                     alert_delete.setMessage("Are you sure you want to delete?");
@@ -150,9 +152,12 @@ public class MemoViewActivity extends AppCompatActivity {
                     alert_delete.show();
 
                     break;
+                case R.id.btn_cancel:
+                    MemoViewActivity.super.onBackPressed();
+                    break;
             }
         }
-    };
+    }; // clickListener
 
 
     @Override

@@ -28,9 +28,9 @@ public class UnitActivity extends AppCompatActivity {
     LinearLayout layout_length, layout_area, layout_weight;
     Spinner spinner_length_from, spinner_length_to, spinner_area_from, spinner_area_to, spinner_weight_from, spinner_weight_to;
 
-    String spinner_length[] = {"밀리미터(mm)", "센티미터(cm)", "미터(m)", "킬로미터(km)", "인치(inch)", "피트(ft)", "야드(yd)", "마일(mile)"};
-    String spinner_area[] = {"제곱미터(m^2)", "제곱키로미터(km^2)", "제곱피트(ft^2)", "제곱야드(yd^2)", "아르(a)", "헥타르(ha)", "에이커(ac)", "평"};
-    String spinner_weight[] = {"밀리그램(mg)", "그램(g)", "킬로그램(kg)", "톤(t)", "킬로톤(kt)", "파운드(lb)", "그레인(gr)", "온스(oz)"};
+    final String SPINNER_LENGTH[] = {"밀리미터(mm)", "센티미터(cm)", "미터(m)", "킬로미터(km)", "인치(inch)", "피트(ft)", "야드(yd)", "마일(mile)"};
+    final String SPINNER_WEIGHT[] = {"밀리그램(mg)", "그램(g)", "킬로그램(kg)", "톤(t)", "킬로톤(kt)", "파운드(lb)", "그레인(gr)", "온스(oz)"};
+    final String SPINNER_AREA[] = {"제곱미터(m^2)", "제곱키로미터(km^2)", "제곱피트(ft^2)", "제곱야드(yd^2)", "아르(a)", "헥타르(ha)", "에이커(ac)", "평"};
 
     private double output_mm, output_cm, output_m, output_km, output_inch, output_ft, output_yd, output_mile;
     private double output_mg, output_g, output_kg, output_ton, output_kt, output_lb, output_gr, output_oz;
@@ -110,9 +110,9 @@ public class UnitActivity extends AppCompatActivity {
         spinner_weight_to = findViewById(R.id.spinner_weight_to);
 
         // 스피너 데이터(length, area, weight)를 어댑터로 생성
-        ArrayAdapter<String> adapter_length = new ArrayAdapter<>(this, R.layout.spniner_dropdown_item, spinner_length); // R. 은 내가 정의한 리소스 android.R. 은 android에 정의되어있는 리소스
-        ArrayAdapter<String> adapter_area = new ArrayAdapter<>(this, R.layout.spniner_dropdown_item, spinner_area);
-        ArrayAdapter<String> adapter_weight = new ArrayAdapter<>(this, R.layout.spniner_dropdown_item, spinner_weight);
+        ArrayAdapter<String> adapter_length = new ArrayAdapter<>(this, R.layout.spniner_dropdown_item, SPINNER_LENGTH); // R. 은 내가 정의한 리소스 android.R. 은 android에 정의되어있는 리소스
+        ArrayAdapter<String> adapter_area = new ArrayAdapter<>(this, R.layout.spniner_dropdown_item, SPINNER_AREA);
+        ArrayAdapter<String> adapter_weight = new ArrayAdapter<>(this, R.layout.spniner_dropdown_item, SPINNER_WEIGHT);
 
         // 스피너 어댑터에 등록
         spinner_length_from.setAdapter(adapter_length);
@@ -145,27 +145,27 @@ public class UnitActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch(v.getId()) {
                 case R.id.btn_length:
-                    btn_length.setBackgroundResource(R.drawable.bg_button_dark_ripple); // 현재 선택한 단위종류 표시
-                    btn_weight.setBackgroundResource(R.drawable.bg_button_ripple);
-                    btn_area.setBackgroundResource(R.drawable.bg_button_ripple);
+                    btn_length.setBackgroundResource(R.drawable.bg_simple_btn_dark_ripple); // 현재 선택한 단위종류 표시
+                    btn_weight.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
+                    btn_area.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
                     layout_length.setVisibility(View.VISIBLE);
                     layout_area.setVisibility(View.GONE);
                     layout_weight.setVisibility(View.GONE);
                     unitFlag = LENGTH;
                     break;
                 case R.id.btn_weight:
-                    btn_length.setBackgroundResource(R.drawable.bg_button_ripple);
-                    btn_weight.setBackgroundResource(R.drawable.bg_button_dark_ripple);
-                    btn_area.setBackgroundResource(R.drawable.bg_button_ripple);
+                    btn_length.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
+                    btn_weight.setBackgroundResource(R.drawable.bg_simple_btn_dark_ripple);
+                    btn_area.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
                     layout_length.setVisibility(View.GONE);
                     layout_weight.setVisibility(View.VISIBLE);
                     layout_area.setVisibility(View.GONE);
                     unitFlag = WEIGHT;
                     break;
                 case R.id.btn_area:
-                    btn_length.setBackgroundResource(R.drawable.bg_button_ripple);
-                    btn_weight.setBackgroundResource(R.drawable.bg_button_ripple);
-                    btn_area.setBackgroundResource(R.drawable.bg_button_dark_ripple);
+                    btn_length.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
+                    btn_weight.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
+                    btn_area.setBackgroundResource(R.drawable.bg_simple_btn_dark_ripple);
                     layout_length.setVisibility(View.GONE);
                     layout_weight.setVisibility(View.GONE);
                     layout_area.setVisibility(View.VISIBLE);
@@ -176,7 +176,7 @@ public class UnitActivity extends AppCompatActivity {
     }; // clickListener
 
     /**
-     * TextView에 숫자를 입력할때 마다 결과값을 실시간으로 보여준다.
+     * TextView 에 숫자를 입력할때 마다 결과값을 실시간으로 보여준다.
      */
     TextWatcher textWatcher = new TextWatcher() {
         @Override
@@ -559,8 +559,6 @@ public class UnitActivity extends AppCompatActivity {
             switchResult(saT);
         }
     }
-
-
 
     /**
      * 숫자 표시 형식을 맞춰주고 TextView setText 를 해주는 함수

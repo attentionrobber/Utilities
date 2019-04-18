@@ -97,10 +97,7 @@ public class MainActivity extends AppCompatActivity {
 //                startActivityForResult(Intent.createChooser(intent, ""), OPEN_GALLERY);
                 break;
             case R.id.button_search_small:
-                intent = new Intent(this, SearchActivity.class);
-                intent.putExtra("search", et_search.getText().toString());
-                startActivity(intent);
-                break;
+                actionSearch(); break;
         }
     }
 
@@ -111,10 +108,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                hideKeypad(); // 키패드 감추기
-                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                intent.putExtra("search", et_search.getText().toString());
-                startActivity(intent);
+                actionSearch();
                 return true;
             }
             return false;
@@ -135,6 +129,18 @@ public class MainActivity extends AppCompatActivity {
             et_search.setVisibility(View.GONE);
             button_search_small.setVisibility(View.GONE);
             tv_search.setVisibility(View.VISIBLE);
+        }
+    }
+    /**
+     * Search
+     */
+    private void actionSearch() {
+        String searchWord = et_search.getText().toString();
+        if (!searchWord.equals("")) {
+            hideKeypad(); // 키패드 감추기
+            Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+            intent.putExtra("search", searchWord);
+            startActivity(intent);
         }
     }
 
