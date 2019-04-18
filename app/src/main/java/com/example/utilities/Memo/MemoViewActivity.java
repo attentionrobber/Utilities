@@ -2,11 +2,18 @@ package com.example.utilities.Memo;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ImageSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -103,10 +110,34 @@ public class MemoViewActivity extends AppCompatActivity {
 
         // 가져온 Memo data 를 뿌려준다.
         tv_title.setText(title);
-        tv_content.setText(content);
-        if (strUri.length() != 0) { // 이미지가 존재할 경우만 세팅한다.
-            Glide.with(this).load(Uri.parse(strUri)).into(imageView);
-        }
+        //tv_content.setText(content);
+
+
+        ImageSpan imageSpan = new ImageSpan(this, Uri.parse(strUri)); // TODO: need to repeat 필요한만큼 반복
+
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(content);
+        // builder.toString() 텍스트 내용 가져옴
+        //Log.i("TESTS", ""+builder.toString());
+        builder.setSpan(imageSpan, builder.length()-1, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        builder.setSpan(new ClickableSpan() {
+//            @Override
+//            public void onClick(@NonNull View widget) {
+//                builder.delete(11, 13);
+//                tv_content.setText(""); // to be MODIFIED
+//            }
+//        }, 11, 13, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+        tv_content.setText(builder);
+        tv_content.setMovementMethod(LinkMovementMethod.getInstance()); // TextView 에 있는 이미지 클릭 가능하도록함
+
+
+
+
+//        if (strUri.length() != 0) { // 이미지가 존재할 경우만 세팅한다.
+//            Glide.with(this).load(Uri.parse(strUri)).into(imageView);
+//        }
     }
 
     private void modifyMemo() {

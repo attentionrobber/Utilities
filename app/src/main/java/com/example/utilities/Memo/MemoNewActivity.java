@@ -224,13 +224,12 @@ public class MemoNewActivity extends AppCompatActivity {
 
         ImageSpan imageSpan = new ImageSpan(this, Uri.parse(strUri));
 
+        int selStart = editText_content.getSelectionStart(); // 커서 시작 위치
+        int selEnd = editText_content.getSelectionEnd(); // 커서 마지막 위치
+
         SpannableStringBuilder builder = new SpannableStringBuilder();
-        builder.append(editText_content.getText());
-
-        int selStart = editText_content.getSelectionStart();
-
-        // current selection is replace with imageId
-        builder.replace(editText_content.getSelectionStart(), editText_content.getSelectionEnd(), strUri);
+        builder.append(editText_content.getText()); // builder 에 editText 의 내용을 붙인다.
+        builder.replace(selStart, selEnd, strUri); // 커서의 시작 위치부터 마지막 위치까지 strUri 로 대체된다.
 
         // This adds a span to display image where the imageId is. If you do builder.toString() - the string will contain imageId where the imageSpan is.
         // you can use it later - if you want to find location of imageSpan in text;
@@ -346,7 +345,7 @@ public class MemoNewActivity extends AppCompatActivity {
             case REQ_GALLERY:
                 //if(data != null && data.getData() != null) {
                 if (resultCode == RESULT_OK) {
-                    imageUri = data.getData();
+                    imageUri = data.getData(); // TODO: 삭제 예정 (imageUri 는 EditText 로 가게 되므로) or 배열로 저장한다.
                     inputImageInsideEditText(String.valueOf(imageUri)); // EditText 안에 이미지를 글자처럼 추가
                 }
                 break;
