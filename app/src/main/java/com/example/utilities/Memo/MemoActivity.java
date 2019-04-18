@@ -31,7 +31,7 @@ public class MemoActivity extends AppCompatActivity {
         setWidget();
 
         try {
-            loadData(); // 4. DB에서 데이터 로드
+            loadData(); // 4. DB 에서 데이터 로드
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -41,7 +41,7 @@ public class MemoActivity extends AppCompatActivity {
 
     private void setWidget() {
         recyclerView = findViewById(R.id.recyclerView);
-        findViewById(R.id.imgbtn_new).setOnClickListener(v -> clickListener());
+        findViewById(R.id.btn_new).setOnClickListener(v -> clickListener());
     }
 
     private void clickListener() {

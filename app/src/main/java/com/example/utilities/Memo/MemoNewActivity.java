@@ -34,6 +34,10 @@ import com.j256.ormlite.dao.Dao;
 import java.sql.SQLException;
 import java.util.Date;
 
+/**
+ * Used by: MemoActivity
+ * Called by: MemoActivity
+ */
 public class MemoNewActivity extends AppCompatActivity {
 
     private static final String TAG = "MemoNewActivity";
@@ -319,8 +323,6 @@ public class MemoNewActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     imageUri = data.getData();
                     Glide.with(this).load(imageUri).into(imageView);
-                } else {
-
                 }
                 break;
             case REQ_LOCATION: // 내 위치

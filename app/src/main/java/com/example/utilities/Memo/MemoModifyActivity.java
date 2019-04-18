@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +28,10 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Used by: MemoViewActivity
+ * Called by: MemoViewActivity
+ */
 public class MemoModifyActivity extends AppCompatActivity {
 
     private static final String TAG = "MemoNewActivity";
@@ -44,16 +49,12 @@ public class MemoModifyActivity extends AppCompatActivity {
     private final int REQ_GALLERY = 102; // 갤러리 요청 코드
 
     // 메모 데이터 관련
-    List<Memo> datas;
-    int position = 0;
+    List<Memo> memoList;
+    int position = 0; // Memo position
 
     // 이미지 Uri 관련
     Uri imageUri;
     String strUri;
-
-    // 액티비티 호출 관련
-    Intent intent;
-    Bundle bundle;
 
     // DB 관련
     DBHelper dbHelper;
@@ -72,59 +73,79 @@ public class MemoModifyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_memo_modify);
 
         setWidget();
-        initDB();
-        setListener();
-    }
 
-    private void updateToDB(Memo memo) throws SQLException {
-        memo.setTitle(editText_title.getText().toString());
-        memo.setContent(editText_content.getText().toString());
-        memo.setCurrentDate(new Date(System.currentTimeMillis()));
-        if (imageUri != null) {
-            strUri = imageUri.toString(); // Uri를 String으로 변환해서
-        } else {
-            strUri = "";
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            assert bundle != null;
+            position = bundle.getInt("position");
         }
-        memo.setImgUri(strUri); // memo클래스에 넣는다.
-        memoDao.update(memo);
-    }
 
-    private void initDB() {
-        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
         try {
-            memoDao = dbHelper.getMemoDao();
-            datas = memoDao.queryForAll();
+            initDB();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        position = bundle.getInt("position");
+
+        setMemo(position); // input loaded contents to View. 각 view 에 로드한 내용을 넣는다.
     }
 
     private void setWidget() {
-        editText_title = (EditText) findViewById(R.id.textView_title);
-        editText_content = (EditText) findViewById(R.id.editText_content);
-        btn_OK = (Button) findViewById(R.id.btn_OK);
-        btn_cancle = (Button) findViewById(R.id.btn_cancle);
-        imgbtn_addimg = (ImageButton) findViewById(R.id.imgbtn_addimg);
-        imageView = (ImageView) findViewById(R.id.imageView);
+        editText_title = findViewById(R.id.textView_title);
+        editText_content = findViewById(R.id.editText_content);
+        btn_OK = findViewById(R.id.btn_OK);
+        btn_cancle = findViewById(R.id.btn_cancle);
+        imgbtn_addimg = findViewById(R.id.imgbtn_addimg);
+        imageView = findViewById(R.id.imageView);
 
-        intent = getIntent();
-        bundle = intent.getExtras();
-        editText_title.setText(bundle.getString("title"));
-        editText_content.setText(bundle.getString("content"));
-        // Image가 있을 경우에만 세팅한다.
-        strUri = bundle.getString("imageUri");
-        if (strUri != null) {
-            Uri imageUri = Uri.parse(strUri);
-            Glide.with(this).load(imageUri).into(imageView);
-        }
-    }
-
-    private void setListener() {
+        // setListener
         btn_OK.setOnClickListener(clickListener);
         btn_cancle.setOnClickListener(clickListener);
         imgbtn_addimg.setOnClickListener(clickListener);
         imageView.setOnClickListener(clickListener);
+    }
+
+    /**
+     * DB 초기화, 로드
+     */
+    private void initDB() throws SQLException {
+        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
+        memoDao = dbHelper.getMemoDao();
+
+        memoList = memoDao.queryForAll();
+    }
+
+    /**
+     * 수정한 메모를 DB 에 저장한다.
+     */
+    private void updateToDB(Memo memo) throws SQLException {
+
+        memo.setTitle(editText_title.getText().toString());
+        memo.setContent(editText_content.getText().toString());
+        memo.setCurrentDate(new Date(System.currentTimeMillis()));
+
+        if (imageUri != null) strUri = imageUri.toString(); // Uri 를 String 으로 변환해서
+        else strUri = ""; // 이미지가 없는 경우
+        memo.setImgUri(strUri); // Memo 클래스에 넣는다.
+
+        memoDao.update(memo);
+    }
+
+    /**
+     * 각 view 에 내용을 세팅한다.
+     */
+    private void setMemo(int position) {
+        // position 으로 Memo data 를 가져온다.
+        String title = memoList.get(position).getTitle();
+        String content = memoList.get(position).getContent();
+        strUri = memoList.get(position).getImgUri();
+
+        // 가져온 Memo data 를 뿌려준다.
+        editText_title.setText(title);
+        editText_content.setText(content);
+        if (strUri.length() != 0) { // 이미지가 존재할 경우만 세팅한다.
+            Glide.with(this).load(Uri.parse(strUri)).into(imageView);
+        }
     }
 
     /**
@@ -136,67 +157,64 @@ public class MemoModifyActivity extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.btn_OK:
                     try {
-                        updateToDB(datas.get(position));
+                        updateToDB(memoList.get(position));
+                        setResult(RESULT_OK, new Intent()); // MemoViewActivity 로 결과를 콜백한다.
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                     finish();
                     break;
+
                 case R.id.btn_cancle:
                     MemoModifyActivity.super.onBackPressed();
                     break;
+
                 case R.id.imgbtn_addimg :
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(MemoModifyActivity.this); // 1. 팝업창 만들기
                     alertDialog.setTitle("Input Image"); // 2. 팝업창 제목
                     final CharSequence[] items = {"Camera", "Gallery"}; // 3. Items 만들기
-                    alertDialog.setItems(items, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            Intent intent = null;
-                            switch (which) {
-                                case 0 :
-                                    intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                    // 카메라 촬영 후 미디어 컨텐트 Uri를 생성해서 외부저장소에 저장한다.
-                                    // 마시멜로 이상 버전은 아래 코드를 반영해야함.
-                                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                                        ContentValues values = new ContentValues(1);
-                                        values.put(MediaStore.Images.Media.MIME_TYPE, "memo/jpg");
-                                        imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                                        // 컨텐트 Uri강제 세팅
-                                    }
-                                    startActivityForResult(intent, REQ_CAMERA);
-                                    break;
-                                case 1 :
-                                    intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                    intent.setType("image/*"); // 외부저장소에 있는 이미지만 가져오기위한 필터링.
-                                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQ_GALLERY); // createChooser로 타이틀을 붙여줄 수 있다.
-                                    break;
-                            }
+                    alertDialog.setItems(items, (dialog, which) -> {
+                        Intent intent;
+                        switch (which) {
+                            case 0 :
+                                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                // 카메라 촬영 후 미디어 컨텐트 Uri를 생성해서 외부저장소에 저장한다.
+                                // 마시멜로 이상 버전은 아래 코드를 반영해야함.
+                                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                                    ContentValues values = new ContentValues(1);
+                                    values.put(MediaStore.Images.Media.MIME_TYPE, "memo/jpg");
+                                    imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                    // 컨텐트 Uri강제 세팅
+                                }
+                                startActivityForResult(intent, REQ_CAMERA);
+                                break;
+                            case 1 :
+                                intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                intent.setType("image/*"); // 외부저장소에 있는 이미지만 가져오기위한 필터링.
+                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQ_GALLERY); // createChooser로 타이틀을 붙여줄 수 있다.
+                                break;
                         }
                     });
                     alertDialog.show(); // 4. show함수로 팝업창을 띄운다.
                     break;
+
                 case R.id.imageView :
                     AlertDialog.Builder alertImageView = new AlertDialog.Builder(MemoModifyActivity.this);
                     alertImageView.setTitle("Image Option");
                     final CharSequence[] items_ImageView = {"Change", "Delete"};
-                    alertImageView.setItems(items_ImageView, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which) {
-                                case 0 : // Change
-                                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                    intent.setType("image/*"); // 외부저장소에 있는 이미지만 가져오기위한 필터링.
-                                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQ_GALLERY); // createChooser로 타이틀을 붙여줄 수 있다.
-                                    break;
-                                case 1 : // Delete
-                                    imageView.setImageResource(0);
-                                    imageUri = null;
-                                    break;
-                            }
+                    alertImageView.setItems(items_ImageView, (dialog, which) -> {
+                        switch (which) {
+                            case 0 : // Image Change
+                                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                intent.setType("image/*"); // 외부저장소에 있는 이미지만 가져오기위한 필터링.
+                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQ_GALLERY); // createChooser 으로 타이틀을 붙여줄 수 있다.
+                                break;
+                            case 1 : // Image Delete
+                                imageView.setImageResource(0);
+                                imageUri = null;
+                                break;
                         }
                     });
                     alertImageView.show(); // show함수로 팝업창을 띄운다.
@@ -213,7 +231,7 @@ public class MemoModifyActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQ_CAMERA:
                 // 마시멜로버전 이상인 경우에만 getData()에 null이 넘어올것임.
-                if (resultCode == RESULT_OK) { // resultCode OK이면 완료되었다는 뜻.
+                if (resultCode == RESULT_OK) { // resultCode OK 이면 완료되었다는 뜻.
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                         if (data != null && data.getData() != null) {
                             imageUri = data.getData();
@@ -222,8 +240,6 @@ public class MemoModifyActivity extends AppCompatActivity {
                     if (imageUri != null) {
                         Glide.with(this).load(imageUri).into(imageView);
                         //imageView.setImageURI(fileUri);
-                    } else {
-
                     }
                 } else {
                     // TODO: reulstCode가 uri가 남아있는데 삭제처리해야함.
@@ -234,8 +250,6 @@ public class MemoModifyActivity extends AppCompatActivity {
                 if(resultCode == RESULT_OK) {
                     imageUri = data.getData();
                     Glide.with(this).load(imageUri).into(imageView);
-                } else {
-
                 }
                 break;
         }

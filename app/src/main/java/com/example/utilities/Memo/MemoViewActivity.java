@@ -1,14 +1,13 @@
 package com.example.utilities.Memo;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,21 +22,27 @@ import com.j256.ormlite.dao.Dao;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Used by: MemoAdapter
+ * Called by: MemoAdapter
+ */
 public class MemoViewActivity extends AppCompatActivity {
 
     private static final String TAG = "MemoViewActivity";
 
+    final int REQ_MODIFY = 100; // Activity Request code
+
     // Widget
-    TextView textView_title, textView_content;
+    TextView tv_title, tv_content;
     //Button btn_modify, btn_delete;
     ImageView imageView;
 
     // 메모 데이터 관련
-    List<Memo> datas;
-    int position = 0;
+    List<Memo> memoList;
+    int position = 0; // Memo position
 
-    // 이미지 관려
-    String strUri;
+    // 이미지 관련
+    String strUri = "";
 
     // DB 관련
     DBHelper dbHelper;
@@ -51,68 +56,71 @@ public class MemoViewActivity extends AppCompatActivity {
 
         setWidget();
 
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras(); // 번들 단위로 받아온다.
+            assert bundle != null;
+            position = bundle.getInt("position"); // position 을 통해 Memo data 에 접근한다.
+        }
+
         try {
-            setMemo();
+            initDB();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        setMemo(position); // input loaded contents to View. 각 view 에 로드한 내용을 넣는다.
     }
 
     private void setWidget() {
         findViewById(R.id.btn_modify).setOnClickListener(clickListener);
         findViewById(R.id.btn_delete).setOnClickListener(clickListener);
         findViewById(R.id.btn_cancel).setOnClickListener(clickListener);
-        textView_title = findViewById(R.id.textView_title);
-        textView_content = findViewById(R.id.textView_content);
-        textView_content.setMovementMethod(new ScrollingMovementMethod()); // TextView Scrolling
+        tv_title = findViewById(R.id.textView_title);
+        tv_content= findViewById(R.id.textView_content);
+        tv_content.setMovementMethod(new ScrollingMovementMethod()); // TextView Scrolling
         imageView = findViewById(R.id.imageView);
     }
 
-    private void setMemo() throws SQLException{
-
+    /**
+     * DB 초기화 및 로드
+     */
+    public void initDB() throws SQLException {
         dbHelper = OpenHelperManager.getHelper(this, DBHelper.class); // static 불가
         memoDao = dbHelper.getMemoDao();
 
-        datas = memoDao.queryForAll();
+        memoList = memoDao.queryForAll();
+    }
 
-        Intent intent = getIntent();
-        if(intent != null) {
-            Bundle bundle = intent.getExtras(); // 번들 단위로 받아온다.
+    /**
+     * 각 view 에 내용을 세팅한다.
+     */
+    private void setMemo(int position) {
+        // position 으로 Memo data 를 가져온다.
+        String title = memoList.get(position).getTitle();
+        String content = memoList.get(position).getContent();
+        strUri = memoList.get(position).getImgUri();
 
-            // Bundle을 변수에 세팅
-            position = bundle.getInt("position");
-            String title = bundle.getString("title");
-            String content = bundle.getString("content");
-
-            // Bundle 로 받아온 변수를 각 Widget 에 세팅
-            textView_title.setText(title);
-            textView_content.setText(content);
-
-            // Image가 있을 경우에만 세팅한다.
-            strUri = bundle.getString("imageUri");
-            if(strUri != null) {
-                Uri imageUri = Uri.parse(strUri);
-                Glide.with(this).load(imageUri).into(imageView);
-            }
+        // 가져온 Memo data 를 뿌려준다.
+        tv_title.setText(title);
+        tv_content.setText(content);
+        if (strUri.length() != 0) { // 이미지가 존재할 경우만 세팅한다.
+            Glide.with(this).load(Uri.parse(strUri)).into(imageView);
         }
     }
 
-    private void modify() throws SQLException {
+    private void modifyMemo() {
 
-        // 2. New Activity를 editText에 내용을 받고 띄운다
         Intent intent = new Intent(this, MemoModifyActivity.class);
         intent.putExtra("position", position);
-        intent.putExtra("title", textView_title.getText().toString());
-        intent.putExtra("content", textView_content.getText().toString());
-        intent.putExtra("imageUri", strUri);
-        // 1. View Activty 닫고
+
         //finish();
-        startActivity(intent);
+        startActivityForResult(intent, 100);
     }
 
-    private void delete(Memo memo) throws SQLException{
+    private void deleteMemo(Memo memo) throws SQLException{
         memoDao.delete(memo);
-        finish();
+        finish(); // Activity 종료
     }
 
     /**
@@ -123,32 +131,19 @@ public class MemoViewActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.btn_modify:
-                    try {
-                        modify();
-                        // TODO: 수정이 완료된 후 refresh 해주기
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    break;
+                    modifyMemo(); break; // TODO: 수정이 완료된 후 refresh 해주기
                 case R.id.btn_delete:
                     AlertDialog.Builder alert_delete = new AlertDialog.Builder(MemoViewActivity.this);
                     alert_delete.setTitle("DELETE");
                     alert_delete.setMessage("Are you sure you want to delete?");
-                    alert_delete.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                delete(datas.get(position));
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
+                    alert_delete.setPositiveButton("OK", (dialog, which) -> {
+                        try {
+                            deleteMemo(memoList.get(position));
+                        } catch (SQLException e) {
+                            e.printStackTrace();
                         }
                     });
-                    alert_delete.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
+                    alert_delete.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
                     alert_delete.show();
 
                     break;
@@ -159,6 +154,23 @@ public class MemoViewActivity extends AppCompatActivity {
         }
     }; // clickListener
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_MODIFY:
+                if (resultCode == RESULT_OK) { // 수정이 완료된 경우
+                    try {
+                        initDB(); // DB 다시 로드
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    setMemo(position); // 수정된 내용으로 refresh
+                }
+                break;
+        }
+    }
 
     @Override
     protected void onStart() {

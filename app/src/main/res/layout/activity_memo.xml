@@ -5,36 +5,25 @@
     android:id="@+id/activity_memo"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="0dp"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingTop="0dp"
     tools:context="com.example.utilities.Memo.MemoActivity">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/recyclerView"
-        android:padding="0dp"
-        android:paddingBottom="0dp"
-        android:paddingEnd="0dp"
-        android:paddingLeft="0dp"
-        android:paddingRight="0dp"
-        android:paddingStart="0dp"
-        android:paddingTop="0dp">
+        android:id="@+id/recyclerView">
     </android.support.v7.widget.RecyclerView>
 
     <ImageButton
-        android:id="@+id/imgbtn_new"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        app:srcCompat="@android:drawable/ic_menu_add"
-        android:background="@drawable/bg_simple"
+        android:id="@+id/btn_new"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@android:drawable/ic_menu_add"
+        android:background="@drawable/bg_simple_btn_ripple"
         android:layout_marginRight="20dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="17dp" />
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
