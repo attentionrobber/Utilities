@@ -84,22 +84,22 @@
                     android:background="@drawable/bg_simple_thick"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
-                    android:paddingLeft="6dp"
+                    android:paddingLeft="8dp"
                     android:textCursorDrawable="@null"
                     android:cursorVisible="true"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:layout_gravity="bottom"
-                    android:visibility="gone"/>
+                    android:visibility="visible"/>
                 <ImageButton
                     android:id="@+id/button_search_small"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_gravity="bottom|right"
-                    android:src="@drawable/icon_search_rev"
+                    android:src="@drawable/icon_search_small"
                     android:scaleType="fitXY"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:visibility="gone"/>
+                    android:visibility="visible"/>
             </FrameLayout>
         </TableRow>
 

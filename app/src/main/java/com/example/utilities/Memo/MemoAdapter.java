@@ -1,5 +1,6 @@
 package com.example.utilities.Memo;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
@@ -25,6 +26,9 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
     private Context context;
     private Intent intent;
 
+    @SuppressLint("SimpleDateFormat")
+    private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd kk:mm");
+
     MemoAdapter(List<Memo> memos, Context context) { // 생성자
         this.memoList = memos;
         this.context = context;
@@ -34,21 +38,20 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
     // 홀더(한 페이지)에 모양을 저장
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.card_item, parent, false); // context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) 와 같다.
+        View view = LayoutInflater.from(context).inflate(R.layout.item_memo_cardview, parent, false); // context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) 와 같다.
         return new Holder(view);
     }
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-        // 1. 데이터를 행 단위로 꺼낸다.
-        final Memo memo = memoList.get(position); // 멤버변수가 아닌 지역변수를 참조할땐 상수로 가져와야함.
 
-        // 2. 홀더에 데이터를 세팅한다.
+        final Memo memo = memoList.get(position); // 데이터를 행 단위로 꺼낸다. 멤버변수가 아닌 지역변수를 참조할땐 상수로 가져와야함.
+
+        // 홀더에 데이터를 세팅한다.
         holder.textView_title.setText(memo.getTitle());
         holder.textView_content.setText(memo.getContent());
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm");
-        String date_f = format.format(memo.getCurrentDate());
-        holder.textView_time.setText(date_f);
+        String date = df.format(memo.getCurrentDate());
+        holder.textView_time.setText(date);
         holder.imageUri = memo.getImgUri();
         holder.position = position;
     }

@@ -11,6 +11,9 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -103,8 +106,8 @@ public class MemoNewActivity extends AppCompatActivity {
 
         findViewById(R.id.btn_OK).setOnClickListener(this::clickListener);
         findViewById(R.id.btn_cancel).setOnClickListener(this::clickListener);
-        findViewById(R.id.imgbtn_addimg).setOnClickListener(this::clickListener);
-        findViewById(R.id.imgbtn_location).setOnClickListener(this::clickListener);
+        findViewById(R.id.btn_addImg).setOnClickListener(this::clickListener);
+        findViewById(R.id.btn_addLocation).setOnClickListener(this::clickListener);
         findViewById(R.id.imageView).setOnClickListener(this::clickListener);
     }
 
@@ -138,37 +141,12 @@ public class MemoNewActivity extends AppCompatActivity {
                     case 1 : // Gallery
                         intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         intent.setType("image/*"); // 외부저장소에 있는 이미지만 가져오기위한 필터링.
-                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQ_GALLERY); // createChooser로 타이틀을 붙여줄 수 있다.
+                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQ_GALLERY); // createChooser 으로 타이틀을 붙여줄 수 있다.
                         break;
                 }
             }
         });
-        alert_AddImg.show(); // 4. show함수로 팝업창을 띄운다.
-    }
-
-    /**
-     * ImageView 클릭시 이미지 바꿀지 삭제할지 AlertDialog 띄우는 함수
-     */
-    private void alertClickImageView() {
-        if (imageUri != null) { // 이미지가 삽입되었을때만 작동
-            AlertDialog.Builder alertImageView = new AlertDialog.Builder(MemoNewActivity.this);
-            alertImageView.setTitle("Image Option");
-            final CharSequence[] items_ImageView = {"Change", "Delete"};
-            alertImageView.setItems(items_ImageView, (dialog, which) -> {
-                switch (which) {
-                    case 0: // Image Change
-                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        intent.setType("image/*"); // 외부저장소에 있는 이미지만 가져오기위한 필터링.
-                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQ_GALLERY); // createChooser로 타이틀을 붙여줄 수 있다.
-                        break;
-                    case 1: // Image Delete
-                        imageView.setImageResource(0);
-                        imageUri = null;
-                        break;
-                }
-            });
-            alertImageView.show(); // 팝업창을 띄운다.
-        }
+        alert_AddImg.show(); // 4. 팝업창을 띄운다.
     }
 
     /**
@@ -215,6 +193,52 @@ public class MemoNewActivity extends AppCompatActivity {
     }
 
     /**
+     * ImageView 클릭시 이미지 바꿀지 삭제할지 AlertDialog 띄우는 함수
+     */
+    private void alertClickImageView() {
+        if (imageUri != null) { // 이미지가 삽입되었을때만 작동
+            AlertDialog.Builder alertImageView = new AlertDialog.Builder(MemoNewActivity.this);
+            alertImageView.setTitle("Image Option");
+            final CharSequence[] items_ImageView = {"Change", "Delete"};
+            alertImageView.setItems(items_ImageView, (dialog, which) -> {
+                switch (which) {
+                    case 0: // Image Change
+                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        intent.setType("image/*"); // 외부저장소에 있는 이미지만 가져오기위한 필터링.
+                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQ_GALLERY); // createChooser로 타이틀을 붙여줄 수 있다.
+                        break;
+                    case 1: // Image Delete
+                        imageView.setImageResource(0);
+                        imageUri = null;
+                        break;
+                }
+            });
+            alertImageView.show(); // 팝업창을 띄운다.
+        }
+    }
+
+    /**
+     * EditText 안에 이미지를 글자처럼 추가
+     */
+    private void inputImageInsideEditText(String strUri) {
+
+        ImageSpan imageSpan = new ImageSpan(this, Uri.parse(strUri));
+
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(editText_content.getText());
+
+        int selStart = editText_content.getSelectionStart();
+
+        // current selection is replace with imageId
+        builder.replace(editText_content.getSelectionStart(), editText_content.getSelectionEnd(), strUri);
+
+        // This adds a span to display image where the imageId is. If you do builder.toString() - the string will contain imageId where the imageSpan is.
+        // you can use it later - if you want to find location of imageSpan in text;
+        builder.setSpan(imageSpan, selStart, selStart + strUri.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        editText_content.setText(builder);
+    }
+
+    /**
      * ClickListener 함수화
      */
     private void clickListener(View v) {
@@ -243,21 +267,21 @@ public class MemoNewActivity extends AppCompatActivity {
                     MemoNewActivity.super.onBackPressed();
                 }
                 break;
-            case R.id.imgbtn_addimg : // Add Image 버튼 클릭시
+            case R.id.btn_addImg : // Add Image 버튼 클릭시
                 hideKeypad();
                 alertAddImage();
                 break;
-            case R.id.imageView : // ImageView 클릭시
-                hideKeypad();
-                alertClickImageView();
-                break;
-            case R.id.imgbtn_location: // Location 버튼 클릭시
+            case R.id.btn_addLocation: // Location 버튼 클릭시
                 hideKeypad();
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     PermissionControl.checkPermission(MemoNewActivity.this, REQ_LOCATION);
                 } else {
                     alertDialogLocation(); // 내 위치 or 지도 검색할지 선택하는 alert
                 }
+                break;
+            case R.id.imageView : // ImageView 클릭시
+                hideKeypad();
+                alertClickImageView();
                 break;
         }
     }
@@ -293,6 +317,7 @@ public class MemoNewActivity extends AppCompatActivity {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+
     /**
      * startActivityForResult() 후에 실행되는 콜백 함수
      */
@@ -322,7 +347,7 @@ public class MemoNewActivity extends AppCompatActivity {
                 //if(data != null && data.getData() != null) {
                 if (resultCode == RESULT_OK) {
                     imageUri = data.getData();
-                    Glide.with(this).load(imageUri).into(imageView);
+                    inputImageInsideEditText(String.valueOf(imageUri)); // EditText 안에 이미지를 글자처럼 추가
                 }
                 break;
             case REQ_LOCATION: // 내 위치

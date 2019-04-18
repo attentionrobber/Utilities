@@ -20,6 +20,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * GPS 를 이용해 자신의 위치를 찾아준다.
+ * Used by: MainActivity, MemoNewActivity, MemoModifyActivity
+ */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -46,7 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        alertGPS(); // GPS센서가 꺼져있으면 알림 띄워주는 함수
+        alertGPS(); // GPS 센서가 꺼져있으면 알림 띄워주는 함수
 
         // 디폴트 지도 위치 설정 : 서울 신사역 37.516066 127.019361
         LatLng sinsa = new LatLng(37.516066, 127.019361);
