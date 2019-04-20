@@ -1,24 +1,21 @@
 package com.example.utilities.Memo;
 
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.support.annotation.NonNull;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
-import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.utilities.R;
 import com.example.utilities.Util_Class.Logger;
 import com.example.utilities.data.DBHelper;
@@ -28,6 +25,8 @@ import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Used by: MemoAdapter
@@ -49,7 +48,7 @@ public class MemoViewActivity extends AppCompatActivity {
     int position = 0; // Memo position
 
     // 이미지 관련
-    String strUri = "";
+    String[] strUri = new String[10];
 
     // DB 관련
     DBHelper dbHelper;
@@ -105,7 +104,7 @@ public class MemoViewActivity extends AppCompatActivity {
     private void setMemo(int position) {
         // position 으로 Memo data 를 가져온다.
         String title = memoList.get(position).getTitle();
-        String content = memoList.get(position).getContent();
+        String context = memoList.get(position).getContent();
         strUri = memoList.get(position).getImgUri();
 
         // 가져온 Memo data 를 뿌려준다.
@@ -113,13 +112,26 @@ public class MemoViewActivity extends AppCompatActivity {
         //tv_content.setText(content);
 
 
-        ImageSpan imageSpan = new ImageSpan(this, Uri.parse(strUri)); // TODO: need to repeat 필요한만큼 반복
+        Log.i("TESTS", ""+strUri.toString());
 
-        SpannableStringBuilder builder = new SpannableStringBuilder();
-        builder.append(content);
-        // builder.toString() 텍스트 내용 가져옴
-        //Log.i("TESTS", ""+builder.toString());
-        builder.setSpan(imageSpan, builder.length()-1, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        // Image 를 Uri 로 저장해야함. String 을 그대로 옮기기는 힘듬.
+        SpannableStringBuilder builder = new SpannableStringBuilder(context);
+
+        // context 에서 strUri 의 시작, 마지막 위치를 찾는다.
+//        if (context.contains(strUri.get(0))) {
+//            int start = context.indexOf(strUri.get(0));
+//            int end = context.lastIndexOf(strUri.get(0));
+//            Uri uri = null;
+//            for (int i = 0; i < strUri.size(); i++) {
+//                uri = Uri.parse(strUri.get(i));
+//                ImageSpan imageSpan = new ImageSpan(this, uri); // strUri 있는갯수만큼
+//                builder.setSpan(imageSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            }
+//        }
+
+
+
+
 //        builder.setSpan(new ClickableSpan() {
 //            @Override
 //            public void onClick(@NonNull View widget) {
@@ -129,7 +141,7 @@ public class MemoViewActivity extends AppCompatActivity {
 //        }, 11, 13, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 
-        tv_content.setText(builder);
+        tv_content.setText(context);
         tv_content.setMovementMethod(LinkMovementMethod.getInstance()); // TextView 에 있는 이미지 클릭 가능하도록함
 
 
@@ -140,13 +152,45 @@ public class MemoViewActivity extends AppCompatActivity {
 //        }
     }
 
+    /**
+     * ImageSpan 과 SpannableStringBuilder 를 이용해
+     * Uri 로 된 이미지를 TextView 에 표시하기
+     */
+    public CharSequence addSpans(Context context, CharSequence msg) {
+        SpannableStringBuilder builder = new SpannableStringBuilder(msg);
+        Pattern pattern = Pattern.compile("\\[([^\\[\\]]+)\\]");
+        if(pattern != null) {
+            Matcher matcher = pattern.matcher( msg );
+            int matchesSoFar = 0;
+            while(matcher.find()) {
+                CharSequence cs = matcher.group().subSequence(1, matcher.group().length()-1);
+                int value = Integer.parseInt(cs.toString());
+                System.out.println("pattern is::"+matcher.group().subSequence(1, matcher.group().length()-1));
+                int start = matcher.start() - (matchesSoFar * 2);
+                int end = matcher.end() - (matchesSoFar * 2);
+                Drawable Smiley = context.getResources().getDrawable(value);
+                Smiley.setBounds(0, 0,15,15);
+                builder.setSpan(new ImageSpan(Smiley), start + 1, end - 1, 0 );
+                builder.delete(start, start + 1);
+                builder.delete(end - 2, end -1);
+                matchesSoFar++;
+            }
+        }
+        return builder;
+    }
+    public CharSequence spans(String context) {
+
+
+        return spans(context);
+    }
+
     private void modifyMemo() {
 
         Intent intent = new Intent(this, MemoModifyActivity.class);
         intent.putExtra("position", position);
 
         //finish();
-        startActivityForResult(intent, 100);
+        startActivityForResult(intent, REQ_MODIFY);
     }
 
     private void deleteMemo(Memo memo) throws SQLException{
@@ -163,6 +207,7 @@ public class MemoViewActivity extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.btn_modify:
                     modifyMemo(); break; // TODO: 수정이 완료된 후 refresh 해주기
+
                 case R.id.btn_delete:
                     AlertDialog.Builder alert_delete = new AlertDialog.Builder(MemoViewActivity.this);
                     alert_delete.setTitle("DELETE");
@@ -194,10 +239,10 @@ public class MemoViewActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) { // 수정이 완료된 경우
                     try {
                         initDB(); // DB 다시 로드
+                        setMemo(position); // 수정된 내용으로 refresh
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
-                    setMemo(position); // 수정된 내용으로 refresh
                 }
                 break;
         }

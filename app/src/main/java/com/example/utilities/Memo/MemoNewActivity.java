@@ -14,23 +14,18 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.utilities.MapsActivity;
 import com.example.utilities.R;
 import com.example.utilities.Util_Class.Logger;
 import com.example.utilities.Util_Class.PermissionControl;
 import com.example.utilities.data.DBHelper;
 import com.example.utilities.domain.Memo;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
@@ -50,7 +45,6 @@ public class MemoNewActivity extends AppCompatActivity {
     //Button btn_OK, btn_cancel;
     //ImageButton imgbtn_addimg, imgbtn_location;
     EditText editText_title, editText_content;
-    ImageView imageView;
 
     // 권한 관련
     private final int PERM_GRANT = 1;
@@ -63,8 +57,9 @@ public class MemoNewActivity extends AppCompatActivity {
     private final int REQ_GALLERY = 102; // 갤러리 요청 코드
 
     // 이미지 Uri 관련
-    Uri imageUri;
-    String strUri = "";
+    Uri imageUri; // 카메라, 갤러리에서 받아오는 이미지의 Uri
+    String[] strUri = new String[3]; // DB 에 저장되는 String 형태의 Uri. 10개까지 이미지 저장 가능
+    //UriList uriLists;
 
     // Location 관련
     Intent intent; // 지도 인텐트
@@ -80,6 +75,16 @@ public class MemoNewActivity extends AppCompatActivity {
         //checkPermission();
     }
 
+    private void setWidget() {
+        editText_title = findViewById(R.id.textView_title);
+        editText_content = findViewById(R.id.editText_content);
+
+        findViewById(R.id.btn_OK).setOnClickListener(this::clickListener);
+        findViewById(R.id.btn_cancel).setOnClickListener(this::clickListener);
+        findViewById(R.id.btn_addImg).setOnClickListener(this::clickListener);
+        findViewById(R.id.btn_addLocation).setOnClickListener(this::clickListener);
+    }
+
     private Memo makeMemo() {
         Memo memo = new Memo();
 
@@ -87,8 +92,8 @@ public class MemoNewActivity extends AppCompatActivity {
         memo.setContent(editText_content.getText().toString());
         memo.setCurrentDate(new Date(System.currentTimeMillis()));
 
-        if(imageUri != null) strUri = imageUri.toString();
-        else strUri = "";
+//        if(imageUri != null) strUri = imageUri.toString();
+//        else strUri = "";
         memo.setImgUri(strUri);
 
         return memo;
@@ -98,17 +103,6 @@ public class MemoNewActivity extends AppCompatActivity {
         DBHelper dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
         Dao<Memo, Integer> memoDao = dbHelper.getMemoDao();
         memoDao.create(memo);
-    }
-
-    private void setWidget() {
-        editText_title = findViewById(R.id.textView_title);
-        editText_content = findViewById(R.id.editText_content);
-
-        findViewById(R.id.btn_OK).setOnClickListener(this::clickListener);
-        findViewById(R.id.btn_cancel).setOnClickListener(this::clickListener);
-        findViewById(R.id.btn_addImg).setOnClickListener(this::clickListener);
-        findViewById(R.id.btn_addLocation).setOnClickListener(this::clickListener);
-        findViewById(R.id.imageView).setOnClickListener(this::clickListener);
     }
 
     /**
@@ -195,6 +189,7 @@ public class MemoNewActivity extends AppCompatActivity {
     /**
      * ImageView 클릭시 이미지 바꿀지 삭제할지 AlertDialog 띄우는 함수
      */
+    @Deprecated
     private void alertClickImageView() {
         if (imageUri != null) { // 이미지가 삽입되었을때만 작동
             AlertDialog.Builder alertImageView = new AlertDialog.Builder(MemoNewActivity.this);
@@ -208,7 +203,7 @@ public class MemoNewActivity extends AppCompatActivity {
                         startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQ_GALLERY); // createChooser로 타이틀을 붙여줄 수 있다.
                         break;
                     case 1: // Image Delete
-                        imageView.setImageResource(0);
+                        //imageView.setImageResource(0);
                         imageUri = null;
                         break;
                 }
@@ -238,7 +233,7 @@ public class MemoNewActivity extends AppCompatActivity {
     }
 
     /**
-     * ClickListener 함수화
+     * ClickListener
      */
     private void clickListener(View v) {
         switch (v.getId()) {
@@ -278,10 +273,7 @@ public class MemoNewActivity extends AppCompatActivity {
                     alertDialogLocation(); // 내 위치 or 지도 검색할지 선택하는 alert
                 }
                 break;
-            case R.id.imageView : // ImageView 클릭시
-                hideKeypad();
-                alertClickImageView();
-                break;
+            default: break;
         }
     }
 
@@ -328,25 +320,36 @@ public class MemoNewActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case REQ_CAMERA:
-                // 마시멜로버전 이상인 경우에만 getData()에 null이 넘어올것임.
-                if (resultCode == RESULT_OK) { // resultCode OK이면 완료되었다는 뜻.
+                // 마시멜로버전 이상인 경우에만 getData()에 null 이 넘어올것임.
+                if (resultCode == RESULT_OK) { // resultCode OK 이면 완료되었다는 뜻.
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                         if (data != null && data.getData() != null) {
                             imageUri = data.getData();
                         }
                     }
                     if (imageUri != null) {
-                        Glide.with(this).load(imageUri).into(imageView);
+                        // TODO: 카메라 촬영으로 이미지 추가시 처리
                     }
-                } else { // resultCode가 uri가 남아있는데 삭제처리해야함.
+                } else { // resultCode 가 uri 가 남아있는데 삭제처리해야함.
                     //imageUri = null;
                 }
                 break;
             case REQ_GALLERY:
                 //if(data != null && data.getData() != null) {
                 if (resultCode == RESULT_OK) {
-                    imageUri = data.getData(); // TODO: 삭제 예정 (imageUri 는 EditText 로 가게 되므로) or 배열로 저장한다.
-                    inputImageInsideEditText(String.valueOf(imageUri)); // EditText 안에 이미지를 글자처럼 추가
+                    if (strUri[strUri.length-1] == null) { // 최대 이미지 개수(10) 제한
+                        imageUri = data.getData();
+                        inputImageInsideEditText(String.valueOf(imageUri)); // EditText 안에 이미지를 글자처럼 추가
+                        for (int i=0; i<strUri.length; i++) {
+                            if (strUri[i] == null) {
+                                strUri[i] = String.valueOf(imageUri); // DB 에 이미지 Uri 를 저장
+                                //Log.i("TESTS", ""+strUri[i]);
+                                break;
+                            }
+                        }
+                    } else // TODO: 이미지 최대 개수 안내 메세지 좀더 일찍 알려주기
+                        Toast.makeText(this, "이미지를 더 추가할 수 없습니다.", Toast.LENGTH_SHORT);
+
                 }
                 break;
             case REQ_LOCATION: // 내 위치
@@ -389,7 +392,7 @@ public class MemoNewActivity extends AppCompatActivity {
             if( PermissionControl.onCheckResult(grantResults) ) { // 권한이 GRANTED 될 경우
                 //init(); // 프로그램 실행
                 PERM_RESULT = PERM_GRANT;
-                Logger.print("333335", "ssibal");
+                //Logger.print("333335", "ssibal");
             } else {
                 Toast.makeText(this, "권한을 실행하지 않으면 프로그램이 실행되지 않습니다.", Toast.LENGTH_SHORT).show();
                 finish();

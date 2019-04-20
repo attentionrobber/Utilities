@@ -1,7 +1,6 @@
 package com.example.utilities.Memo;
 
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -10,7 +9,6 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,7 +53,7 @@ public class MemoModifyActivity extends AppCompatActivity {
 
     // 이미지 Uri 관련
     Uri imageUri;
-    String strUri;
+    String[] strUri = new String[10];
 
     // DB 관련
     DBHelper dbHelper;
@@ -128,8 +126,8 @@ public class MemoModifyActivity extends AppCompatActivity {
         memo.setContent(editText_content.getText().toString());
         memo.setCurrentDate(new Date(System.currentTimeMillis()));
 
-        if (imageUri != null) strUri = imageUri.toString(); // Uri 를 String 으로 변환해서
-        else strUri = ""; // 이미지가 없는 경우
+//        if (imageUri != null) strUri = imageUri.toString(); // Uri 를 String 으로 변환해서
+//        else strUri = ""; // 이미지가 없는 경우
         memo.setImgUri(strUri); // Memo 클래스에 넣는다.
 
         memoDao.update(memo);
@@ -147,9 +145,9 @@ public class MemoModifyActivity extends AppCompatActivity {
         // 가져온 Memo data 를 뿌려준다.
         editText_title.setText(title);
         editText_content.setText(content);
-        if (strUri.length() != 0) { // 이미지가 존재할 경우만 세팅한다.
-            Glide.with(this).load(Uri.parse(strUri)).into(imageView);
-        }
+//        if (strUri.length() != 0) { // 이미지가 존재할 경우만 세팅한다.
+//            Glide.with(this).load(Uri.parse(strUri)).into(imageView);
+//        }
     }
 
     /**

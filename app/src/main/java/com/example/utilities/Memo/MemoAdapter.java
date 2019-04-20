@@ -52,7 +52,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
         holder.textView_content.setText(memo.getContent());
         String date = df.format(memo.getCurrentDate());
         holder.textView_time.setText(date);
-        holder.imageUri = memo.getImgUri();
+        holder.imgUri = memo.getImgUri();
         holder.position = position;
     }
 
@@ -65,7 +65,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
 
         CardView cardView;
         TextView textView_title, textView_content, textView_time;
-        String imageUri;
+        String[] imgUri = new String[10];
         int position; // holder position
 
         Holder(View itemView) {
