@@ -3,10 +3,12 @@ package com.example.utilities.Memo;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
@@ -102,54 +104,37 @@ public class MemoViewActivity extends AppCompatActivity {
      * 각 view 에 내용을 세팅한다.
      */
     private void setMemo(int position) {
+
         // position 으로 Memo data 를 가져온다.
         String title = memoList.get(position).getTitle();
         String context = memoList.get(position).getContent();
         strUri = memoList.get(position).getImgUri();
 
-        // 가져온 Memo data 를 뿌려준다.
-        tv_title.setText(title);
-        //tv_content.setText(content);
+        SpannableStringBuilder builder = new SpannableStringBuilder(context); // TextView 의 uri 를 text 가 아닌 이미지로 표현하기 위한 builder
 
+        for (String uris : strUri) { // context 에서 strUri 의 시작, 마지막 위치를 찾는다.
+            if (uris != null) {
+                int start = context.indexOf(uris); // uri text 의 시작 위치
+                int end = start + uris.length(); // uri text 의 마지막 위치
+                Uri uri = Uri.parse(uris); // strUri 를 Uri 형식으로 바꿔준다.
+                ImageSpan imageSpan = new ImageSpan(this, uri); // ImageSpan 으로 uri 를 이미지로 나타낸다.
+                builder.setSpan(imageSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); // builder 를 통해 Span 해준다.
+                Log.i("TESTS", "" + start + " // " + end + " // " + uri.toString());
+            } else break;
+        }
 
-        Log.i("TESTS", ""+strUri.toString());
-
-        // Image 를 Uri 로 저장해야함. String 을 그대로 옮기기는 힘듬.
-        SpannableStringBuilder builder = new SpannableStringBuilder(context);
-
-        // context 에서 strUri 의 시작, 마지막 위치를 찾는다.
-//        if (context.contains(strUri.get(0))) {
-//            int start = context.indexOf(strUri.get(0));
-//            int end = context.lastIndexOf(strUri.get(0));
-//            Uri uri = null;
-//            for (int i = 0; i < strUri.size(); i++) {
-//                uri = Uri.parse(strUri.get(i));
-//                ImageSpan imageSpan = new ImageSpan(this, uri); // strUri 있는갯수만큼
-//                builder.setSpan(imageSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            }
-//        }
-
-
-
-
-//        builder.setSpan(new ClickableSpan() {
+//        builder.setSpan(new ClickableSpan() { // span 이미지 클릭이벤트
 //            @Override
 //            public void onClick(@NonNull View widget) {
 //                builder.delete(11, 13);
 //                tv_content.setText(""); // to be MODIFIED
 //            }
 //        }, 11, 13, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        //tv_content.setMovementMethod(LinkMovementMethod.getInstance()); // TextView 에 있는 이미지 클릭 가능하도록함
 
-
-        tv_content.setText(context);
-        tv_content.setMovementMethod(LinkMovementMethod.getInstance()); // TextView 에 있는 이미지 클릭 가능하도록함
-
-
-
-
-//        if (strUri.length() != 0) { // 이미지가 존재할 경우만 세팅한다.
-//            Glide.with(this).load(Uri.parse(strUri)).into(imageView);
-//        }
+        // 가져온 Memo data 를 뿌려준다.
+        tv_title.setText(title);
+        tv_content.setText(builder);
     }
 
     /**
