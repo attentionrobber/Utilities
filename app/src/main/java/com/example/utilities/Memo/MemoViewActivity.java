@@ -1,8 +1,6 @@
 package com.example.utilities.Memo;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -10,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ImageSpan;
 import android.util.Log;
@@ -27,8 +24,6 @@ import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Used by: MemoAdapter
@@ -110,6 +105,16 @@ public class MemoViewActivity extends AppCompatActivity {
         String context = memoList.get(position).getContent();
         strUri = memoList.get(position).getImgUri();
 
+        // 가져온 Memo data 를 뿌려준다.
+        tv_title.setText(title);
+        tv_content.setText(inputImageToTextView(context)); // ImageSpan 을 이용해 uri text 를 이미지로 표시한다.
+    }
+
+    /**
+     * ImageSpan 과 SpannableStringBuilder 를 이용해
+     * Uri 텍스트를 이미지로 TextView 에 표시하기
+     */
+    private CharSequence inputImageToTextView(String context) {
         SpannableStringBuilder builder = new SpannableStringBuilder(context); // TextView 의 uri 를 text 가 아닌 이미지로 표현하기 위한 builder
 
         for (String uris : strUri) { // context 에서 strUri 의 시작, 마지막 위치를 찾는다.
@@ -122,7 +127,6 @@ public class MemoViewActivity extends AppCompatActivity {
                 Log.i("TESTS", "" + start + " // " + end + " // " + uri.toString());
             } else break;
         }
-
 //        builder.setSpan(new ClickableSpan() { // span 이미지 클릭이벤트
 //            @Override
 //            public void onClick(@NonNull View widget) {
@@ -131,50 +135,12 @@ public class MemoViewActivity extends AppCompatActivity {
 //            }
 //        }, 11, 13, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         //tv_content.setMovementMethod(LinkMovementMethod.getInstance()); // TextView 에 있는 이미지 클릭 가능하도록함
-
-        // 가져온 Memo data 를 뿌려준다.
-        tv_title.setText(title);
-        tv_content.setText(builder);
-    }
-
-    /**
-     * ImageSpan 과 SpannableStringBuilder 를 이용해
-     * Uri 로 된 이미지를 TextView 에 표시하기
-     */
-    public CharSequence addSpans(Context context, CharSequence msg) {
-        SpannableStringBuilder builder = new SpannableStringBuilder(msg);
-        Pattern pattern = Pattern.compile("\\[([^\\[\\]]+)\\]");
-        if(pattern != null) {
-            Matcher matcher = pattern.matcher( msg );
-            int matchesSoFar = 0;
-            while(matcher.find()) {
-                CharSequence cs = matcher.group().subSequence(1, matcher.group().length()-1);
-                int value = Integer.parseInt(cs.toString());
-                System.out.println("pattern is::"+matcher.group().subSequence(1, matcher.group().length()-1));
-                int start = matcher.start() - (matchesSoFar * 2);
-                int end = matcher.end() - (matchesSoFar * 2);
-                Drawable Smiley = context.getResources().getDrawable(value);
-                Smiley.setBounds(0, 0,15,15);
-                builder.setSpan(new ImageSpan(Smiley), start + 1, end - 1, 0 );
-                builder.delete(start, start + 1);
-                builder.delete(end - 2, end -1);
-                matchesSoFar++;
-            }
-        }
         return builder;
-    }
-    public CharSequence spans(String context) {
-
-
-        return spans(context);
     }
 
     private void modifyMemo() {
-
         Intent intent = new Intent(this, MemoModifyActivity.class);
         intent.putExtra("position", position);
-
-        //finish();
         startActivityForResult(intent, REQ_MODIFY);
     }
 
@@ -191,7 +157,7 @@ public class MemoViewActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.btn_modify:
-                    modifyMemo(); break; // TODO: 수정이 완료된 후 refresh 해주기
+                    modifyMemo(); break;
 
                 case R.id.btn_delete:
                     AlertDialog.Builder alert_delete = new AlertDialog.Builder(MemoViewActivity.this);

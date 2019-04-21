@@ -302,7 +302,7 @@ public class MemoNewActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQ_CAMERA && resultCode == RESULT_OK) {
+        if (requestCode == REQ_CAMERA && resultCode == RESULT_OK) { // 카메라 촬영으로 이미지 삽입했을 경우
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) { // 마시멜로버전 이상인 경우에만 getData()에 null 이 넘어올것임.
                 if (data != null && data.getData() != null)
                     imageUri = data.getData();
@@ -311,12 +311,11 @@ public class MemoNewActivity extends AppCompatActivity {
                 resultSelectedImages(imageUri);
             imageUri = null;
 
-        } else if (requestCode == REQ_GALLERY && resultCode== RESULT_OK) {
+        } else if (requestCode == REQ_GALLERY && resultCode== RESULT_OK) { // 갤러리 선택으로 이미지 삽입했을 경우
             //if(data != null && data.getData() != null) {
             imageUri = data.getData();
-            Log.i("TESTS", ""+imageUri);
+            //Log.i("TESTS", ""+imageUri);
             if (imageUri != null)
-                // TODO: 내장 갤러리 이용시 Uri가 아닌 path로 받아와져서 구분이 안댐
                 resultSelectedImages(imageUri);
             imageUri = null;
 
@@ -351,7 +350,7 @@ public class MemoNewActivity extends AppCompatActivity {
      */
     private void resultSelectedImages(Uri uri) {
         if (strUri[strUri.length-1] == null) { // 최대 이미지 개수(10) 제한
-            inputImageInsideEditText(uri.toString()); // EditText 안에 이미지를 글자처럼 추가
+            inputImageToEditText(uri.toString()); // EditText 안에 이미지를 글자처럼 추가
             for (int i = 0; i < strUri.length; i++) {
                 if (strUri[i] == null) {
                     strUri[i] = uri.toString(); // DB 에 저장할 수 있도록 이미지 Uri 를 String[] 형태로 초기화
@@ -364,7 +363,7 @@ public class MemoNewActivity extends AppCompatActivity {
     /**
      * EditText 안에 이미지를 글자처럼 추가
      */
-    private void inputImageInsideEditText(String strUri) {
+    private void inputImageToEditText(String strUri) {
 
         ImageSpan imageSpan = new ImageSpan(this, Uri.parse(strUri));
 

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,10 +81,10 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
 
             imageView.setLayoutParams(params);
 
-            imageView.setOnClickListener(v -> { // ImageView 클릭시 ImageDetailViewActivity 로 넘어감.
+            imageView.setOnClickListener(v -> {
 
-                if (mActivity.getIntent().getIntExtra("REQ_CODE", 0) != 0) {
-                    Intent intent = new Intent().setData(Uri.parse(items.get(getAdapterPosition()).getUri()));
+                if (mActivity.getIntent().getIntExtra("REQ_CODE", 0) == 102) { // RequestCode 가 Gallery 일 경우
+                    Intent intent = new Intent().setData(Uri.parse(items.get(getAdapterPosition()).getUri())); // 선택한 이미지의 uri 를 콜백해준다.
                     mActivity.setResult(Activity.RESULT_OK, intent);
                     mActivity.finish();
                 } else {
@@ -94,7 +93,7 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
                     extras.putSerializable("images", (Serializable) items);
                     extras.putInt("position", getAdapterPosition());
                     intent.putExtras(extras);
-                    context.startActivity(intent);
+                    context.startActivity(intent); // ImageDetailViewActivity 로 넘어감.
                 }
             });
         }
