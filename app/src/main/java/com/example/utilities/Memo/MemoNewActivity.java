@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.utilities.Gallery.GalleryActivity;
 import com.example.utilities.MapsActivity;
 import com.example.utilities.R;
 import com.example.utilities.Util_Class.Logger;
@@ -58,8 +59,8 @@ public class MemoNewActivity extends AppCompatActivity {
 
     // 이미지 Uri 관련
     Uri imageUri; // 카메라, 갤러리에서 받아오는 이미지의 Uri
-    String[] strUri = new String[3]; // DB 에 저장되는 String 형태의 Uri. 10개까지 이미지 저장 가능
-    //UriList uriLists;
+    private final int IMG_MAX = 3; // 저장 가능한 이미지 최대 개수
+    String[] strUri = new String[IMG_MAX]; // DB 에 저장되는 String 형태의 Uri.
 
     // Location 관련
     Intent intent; // 지도 인텐트
@@ -85,15 +86,12 @@ public class MemoNewActivity extends AppCompatActivity {
         findViewById(R.id.btn_addLocation).setOnClickListener(this::clickListener);
     }
 
-    private Memo makeMemo() {
+    private Memo createMemo() {
         Memo memo = new Memo();
 
         memo.setTitle(editText_title.getText().toString());
         memo.setContent(editText_content.getText().toString());
         memo.setCurrentDate(new Date(System.currentTimeMillis()));
-
-//        if(imageUri != null) strUri = imageUri.toString();
-//        else strUri = "";
         memo.setImgUri(strUri);
 
         return memo;
@@ -106,10 +104,60 @@ public class MemoNewActivity extends AppCompatActivity {
     }
 
     /**
+     * ClickListener
+     */
+    private void clickListener(View v) {
+        switch (v.getId()) {
+            case R.id.btn_OK:
+                hideKeypad();
+                try {
+                    Memo memo = createMemo();
+                    saveToDB(memo);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                finish();
+                break;
+            case R.id.btn_cancel:
+                hideKeypad();
+                // 제목이나 내용을 작성했을 경우에만 AlertDialog 나타나게함.
+                if( !(editText_title.getText().toString().equals("")) || !(editText_content.getText().toString().equals(""))) {
+                    AlertDialog.Builder alert_cancel = new AlertDialog.Builder(MemoNewActivity.this);
+                    alert_cancel.setTitle("CANCEL WRITING A NOTE");
+                    alert_cancel.setMessage("Exit without saving.");
+                    alert_cancel.setPositiveButton("OK", (dialog, which) -> MemoNewActivity.super.onBackPressed());
+                    alert_cancel.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                    alert_cancel.show();
+                } else {
+                    MemoNewActivity.super.onBackPressed();
+                }
+                break;
+            case R.id.btn_addImg: // Add Image 버튼 클릭시
+                if (strUri[strUri.length-1] != null) // 이미지가 10개 꽉 찼을 경우
+                    Toast.makeText(this, "이미지를 더 추가할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                else {
+                    hideKeypad();
+                    alertAddImage();
+                }
+                break;
+            case R.id.btn_addLocation: // Add Location 버튼 클릭시
+                hideKeypad();
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    PermissionControl.checkPermission(MemoNewActivity.this, REQ_LOCATION);
+                } else {
+                    alertAddLocation(); // 내 위치 or 지도 검색할지 선택하는 alert
+                }
+                break;
+            default: break;
+        }
+    } // clickListener
+
+    /**
      * 이미지 추가 버튼 눌렀을때
      * 카메라, 갤러리 둘 중 선택하는 AlertDialog 띄우는 함수
      */
     private void alertAddImage() {
+
         AlertDialog.Builder alert_AddImg = new AlertDialog.Builder(MemoNewActivity.this);// 1. Dialog 만들기
         alert_AddImg.setTitle("Input Image"); // 2. Dialog 제목
         final CharSequence[] items_AddImg = {"Camera", "Gallery"}; // 3. Dialog Items 만들기
@@ -133,21 +181,24 @@ public class MemoNewActivity extends AppCompatActivity {
                         startActivityForResult(intent, REQ_CAMERA);
                         break;
                     case 1 : // Gallery
-                        intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        intent.setType("image/*"); // 외부저장소에 있는 이미지만 가져오기위한 필터링.
-                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQ_GALLERY); // createChooser 으로 타이틀을 붙여줄 수 있다.
+//                        intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                        intent.setType("image/*"); // 외부저장소에 있는 이미지만 가져오기위한 필터링.
+//                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQ_GALLERY); // createChooser 으로 타이틀을 붙여줄 수 있다.
+                        intent = new Intent(MemoNewActivity.this, GalleryActivity.class);
+                        intent.putExtra("REQ_CODE", REQ_GALLERY);
+                        startActivityForResult(intent, REQ_GALLERY);
                         break;
                 }
             }
         });
         alert_AddImg.show(); // 4. 팝업창을 띄운다.
-    }
+    } // alertAddImage()
 
     /**
-     * 위치 추가 버튼
+     * 위치 추가 버튼을 눌렀을때
      * 현재 위치 추가할지, 장소 검색 후 위치 추가할지 선택하는 AlertDialog
      */
-    private void alertDialogLocation() {
+    private void alertAddLocation() {
         AlertDialog.Builder alertLocation = new AlertDialog.Builder(MemoNewActivity.this);
         alertLocation.setTitle("Location Option");
         final CharSequence[] items_Location = {"Current Location", "Search Location"};
@@ -171,8 +222,8 @@ public class MemoNewActivity extends AppCompatActivity {
                     break;
             }
         });
-        alertLocation.show(); // show함수로 팝업창을 띄운다.
-    }
+        alertLocation.show(); // 팝업창을 띄운다.
+    } // alertAddLocation()
 
     private void searchByPlacePicker(){
 //        PlacePicker.IntentBuilder placepicker = new PlacePicker.IntentBuilder();
@@ -212,82 +263,17 @@ public class MemoNewActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * EditText 안에 이미지를 글자처럼 추가
-     */
-    private void inputImageInsideEditText(String strUri) {
-
-        ImageSpan imageSpan = new ImageSpan(this, Uri.parse(strUri));
-
-        int selStart = editText_content.getSelectionStart(); // 커서 시작 위치
-        int selEnd = editText_content.getSelectionEnd(); // 커서 마지막 위치
-
-        SpannableStringBuilder builder = new SpannableStringBuilder();
-        builder.append(editText_content.getText()); // builder 에 editText 의 내용을 붙인다.
-        builder.replace(selStart, selEnd, strUri); // 커서의 시작 위치부터 마지막 위치까지 strUri 로 대체된다.
-
-        // This adds a span to display image where the imageId is. If you do builder.toString() - the string will contain imageId where the imageSpan is.
-        // you can use it later - if you want to find location of imageSpan in text;
-        builder.setSpan(imageSpan, selStart, selStart + strUri.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        editText_content.setText(builder);
-    }
-
-    /**
-     * ClickListener
-     */
-    private void clickListener(View v) {
-        switch (v.getId()) {
-            case R.id.btn_OK :
-                hideKeypad();
-                try {
-                    Memo memo = makeMemo();
-                    saveToDB(memo);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                finish();
-                break;
-            case R.id.btn_cancel :
-                hideKeypad();
-                // 제목이나 내용을 작성했을 경우에만 AlertDialog 나타나게함.
-                if( !(editText_title.getText().toString().equals("")) || !(editText_content.getText().toString().equals(""))) {
-                    AlertDialog.Builder alert_cancel = new AlertDialog.Builder(MemoNewActivity.this);
-                    alert_cancel.setTitle("CANCEL WRITING A NOTE");
-                    alert_cancel.setMessage("Exit without saving.");
-                    alert_cancel.setPositiveButton("OK", (dialog, which) -> MemoNewActivity.super.onBackPressed());
-                    alert_cancel.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-                    alert_cancel.show();
-                } else {
-                    MemoNewActivity.super.onBackPressed();
-                }
-                break;
-            case R.id.btn_addImg : // Add Image 버튼 클릭시
-                hideKeypad();
-                alertAddImage();
-                break;
-            case R.id.btn_addLocation: // Location 버튼 클릭시
-                hideKeypad();
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    PermissionControl.checkPermission(MemoNewActivity.this, REQ_LOCATION);
-                } else {
-                    alertDialogLocation(); // 내 위치 or 지도 검색할지 선택하는 alert
-                }
-                break;
-            default: break;
-        }
-    }
-
     private void checkPermission(int permission) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // 안드로이드 버전 체크
             if (PermissionControl.checkPermission(this, permission)) { // 권한 체크
                 //init();
                 PERM_RESULT = PERM_GRANT;
-                Logger.print("111115", "ssibal");
+                //Logger.print("checkPermission", "if ----");
             }
         } else {
             //init(); // 프로그램 실행
             PERM_RESULT = PERM_GRANT;
-            Logger.print("222225", "ssibal");
+            //Logger.print("checkPermission", "else ----");
         }
     }
 
@@ -316,69 +302,81 @@ public class MemoNewActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Logger.print("requestCode==========================="+requestCode,"MemoNewActivity");
+        if (requestCode == REQ_CAMERA && resultCode == RESULT_OK) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) { // 마시멜로버전 이상인 경우에만 getData()에 null 이 넘어올것임.
+                if (data != null && data.getData() != null)
+                    imageUri = data.getData();
+            }
+            if (imageUri != null)
+                resultSelectedImages(imageUri);
+            imageUri = null;
 
-        switch (requestCode) {
-            case REQ_CAMERA:
-                // 마시멜로버전 이상인 경우에만 getData()에 null 이 넘어올것임.
-                if (resultCode == RESULT_OK) { // resultCode OK 이면 완료되었다는 뜻.
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                        if (data != null && data.getData() != null) {
-                            imageUri = data.getData();
-                        }
-                    }
-                    if (imageUri != null) {
-                        // TODO: 카메라 촬영으로 이미지 추가시 처리
-                    }
-                } else { // resultCode 가 uri 가 남아있는데 삭제처리해야함.
-                    //imageUri = null;
-                }
-                break;
-            case REQ_GALLERY:
-                //if(data != null && data.getData() != null) {
-                if (resultCode == RESULT_OK) {
-                    if (strUri[strUri.length-1] == null) { // 최대 이미지 개수(10) 제한
-                        imageUri = data.getData();
-                        inputImageInsideEditText(String.valueOf(imageUri)); // EditText 안에 이미지를 글자처럼 추가
-                        for (int i=0; i<strUri.length; i++) {
-                            if (strUri[i] == null) {
-                                strUri[i] = String.valueOf(imageUri); // DB 에 이미지 Uri 를 저장
-                                //Log.i("TESTS", ""+strUri[i]);
-                                break;
-                            }
-                        }
-                    } else // TODO: 이미지 최대 개수 안내 메세지 좀더 일찍 알려주기
-                        Toast.makeText(this, "이미지를 더 추가할 수 없습니다.", Toast.LENGTH_SHORT);
+        } else if (requestCode == REQ_GALLERY && resultCode== RESULT_OK) {
+            //if(data != null && data.getData() != null) {
+            imageUri = data.getData();
+            Log.i("TESTS", ""+imageUri);
+            if (imageUri != null)
+                // TODO: 내장 갤러리 이용시 Uri가 아닌 path로 받아와져서 구분이 안댐
+                resultSelectedImages(imageUri);
+            imageUri = null;
 
-                }
-                break;
-            case REQ_LOCATION: // 내 위치
-                if (resultCode == RESULT_OK) {
-                    bundle = data.getExtras();
-                    if (bundle != null) {
-                        double latitude = bundle.getDouble("latitude");
-                        double longitude = bundle.getDouble("longitude");
-                        String url = "http://maps.google.com/?q="; // 구글맵 기본 url
-                        String locationUrl = url + latitude + "," + longitude;
-                        editText_content.append(locationUrl);
-                    }
-                }
-                break;
-            case REQ_PLACE_PICKER:
-                if (resultCode == RESULT_OK) {
-//                    Place place = PlacePicker.getPlace(data, this);
-//                    String address = String.valueOf(place.getAddress()); // 선택한 place의 주소
-//                    String name = String.valueOf(place.getName()); // 선택한 place의 검색시 타이틀
-//                    String url = "http://maps.google.com/?q="; // 구글맵 기본 url
-//                    String latlngStr = String.valueOf(place.getLatLng()); // Latlng을 String으로 변환함
-//                    String split[] = latlngStr.split(",");
-//                    String lat = split[0].replaceAll("[^0-9|.]", ""); // 숫자와 .(dot)을 제외한 문자를 모두 없앤다.
-//                    String lng = split[1].replaceAll("[^0-9|.]", "");
-//                    editText_content.append("\n" + address+ " " + name);
-//                    editText_content.append("\n" + url + lat + "," + lng);
-                }
-                break;
+        } else if (requestCode == REQ_LOCATION && resultCode == RESULT_OK) {
+            bundle = data.getExtras();
+            if (bundle != null) {
+                double latitude = bundle.getDouble("latitude");
+                double longitude = bundle.getDouble("longitude");
+                String url = "http://maps.google.com/?q="; // 구글맵 기본 url
+                String locationUrl = url + latitude + "," + longitude;
+                editText_content.append(locationUrl);
+            }
+
+        } else if (requestCode == REQ_PLACE_PICKER && resultCode == RESULT_OK) {
+//            Place place = PlacePicker.getPlace(data, this);
+//            String address = String.valueOf(place.getAddress()); // 선택한 place의 주소
+//            String name = String.valueOf(place.getName()); // 선택한 place의 검색시 타이틀
+//            String url = "http://maps.google.com/?q="; // 구글맵 기본 url
+//            String latlngStr = String.valueOf(place.getLatLng()); // Latlng을 String으로 변환함
+//            String split[] = latlngStr.split(",");
+//            String lat = split[0].replaceAll("[^0-9|.]", ""); // 숫자와 .(dot)을 제외한 문자를 모두 없앤다.
+//            String lng = split[1].replaceAll("[^0-9|.]", "");
+//            editText_content.append("\n" + address+ " " + name);
+//            editText_content.append("\n" + url + lat + "," + lng);
         }
+    }
+
+    /**
+     * Used by: onActivityResult
+     * 카메라에서 촬영하거나 갤러리에서 선택한 이미지를
+     * EditText 에 세팅하고 이미지 Uri 를 DB에 저장할 형태로 초기화한다.
+     */
+    private void resultSelectedImages(Uri uri) {
+        if (strUri[strUri.length-1] == null) { // 최대 이미지 개수(10) 제한
+            inputImageInsideEditText(uri.toString()); // EditText 안에 이미지를 글자처럼 추가
+            for (int i = 0; i < strUri.length; i++) {
+                if (strUri[i] == null) {
+                    strUri[i] = uri.toString(); // DB 에 저장할 수 있도록 이미지 Uri 를 String[] 형태로 초기화
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * EditText 안에 이미지를 글자처럼 추가
+     */
+    private void inputImageInsideEditText(String strUri) {
+
+        ImageSpan imageSpan = new ImageSpan(this, Uri.parse(strUri));
+
+        int start = editText_content.getSelectionStart(); // 커서 시작 위치
+        int end = editText_content.getSelectionEnd(); // 커서 마지막 위치
+
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(editText_content.getText()); // builder 에 editText 의 내용을 붙인다.
+        builder.replace(start, end, strUri); // 커서의 시작 위치부터 마지막 위치까지 strUri 로 대체된다.
+        builder.setSpan(imageSpan, start, start + strUri.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        editText_content.setText(builder);
     }
 
     /**

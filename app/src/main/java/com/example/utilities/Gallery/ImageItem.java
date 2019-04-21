@@ -9,13 +9,15 @@ import java.io.Serializable;
 public class ImageItem implements Serializable {
 
     private String path;
+    private String uri;
     private String title;
     private String date;
     private String size;
     private int position;
 
-    ImageItem(String path, String title, String date, String size, int position) {
+    ImageItem(String path, String uri, String title, String date, String size, int position) {
         this.path = path;
+        this.uri = uri;
         this.title = title;
         this.date = date;
         this.size = size;
@@ -24,6 +26,10 @@ public class ImageItem implements Serializable {
 
     public String getPath() {
         return path;
+    }
+
+    public String getUri() {
+        return uri;
     }
 
     public String getTitle() {

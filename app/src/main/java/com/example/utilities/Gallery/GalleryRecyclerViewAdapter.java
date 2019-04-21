@@ -1,11 +1,14 @@
 package com.example.utilities.Gallery;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,23 +23,25 @@ import java.util.List;
 
 /**
  * 폴더에 들어있는 이미지들을 3줄로 나타내는 어댑터
- * Used by : GalleryActivity,
+ * Used by : GalleryActivity
  */
 public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecyclerViewAdapter.ViewHolder> {
 
-    private final Context context;
     private List<ImageItem> items;
+    private final Context context;
+    private Activity mActivity;
 
-    GalleryRecyclerViewAdapter(Context context, List<ImageItem> items) {
+    GalleryRecyclerViewAdapter(Activity activity, Context context, List<ImageItem> items) {
         this.context = context;
         this.items = items;
+        this.mActivity = activity;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_image_recyclerview, viewGroup, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, mActivity);
     }
 
     @Override
@@ -60,10 +65,12 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
     class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
+        Activity mActivity;
 
-        ViewHolder(View view) {
+        ViewHolder(View view, Activity mActivity) {
             super(view);
 
+            this.mActivity = mActivity;
             DisplayMetrics metrics = new DisplayMetrics();
             WindowManager windowManager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
             windowManager.getDefaultDisplay().getMetrics(metrics);
@@ -76,12 +83,19 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
             imageView.setLayoutParams(params);
 
             imageView.setOnClickListener(v -> { // ImageView 클릭시 ImageDetailViewActivity 로 넘어감.
-                Intent intent = new Intent(context, ImageDetailViewActivity.class);
-                Bundle extras = new Bundle();
-                extras.putSerializable("images", (Serializable) items);
-                extras.putInt("position", getAdapterPosition());
-                intent.putExtras(extras);
-                context.startActivity(intent);
+
+                if (mActivity.getIntent().getIntExtra("REQ_CODE", 0) != 0) {
+                    Intent intent = new Intent().setData(Uri.parse(items.get(getAdapterPosition()).getUri()));
+                    mActivity.setResult(Activity.RESULT_OK, intent);
+                    mActivity.finish();
+                } else {
+                    Intent intent = new Intent(context, ImageDetailViewActivity.class);
+                    Bundle extras = new Bundle();
+                    extras.putSerializable("images", (Serializable) items);
+                    extras.putInt("position", getAdapterPosition());
+                    intent.putExtras(extras);
+                    context.startActivity(intent);
+                }
             });
         }
 

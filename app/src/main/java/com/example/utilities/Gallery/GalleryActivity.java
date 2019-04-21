@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -49,15 +50,18 @@ public class GalleryActivity extends AppCompatActivity {
     List<ImageItem> images = new ArrayList<>(); // Images in bucket. bucket 안의 이미지
     String bucketName = ""; // 선택된 버켓(폴더) 이름
 
-//    Uri fileUri = null; // Image // 사진 촬영 후 임시로 저장할 공간
+    public int req_code = 0; // 다른 액티비티에서 넘어오는 requestCode
 //    private final int REQ_PERMISSION = 100; // 권한 요청 코드
-    private final int REQ_CAMERA = 101; // 카매라 요청 코드
+    private final int REQ_CAMERA = 101; // 카메라 요청 코드
 //    private final int REQ_GALLERY = 102; // 갤러리 요청 코드
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
+
+        if (getIntent() != null)
+            req_code = getIntent().getIntExtra("REQ_CODE", 0);
 
         setWidget();
         init();
@@ -88,7 +92,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         if (!bucketName.equals("")) { // bucketName 이 초기화 됐을 경우
             images = getImagesByBucket(bucketName);
-            imgAdapter = new GalleryRecyclerViewAdapter(this, images);
+            imgAdapter = new GalleryRecyclerViewAdapter(this, this, images);
             recyclerView.setAdapter(imgAdapter);
         }
     }
@@ -152,28 +156,30 @@ public class GalleryActivity extends AppCompatActivity {
     public List<ImageItem> getImagesByBucket(@NonNull String bucketName){
 
         List<ImageItem> images = new ArrayList<>();
-        String path, title, date, size;
+        String path, uri, title, date, size;
         int position = -1;
 
-        Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String [] projection = {MediaStore.Images.Media.DATA, // uri(path)
+        Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        String [] projection = {MediaStore.Images.Media.DATA, // path
+                                MediaStore.Images.Media._ID, // uri
                                 MediaStore.Images.Media.TITLE, // name
                                 MediaStore.Images.Media.DATE_ADDED,
                                 MediaStore.Images.Media.SIZE };
         String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME+" =?"; // 폴더명으로 선별(bucketName)
         String orderBy = MediaStore.Images.Media.DATE_ADDED+" DESC";
 
-        Cursor cursor = getContentResolver().query(uri, projection, selection, new String[]{bucketName}, orderBy);
+        Cursor cursor = getContentResolver().query(contentUri, projection, selection, new String[]{bucketName}, orderBy);
         if(cursor != null){
             File file;
             while (cursor.moveToNext()){
                 path = cursor.getString(cursor.getColumnIndex(projection[0]));
-                title = cursor.getString(cursor.getColumnIndex(projection[1]));
-                date = cursor.getString(cursor.getColumnIndex(projection[2]));
-                size = cursor.getString(cursor.getColumnIndex(projection[3]));
+                uri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, ""+cursor.getString(cursor.getColumnIndex(projection[1]))).toString();
+                title = cursor.getString(cursor.getColumnIndex(projection[2]));
+                date = cursor.getString(cursor.getColumnIndex(projection[3]));
+                size = cursor.getString(cursor.getColumnIndex(projection[4]));
                 file = new File(path);
                 if (file.exists() && !images.contains(path)) { // images 에 path 가 없을 경우( = 같은 파일이 아닐 경우)
-                    images.add(new ImageItem(path, title, date, size, position++));
+                    images.add(new ImageItem(path, uri, title, date, size, position++));
                 }
             }
             cursor.close();
@@ -192,7 +198,7 @@ public class GalleryActivity extends AppCompatActivity {
         recyclerView.setVisibility(View.VISIBLE);
         tv_galleryTitle.setText(bucketName + " (" + countOfEachBuckets.get(position) + ")");
 
-        imgAdapter = new GalleryRecyclerViewAdapter(this, images);
+        imgAdapter = new GalleryRecyclerViewAdapter(this, this, images);
         recyclerView.setAdapter(imgAdapter);
         if (mColumnCount <= 1) {
             recyclerView.setLayoutManager(new LinearLayoutManager(this)); // Recycler View 매니저 등록하기(View의 모양(Grid, 일반, 비대칭Grid)을 결정한다.)
@@ -240,7 +246,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case REQ_CAMERA:
-                if (resultCode == RESULT_OK) {// resultCode OK이면 완료되었다는 뜻.
+                if (resultCode == RESULT_OK) {
                     init();
                     //Logger.print("TAG", "Activity Result");
                 }
