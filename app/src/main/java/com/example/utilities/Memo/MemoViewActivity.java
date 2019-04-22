@@ -22,6 +22,9 @@ import com.example.utilities.domain.Memo;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -45,7 +48,7 @@ public class MemoViewActivity extends AppCompatActivity {
     int position = 0; // Memo position
 
     // 이미지 관련
-    String[] strUri = new String[10];
+    String strUri = "";
 
     // DB 관련
     DBHelper dbHelper;
@@ -107,25 +110,34 @@ public class MemoViewActivity extends AppCompatActivity {
 
         // 가져온 Memo data 를 뿌려준다.
         tv_title.setText(title);
-        tv_content.setText(inputImageToTextView(context)); // ImageSpan 을 이용해 uri text 를 이미지로 표시한다.
+        tv_content.setText(inputImageToTextView(context, strUri)); // ImageSpan 을 이용해 uri text 를 이미지로 표시한다.
     }
 
     /**
      * ImageSpan 과 SpannableStringBuilder 를 이용해
      * Uri 텍스트를 이미지로 TextView 에 표시하기
      */
-    private CharSequence inputImageToTextView(String context) {
+    private CharSequence inputImageToTextView(String context, String strUri) {
+
         SpannableStringBuilder builder = new SpannableStringBuilder(context); // TextView 의 uri 를 text 가 아닌 이미지로 표현하기 위한 builder
 
-        for (String uris : strUri) { // context 에서 strUri 의 시작, 마지막 위치를 찾는다.
-            if (uris != null) {
-                int start = context.indexOf(uris); // uri text 의 시작 위치
-                int end = start + uris.length(); // uri text 의 마지막 위치
-                Uri uri = Uri.parse(uris); // strUri 를 Uri 형식으로 바꿔준다.
-                ImageSpan imageSpan = new ImageSpan(this, uri); // ImageSpan 으로 uri 를 이미지로 나타낸다.
-                builder.setSpan(imageSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); // builder 를 통해 Span 해준다.
-                Log.i("TESTS", "" + start + " // " + end + " // " + uri.toString());
-            } else break;
+        if (!strUri.equals("")) { // 이미지가 있을 경우에만 실행
+            try {
+                BufferedReader br = new BufferedReader(new StringReader(strUri));
+                String line;
+                while ((line = br.readLine()) != null) { // context 에서 strUri 의 시작, 마지막 위치를 찾는다.
+                    if (context.contains(line)) {
+                        int start = context.indexOf(line); // uri text 의 시작 위치
+                        int end = start + line.length(); // uri text 의 마지막 위치
+                        Uri uri = Uri.parse(line); // strUri 를 Uri 형식으로 바꿔준다.
+                        ImageSpan imageSpan = new ImageSpan(this, uri); // ImageSpan 으로 uri 를 이미지로 나타낸다.
+                        builder.setSpan(imageSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); // builder 를 통해 Span 해준다.
+                        //Log.i("TESTS", "" + start + " // " + end + " // " + line);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 //        builder.setSpan(new ClickableSpan() { // span 이미지 클릭이벤트
 //            @Override

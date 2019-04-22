@@ -29,15 +29,15 @@ public class Memo implements Serializable {
     @DatabaseField
     private Date currentDate;
 
-    @DatabaseField(dataType = DataType.SERIALIZABLE)
-    private String[] imgUri = new String[10]; // 최대 10개 이미지 저장 가능
+    @DatabaseField
+    private String imgUri; // 최대 10개 이미지 저장 가능
 
     public Memo() {
 
     }
 
     // create 에 사용할 생성자
-    public Memo(String title, String content, Date currentDate, String[] imgUri) {
+    public Memo(String title, String content, Date currentDate, String imgUri) {
         this.title = title;
         this.content = content;
         this.currentDate = currentDate;
@@ -60,7 +60,7 @@ public class Memo implements Serializable {
         return currentDate;
     }
 
-    public String[] getImgUri() {
+    public String getImgUri() {
         return imgUri;
     }
 
@@ -76,7 +76,7 @@ public class Memo implements Serializable {
         this.currentDate = currentDate;
     }
 
-    public void setImgUri(String[] imgUri) {
+    public void setImgUri(String imgUri) {
         this.imgUri = imgUri;
     }
 

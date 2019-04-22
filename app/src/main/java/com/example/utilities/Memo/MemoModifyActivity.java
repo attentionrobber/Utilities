@@ -27,6 +27,9 @@ import com.example.utilities.domain.Memo;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,9 +59,8 @@ public class MemoModifyActivity extends AppCompatActivity {
     int position = 0; // Memo position
 
     // 이미지 Uri 관련
-    Uri imageUri; // 카메라, 갤러리에서 받아오는 이미지의 Uri
-    private final int IMG_MAX = 3; // 저장 가능한 이미지 최대 개수
-    String[] strUri = new String[IMG_MAX]; // DB 에 저장되는 String 형태의 Uri.
+    Uri imgUri; // 카메라, 갤러리에서 받아오는 이미지의 Uri
+    String uri_temp = ""; // DB 에 저장하기 위해 imgUri 를 여러개 저장하는 임시 변수
 
     // DB 관련
     DBHelper dbHelper;
@@ -125,12 +127,29 @@ public class MemoModifyActivity extends AppCompatActivity {
      */
     private void updateToDB(Memo memo) throws SQLException {
 
+        String context = editText_content.getText().toString();
+
         memo.setTitle(editText_title.getText().toString());
-        memo.setContent(editText_content.getText().toString());
+        memo.setContent(context);
         memo.setCurrentDate(new Date(System.currentTimeMillis()));
 
         // TODO: 이미지 추가했다가 삭제 했을 경우
-        memo.setImgUri(strUri); // Memo 클래스에 넣는다.
+        /*
+         * strUri_temp 에 있는 uri 중 이미지를 넣었다 없앤 것을 제거해준다.
+         */
+        BufferedReader br = new BufferedReader(new StringReader(uri_temp));
+        String line;
+        String uri = "";
+        try {
+            while ( (line = br.readLine()) != null) { // BufferedReader 를 이용해 strUri_temp 를 한줄씩 읽는다.
+                if (context.contains(line)) { // 메모 내용에 한줄씩 읽은 uri 가 포함된 경우에만
+                    uri = uri.concat(line).concat("\n"); // String uri 에 추가한다.
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        memo.setImgUri(uri);
 
         memoDao.update(memo);
     }
@@ -142,32 +161,52 @@ public class MemoModifyActivity extends AppCompatActivity {
         // position 으로 Memo data 를 가져온다.
         String title = memoList.get(position).getTitle();
         String context = memoList.get(position).getContent();
-        strUri = memoList.get(position).getImgUri();
+        uri_temp = memoList.get(position).getImgUri();
 
         // 가져온 Memo data 를 뿌려준다.
-        editText_title.setText(title);
-        inputImageToEditText(context); // ImageSpan 을 이용해 uri text 를 이미지로 표시한다.
+        editText_title.setText(title);; // ImageSpan 을 이용해 uri text 를 이미지로 표시한다.
+        editText_content.setText(setEditTextWithImage(context, uri_temp));
+   }
+
+    private CharSequence setEditTextWithImage(String context, String strUri) {
+        SpannableStringBuilder builder = new SpannableStringBuilder(context); //
+
+        if (!strUri.equals("")) {
+            try {
+                BufferedReader br = new BufferedReader(new StringReader(strUri));
+                String line;
+                while ( (line = br.readLine()) != null) {
+                    int start = context.indexOf(line);
+                    ImageSpan imageSpan = new ImageSpan(this, Uri.parse(line));
+                    builder.setSpan(imageSpan, start, start + line.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return builder;
     }
 
     /**
      * ImageSpan 과 SpannableStringBuilder 를 이용해
      * EditText 안에 Uri 텍스트를 이미지로 추가
      */
-    private void inputImageToEditText(String strUri) {
+    private void inputImageToEditText(EditText editText, Uri uri) {
+        String strUri = uri.toString();
+        ImageSpan imageSpan = new ImageSpan(this, uri);
 
-        ImageSpan imageSpan = new ImageSpan(this, Uri.parse(strUri));
-
-        int start = editText_content.getSelectionStart(); // 커서 시작 위치
-        int end = editText_content.getSelectionEnd(); // 커서 마지막 위치
+        int start = editText.getSelectionStart(); // 커서 시작 위치
+        int end = editText.getSelectionEnd(); // 커서 마지막 위치
 
         SpannableStringBuilder builder = new SpannableStringBuilder();
-        builder.append(editText_content.getText()); // builder 에 editText 의 내용을 붙인다.
+        builder.append(editText.getText()); // builder 에 editText 의 내용을 붙인다.
         builder.replace(start, end, strUri); // 커서의 시작 위치부터 마지막 위치까지 strUri 로 대체된다.
         builder.setSpan(imageSpan, start, start + strUri.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        editText_content.setText(builder);
+        uri_temp = uri_temp.concat(strUri).concat("\n");
+        editText.setText(builder);
     }
-
 
     /**
      * Listener 계열
@@ -213,8 +252,8 @@ public class MemoModifyActivity extends AppCompatActivity {
                     if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                         ContentValues values = new ContentValues(1);
                         values.put(MediaStore.Images.Media.MIME_TYPE, "memo/jpg");
-                        imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                        imgUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                         // 컨텐트 Uri 강제 세팅
                     }
@@ -265,7 +304,7 @@ public class MemoModifyActivity extends AppCompatActivity {
      */
     @Deprecated
     private void alertClickImageView() {
-        if (imageUri != null) { // 이미지가 삽입되었을때만 작동
+        if (imgUri != null) { // 이미지가 삽입되었을때만 작동
             AlertDialog.Builder alertImageView = new AlertDialog.Builder(MemoModifyActivity.this);
             alertImageView.setTitle("Image Option");
             final CharSequence[] items_ImageView = {"Change", "Delete"};
@@ -278,7 +317,7 @@ public class MemoModifyActivity extends AppCompatActivity {
                         break;
                     case 1: // Image Delete
                         //imageView.setImageResource(0);
-                        imageUri = null;
+                        imgUri = null;
                         break;
                 }
             });
@@ -296,18 +335,18 @@ public class MemoModifyActivity extends AppCompatActivity {
             case REQ_CAMERA:
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) { // 마시멜로버전 이상인 경우에만 getData()에 null 이 넘어올것임.
                     if (data != null && data.getData() != null)
-                        imageUri = data.getData();
+                        imgUri = data.getData();
                 }
-                if (imageUri != null)
-                    resultSelectedImages(imageUri);
-                imageUri = null;
+                if (imgUri != null)
+                    inputImageToEditText(editText_content, imgUri);
+                imgUri = null;
                 break;
 
             case REQ_GALLERY:
-                imageUri = data.getData();
-                if (imageUri != null)
-                    resultSelectedImages(imageUri);
-                imageUri = null;
+                imgUri = data.getData();
+                if (imgUri != null)
+                    inputImageToEditText(editText_content, imgUri);
+                imgUri = null;
                 break;
 
             case REQ_MYLOCATION:
@@ -320,23 +359,6 @@ public class MemoModifyActivity extends AppCompatActivity {
                     editText_content.append(locationUrl);
                 }
                 break;
-        }
-    }
-
-    /**
-     * Used by: onActivityResult
-     * 카메라에서 촬영하거나 갤러리에서 선택한 이미지를
-     * EditText 에 세팅하고 이미지 Uri 를 DB에 저장할 형태로 초기화한다.
-     */
-    private void resultSelectedImages(Uri uri) {
-        if (strUri[strUri.length-1] == null) { // 최대 이미지 개수(10) 제한
-            inputImageToEditText(uri.toString()); // EditText 안에 이미지를 글자처럼 추가
-            for (int i = 0; i < strUri.length; i++) {
-                if (strUri[i] == null) {
-                    strUri[i] = uri.toString(); // DB 에 저장할 수 있도록 이미지 Uri 를 String[] 형태로 초기화
-                    break;
-                }
-            }
         }
     }
 

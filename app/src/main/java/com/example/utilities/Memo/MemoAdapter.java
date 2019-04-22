@@ -65,7 +65,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
 
         CardView cardView;
         TextView textView_title, textView_content, textView_time;
-        String[] imgUri = new String[10];
+        String imgUri;
         int position; // holder position
 
         Holder(View itemView) {

@@ -18,7 +18,7 @@ import java.sql.SQLException;
 public class DBHelper extends OrmLiteSqliteOpenHelper {
 
     public static final String DB_NAME = "database.db"; // DBMS 의 Schema 단위
-    public static final int DB_VERSION = 3; // Field 를 수정했을 경우 이것을 바꿔주면 onUpgrade 호출됨.
+    public static final int DB_VERSION = 4; // Field 를 수정했을 경우 이것을 바꿔주면 onUpgrade 호출됨.
 
     private Dao<Memo, Integer> memoDao = null;
     //private Dao<UriList, Integer> uriListDao = null;
