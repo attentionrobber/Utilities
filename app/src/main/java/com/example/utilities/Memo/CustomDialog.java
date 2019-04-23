@@ -3,7 +3,9 @@ package com.example.utilities.Memo;
 import android.app.Activity;
 import android.app.Dialog;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.utilities.R;
@@ -19,7 +21,8 @@ public class CustomDialog {
     private CustomDialogInterface dialogInterface;
 
     private TextView tv_title, tv_dialog_item1, tv_dialog_item2;
-    private ImageButton btn_dialog_item1, btn_dialog_item2;
+    private Button btn_dialog_item1, btn_dialog_item2;
+    private ImageView iv_dialog_item1, iv_dialog_item2;
 
     CustomDialog(Activity activity, CustomDialogInterface dialogInterface) {
         this.activity = activity;
@@ -34,6 +37,8 @@ public class CustomDialog {
         tv_dialog_item2 = dialog.findViewById(R.id.tv_dialog_item2);
         btn_dialog_item1 = dialog.findViewById(R.id.btn_dialog_item1);
         btn_dialog_item2 = dialog.findViewById(R.id.btn_dialog_item2);
+        iv_dialog_item1 = dialog.findViewById(R.id.iv_dialog_item1);
+        iv_dialog_item2 = dialog.findViewById(R.id.iv_dialog_item2);
     }
 
     public void setTitle(String title) {
@@ -46,8 +51,8 @@ public class CustomDialog {
     }
 
     public void setItemIcon(int res1, int res2) {
-        btn_dialog_item1.setImageResource(res1);
-        btn_dialog_item2.setImageResource(res2);
+        iv_dialog_item1.setImageResource(res1);
+        iv_dialog_item2.setImageResource(res2);
     }
 
     public void showDialog() {
