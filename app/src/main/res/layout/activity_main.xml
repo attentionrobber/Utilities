@@ -39,7 +39,7 @@
                     android:id="@+id/button_calc"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="?selectableItemBackground"/>
+                    android:background="?selectableItemBackground"/> <!-- set ripple effect -->
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"

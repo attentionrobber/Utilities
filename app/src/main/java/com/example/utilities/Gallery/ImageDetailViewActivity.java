@@ -81,18 +81,6 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
         init();
     }
 
-    private void init() {
-        slideAdapter = new ImageSlideAdapter(this, images, this);
-        viewPager.setAdapter(slideAdapter);
-        viewPager.setCurrentItem(position);
-
-        horizontalAdapter = new HorizontalAdapter(this, images, this);
-        rv_horizontal.setAdapter(horizontalAdapter);
-        horizontalLayoutManger = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        rv_horizontal.setLayoutManager(horizontalLayoutManger); // RecyclerView 를 수평 방향으로 스크롤되게 함.
-        scrollToCenter(rv_horizontal, position); // Replace rv_horizontal.scrollToPosition(position);
-    }
-
     private void setWidget() {
         viewPager = findViewById(R.id.viewPager);
         //viewPager.setOnClickListener(this::clickListener); // viewPager 의 ClickListener 는 ImageSlideAdapter 의 ZoomViewPagerImageView 에 있음.
@@ -113,6 +101,18 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
         btn_img_delete.setOnClickListener(btnClickListener);
         btn_img_info.setOnClickListener(btnClickListener);
         btn_imgInfo_close.setOnClickListener(btnClickListener);
+    }
+
+    private void init() {
+        slideAdapter = new ImageSlideAdapter(this, images, this);
+        viewPager.setAdapter(slideAdapter);
+        viewPager.setCurrentItem(position);
+
+        horizontalAdapter = new HorizontalAdapter(this, images, this);
+        rv_horizontal.setAdapter(horizontalAdapter);
+        horizontalLayoutManger = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        rv_horizontal.setLayoutManager(horizontalLayoutManger); // RecyclerView 를 수평 방향으로 스크롤되게 함.
+        scrollToCenter(rv_horizontal, position); // Replace rv_horizontal.scrollToPosition(position);
     }
 
     /**
@@ -187,8 +187,8 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
                     tv_imgInfo_title.append(title);tv_imgInfo_size.append(size);
                     tv_imgInfo_date.append(date);tv_imgInfo_path.append(path);
 
-                    viewPager.setPagingEnabled(false); // when display image info don't work viewPager
-                    enableDisableView(viewPager, false); // when display image info don't work viewPager
+                    viewPager.setPagingEnabled(false); // when display image info don't work viewPager. 이미지 정보가 떴을때 swipe 사용 못하도록 함(by CustomViewPager)
+                    enableDisableView(viewPager, false); // when display image info don't work viewPager. 리스너 사용 못하도록 함.
                     rv_horizontal.setVisibility(View.GONE);
                 } else {
                     layout_imgInfo.setVisibility(View.GONE);
@@ -226,7 +226,7 @@ public class ImageDetailViewActivity extends AppCompatActivity implements Synchr
 
     /**
      * View 를 사용하지 않도록 하는 함수.
-     * View 에 설정된 Listener 종류를 못쓰게 하려고 사용함.
+     * View 에 설정된 ClickEvent, Listener 종류를 못쓰게 하려고 사용함.
      */
     private void enableDisableView(View view, boolean enabled) {
         view.setEnabled(enabled);

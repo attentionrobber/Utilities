@@ -49,7 +49,6 @@ public class GalleryFolderAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-
         if (view == null) {
             view = inflater.inflate(R.layout.gallery_folder_item, null);
         }
@@ -59,16 +58,6 @@ public class GalleryFolderAdapter extends BaseAdapter {
 
         ImageView imageView = view.findViewById(R.id.imageView_folder);
         Glide.with(view).load(items.get(position).getFirstImageContainedPath()).into(imageView);
-
-//        Bitmap image = items.get(position).getImage();
-//
-//        if (image != null){
-//            imageView.setImageBitmap(image);
-//        }
-//        else {
-//            // If no image is provided, display a folder icon.
-//            imageView.setImageResource(R.drawable.bg_simple);
-//        }
 
         return view;
     }

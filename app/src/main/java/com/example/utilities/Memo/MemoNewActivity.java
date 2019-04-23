@@ -16,9 +16,14 @@ import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.utilities.Gallery.GalleryActivity;
@@ -176,41 +181,99 @@ public class MemoNewActivity extends AppCompatActivity {
      * 카메라, 갤러리 둘 중 선택하는 AlertDialog 띄우는 함수
      */
     private void alertAddImage() {
+//        AlertDialog.Builder alert_AddImg = new AlertDialog.Builder(MemoNewActivity.this);// 1. Dialog 만들기
+//        alert_AddImg.setTitle("Input Image"); // 2. Dialog 제목
+//        final CharSequence[] items_AddImg = {"Camera", "Gallery"}; // 3. Dialog Items 만들기
+//        alert_AddImg.setItems(items_AddImg, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                Intent intent;
+//                switch (which) {
+//                    case 0 : // Camera
+//                        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                        // 카메라 촬영 후 미디어 컨텐트 Uri 를 생성해서 외부저장소에 저장한다.
+//                        // 마시멜로 이상 버전은 아래 코드를 반영해야함.
+//                        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+//                            ContentValues values = new ContentValues(1);
+//                            values.put(MediaStore.Images.Media.MIME_TYPE, "memo/jpg");
+//                            imgUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//                            intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+//                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//                            // 컨텐트 Uri 강제 세팅
+//                        }
+//                        startActivityForResult(intent, REQ_CAMERA);
+//                        break;
+//                    case 1 : // Gallery
+////                        intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+////                        intent.setType("image/*"); // 외부저장소에 있는 이미지만 가져오기위한 필터링.
+////                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQ_GALLERY); // createChooser 으로 타이틀을 붙여줄 수 있다.
+//                        intent = new Intent(MemoNewActivity.this, GalleryActivity.class);
+//                        intent.putExtra("REQ_CODE", REQ_GALLERY);
+//                        startActivityForResult(intent, REQ_GALLERY);
+//                        break;
+//                }
+//            }
+//        });
+//        alert_AddImg.show(); // 4. 팝업창을 띄운다.
 
         AlertDialog.Builder alert_AddImg = new AlertDialog.Builder(MemoNewActivity.this);// 1. Dialog 만들기
-        alert_AddImg.setTitle("Input Image"); // 2. Dialog 제목
-        final CharSequence[] items_AddImg = {"Camera", "Gallery"}; // 3. Dialog Items 만들기
-        alert_AddImg.setItems(items_AddImg, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent;
-                switch (which) {
-                    case 0 : // Camera
-                        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        // 카메라 촬영 후 미디어 컨텐트 Uri 를 생성해서 외부저장소에 저장한다.
-                        // 마시멜로 이상 버전은 아래 코드를 반영해야함.
-                        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                            ContentValues values = new ContentValues(1);
-                            values.put(MediaStore.Images.Media.MIME_TYPE, "memo/jpg");
-                            imgUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
-                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                            // 컨텐트 Uri 강제 세팅
-                        }
-                        startActivityForResult(intent, REQ_CAMERA);
-                        break;
-                    case 1 : // Gallery
-//                        intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                        intent.setType("image/*"); // 외부저장소에 있는 이미지만 가져오기위한 필터링.
-//                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQ_GALLERY); // createChooser 으로 타이틀을 붙여줄 수 있다.
-                        intent = new Intent(MemoNewActivity.this, GalleryActivity.class);
-                        intent.putExtra("REQ_CODE", REQ_GALLERY);
-                        startActivityForResult(intent, REQ_GALLERY);
-                        break;
-                }
+
+        final DialogItem[] items = {
+                new DialogItem("CAMERA", android.R.drawable.ic_menu_camera),
+                new DialogItem("GALLERY", android.R.drawable.ic_menu_gallery)
+        };
+
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_alert_dialog, null);
+        HorizontalListView listView = view.findViewById(R.id.view_alertDialog); // CustomView
+
+        ArrayAdapter dialogAdapter = new ArrayAdapter<DialogItem>(this, R.layout.item_alert_dialog, R.id.tv_alertDialog, items) {
+            @NonNull
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+
+                ImageView imageView = view.findViewById(R.id.iv_alertDialog);
+                TextView textView = view.findViewById(R.id.tv_alertDialog);
+
+                imageView.setImageResource(items[position].icon);
+                textView.setText(items[position].text);
+
+//                textView.setCompoundDrawablesWithIntrinsicBounds(items[position].icon, 0, 0, 0); // TextView 에 이미지 추가하는 방법
+//                int dp5 = (int) (5 * getResources().getDisplayMetrics().density + 0.5f); // TextView 와 추가한 이미지에 margin
+//                textView.setCompoundDrawablePadding(dp5);
+                view.setOnClickListener(v -> {
+                    Intent intent;
+                    switch (position) {
+                        case 0: // Camera
+                            intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            // 카메라 촬영 후 미디어 컨텐트 Uri 를 생성해서 외부저장소에 저장한다.
+                            // 마시멜로 이상 버전은 아래 코드를 반영해야함.
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                                ContentValues values = new ContentValues(1);
+                                values.put(MediaStore.Images.Media.MIME_TYPE, "memo/jpg");
+                                imgUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                // 컨텐트 Uri 강제 세팅
+                            }
+                            startActivityForResult(intent, REQ_CAMERA);
+                            break;
+
+                        case 1: // Gallery
+                            intent = new Intent(MemoNewActivity.this, GalleryActivity.class);
+                            intent.putExtra("REQ_CODE", REQ_GALLERY);
+                            startActivityForResult(intent, REQ_GALLERY);
+                            break;
+                    }
+                });
+                return view;
             }
-        });
-        alert_AddImg.show(); // 4. 팝업창을 띄운다.
+        };
+        listView.setAdapter(dialogAdapter);
+
+        alert_AddImg.setTitle("INPUT IMAGE")
+                .setView(view)
+                .create()
+                .show(); // 팝업창을 띄운다.
     } // alertAddImage()
 
     /**

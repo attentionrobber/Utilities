@@ -28,7 +28,7 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
 
     private List<ImageItem> items;
     private final Context context;
-    private Activity mActivity;
+    private Activity mActivity; // startActivityForResult 에서 호출됐을 경우 결과를 다시 콜백하기 위해 필요함.
 
     GalleryRecyclerViewAdapter(Activity activity, Context context, List<ImageItem> items) {
         this.context = context;

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:background="?selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/iv_alertDialog"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher_round"/>
+    <TextView
+        android:id="@+id/tv_alertDialog"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:gravity="center"
+        android:layout_gravity="center"/>
+</LinearLayout>

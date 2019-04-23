@@ -102,7 +102,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 키패드의 Search 버튼 눌렀을때 리스너
+     * 키패드의 돋보기(Search)버튼 눌렀을때 리스너
+     * <EditText
+     *     android:imeOptions="actionSearch"
+     *     android:inputType="text" />
      */
     TextView.OnEditorActionListener editorActionListener = new TextView.OnEditorActionListener() {
         @Override

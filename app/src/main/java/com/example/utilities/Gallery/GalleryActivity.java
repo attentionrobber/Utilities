@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -30,6 +29,7 @@ import java.util.List;
 /**
  * 핸드폰에 있는 모든 이미지를 폴더별로 나타낸다.
  * Shows all images on mobile phone by folder
+ * Used by: MemoNewActivity, MemoModifyActivity
  */
 public class GalleryActivity extends AppCompatActivity {
 

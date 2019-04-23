@@ -84,7 +84,7 @@ public class MemoViewActivity extends AppCompatActivity {
         findViewById(R.id.btn_cancel).setOnClickListener(clickListener);
         tv_title = findViewById(R.id.textView_title);
         tv_content= findViewById(R.id.textView_content);
-        tv_content.setMovementMethod(new ScrollingMovementMethod()); // TextView Scrolling
+        tv_content.setMovementMethod(new ScrollingMovementMethod()); // TextView Scrolling. 텍스트뷰 스크롤바 생기게 함. xml android:scrollbars="vertical" 외
         imageView = findViewById(R.id.imageView);
     }
 
