@@ -2,39 +2,23 @@ package com.example.utilities.Memo;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.utilities.Gallery.GalleryActivity;
 import com.example.utilities.MapsActivity;
 import com.example.utilities.R;
@@ -57,16 +41,16 @@ import java.util.List;
  */
 public class MemoModifyActivity extends AppCompatActivity {
 
-    private static final String TAG = "MemoNewActivity";
+    private static final String TAG = "MemoNew";
 
     // Widget 관련
-    EditText editText_title, editText_content;
+    EditText editText_title, editText_content; // TODO: 이미지 추가하고나서 cursor 가 항상 마지막의 한칸앞에 위치하는 현상.
     Button btn_OK, btn_cancel;
     ImageButton btn_addImg, btn_location;
 
     // 권한 관련
     private final int REQ_MYLOCATION = 99; // 내 위치 요청 코드
-    private final int REQ_SEARCHLOCATION = 100; // 검색 위치 요청 코드
+    //private final int REQ_SEARCHLOCATION = 100; // 검색 위치 요청 코드
     private final int REQ_CAMERA = 101; // 카메라 요청 코드
     private final int REQ_GALLERY = 102; // 갤러리 요청 코드
 
@@ -82,12 +66,12 @@ public class MemoModifyActivity extends AppCompatActivity {
     DBHelper dbHelper;
     Dao<Memo, Integer> memoDao;
 
-    // 위치 관련
-    private LocationManager manager; // 위치정보 관리자
-
-    public LocationManager getLocationManager() {
-        return manager;
-    }
+//    // 위치 관련
+//    private LocationManager manager; // 위치정보 관리자
+//
+//    public LocationManager getLocationManager() {
+//        return manager;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -247,113 +231,38 @@ public class MemoModifyActivity extends AppCompatActivity {
      * 카메라, 갤러리 둘 중 선택하는 AlertDialog 띄우는 함수
      */
     private void alertAddImage() {
-        AlertDialog.Builder alert_AddImg = new AlertDialog.Builder(MemoModifyActivity.this);// 1. Dialog 만들기
-
-        final DialogItem[] items = {
-                new DialogItem("CAMERA", android.R.drawable.ic_menu_camera),
-                new DialogItem("GALLERY", android.R.drawable.ic_menu_gallery)
-        };
-//        List<DialogItem> items = new ArrayList<>();
-//        items.add(new DialogItem("CAMERA", android.R.drawable.ic_menu_camera));
-//        items.add(new DialogItem("GALLERY", android.R.drawable.ic_menu_gallery));
-
-//        // TODO: Item Horizontal 으로 수정
-//        ListAdapter dialogAdapter = new ArrayAdapter<DialogItem>(this, R.layout.item_alert_dialog, R.id.tv_alertDialog, items){
-//            public View getView(int position, View convertView, ViewGroup parent) {
-//                View view = super.getView(position, convertView, parent);
-//
-//                TextView textView = view.findViewById(R.id.tv_alertDialog);
-//                textView.setText(items[position].text);
-//                textView.setCompoundDrawablesWithIntrinsicBounds(items[position].icon, 0, 0, 0);
-//
-//                //Add margin between image and text (support various screen densities)
-////                int dp5 = (int) (5 * getResources().getDisplayMetrics().density + 0.5f);
-////                textView.setCompoundDrawablePadding(dp5);
-//
-//                return view;
-//            }
-//        };
-//
-//        alert_AddImg.setAdapter(dialogAdapter, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int item) {
-//                Intent intent;
-//                switch (item) {
-//                    case 0: // Camera
-//                        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                        // 카메라 촬영 후 미디어 컨텐트 Uri 를 생성해서 외부저장소에 저장한다.
-//                        // 마시멜로 이상 버전은 아래 코드를 반영해야함.
-//                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-//                            ContentValues values = new ContentValues(1);
-//                            values.put(MediaStore.Images.Media.MIME_TYPE, "memo/jpg");
-//                            imgUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-//                            intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
-//                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-//                            // 컨텐트 Uri 강제 세팅
-//                        }
-//                        startActivityForResult(intent, REQ_CAMERA);
-//                        break;
-//                    case 1: // Gallery
-//                        intent = new Intent(MemoModifyActivity.this, GalleryActivity.class);
-//                        intent.putExtra("REQ_CODE", REQ_GALLERY);
-//                        startActivityForResult(intent, REQ_GALLERY);
-//                        break;
-//                }
-//            }
-//        });
-
-
-        View view = LayoutInflater.from(this).inflate(R.layout.layout_alert_dialog, null);
-        HorizontalListView listView = view.findViewById(R.id.view_alertDialog); // CustomView
-
-        ArrayAdapter dialogAdapter = new ArrayAdapter<DialogItem>(this, R.layout.item_alert_dialog, R.id.tv_alertDialog, items) {
-            @NonNull
-            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-
-                ImageView imageView = view.findViewById(R.id.iv_alertDialog);
-                TextView textView = view.findViewById(R.id.tv_alertDialog);
-
-                imageView.setImageResource(items[position].icon);
-                textView.setText(items[position].text);
-
-//                textView.setCompoundDrawablesWithIntrinsicBounds(items[position].icon, 0, 0, 0); // TextView 에 이미지 추가하는 방법
-//                int dp5 = (int) (5 * getResources().getDisplayMetrics().density + 0.5f); // TextView 와 추가한 이미지에 margin
-//                textView.setCompoundDrawablePadding(dp5);
-                view.setOnClickListener(v -> {
-                    Intent intent;
-                    switch (position) {
-                        case 0: // Camera
-                        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        // 카메라 촬영 후 미디어 컨텐트 Uri 를 생성해서 외부저장소에 저장한다.
-                        // 마시멜로 이상 버전은 아래 코드를 반영해야함.
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                            ContentValues values = new ContentValues(1);
-                            values.put(MediaStore.Images.Media.MIME_TYPE, "memo/jpg");
-                            imgUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
-                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                            // 컨텐트 Uri 강제 세팅
-                        }
-                        startActivityForResult(intent, REQ_CAMERA);
-                        break;
-
-                        case 1: // Gallery
-                        intent = new Intent(MemoModifyActivity.this, GalleryActivity.class);
-                        intent.putExtra("REQ_CODE", REQ_GALLERY);
-                        startActivityForResult(intent, REQ_GALLERY);
-                        break;
+        // setOnClickListener 를 실행하기 위한 DialogInterface
+        CustomDialogInterface dialogInterface = position -> {
+            Intent intent;
+            switch (position) {
+                case 0: // Camera
+                    intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    // 카메라 촬영 후 미디어 컨텐트 Uri 를 생성해서 외부저장소에 저장한다.
+                    // 마시멜로 이상 버전은 아래 코드를 반영해야함.
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                        ContentValues values = new ContentValues(1);
+                        values.put(MediaStore.Images.Media.MIME_TYPE, "memo/jpg");
+                        imgUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                        // 컨텐트 Uri 강제 세팅
                     }
-                });
-                return view;
+                    startActivityForResult(intent, REQ_CAMERA);
+                    break;
+
+                case 1: // Gallery
+                    intent = new Intent(MemoModifyActivity.this, GalleryActivity.class);
+                    intent.putExtra("REQ_CODE", REQ_GALLERY);
+                    startActivityForResult(intent, REQ_GALLERY);
+                    break;
             }
         };
-        listView.setAdapter(dialogAdapter);
 
-        alert_AddImg.setTitle("INPUT IMAGE")
-                .setView(view)
-                .create()
-                .show(); // 팝업창을 띄운다.
+        CustomDialog dialog = new CustomDialog(this, dialogInterface); // CustomDialog 생성 interface 도 같이 넣어줘서 Dialog 의 ClickListener 에서 실행시킨다.
+        dialog.setTitle("INPUT IMAGE");
+        dialog.setItemName("CAMERA", "GALLERY");
+        dialog.setItemIcon(android.R.drawable.ic_menu_camera, android.R.drawable.ic_menu_gallery);
+        dialog.showDialog();
     }
 
     /**
