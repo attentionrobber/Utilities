@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
@@ -73,6 +74,7 @@ public class MemoNewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_new);
 
+        // TODO: context 내용이 길어져서 화면이 내려가도 버튼이랑 제목은 보이게 수정.
         displayKeypad();// 키패드(키보드) 자동으로 띄우기
         setWidget();
         //checkPermission();
@@ -99,6 +101,7 @@ public class MemoNewActivity extends AppCompatActivity {
 
         /*
          * strUri_temp 에 있는 uri 중 이미지를 넣었다 없앤 것을 제거해준다.
+         * 실제로 추가한 uri 만 DB 에 저장한다.
          */
         BufferedReader br = new BufferedReader(new StringReader(uri_temp));
         String line;
@@ -324,7 +327,7 @@ public class MemoNewActivity extends AppCompatActivity {
                     imgUri = data.getData();
             }
             if (imgUri != null)
-                inputImageToEditText(editText_content, imgUri);
+                inputImageToEditText(editText_content, imgUri.toString());
             imgUri = null;
 
         } else if (requestCode == REQ_GALLERY && resultCode== RESULT_OK) { // 갤러리 선택으로 이미지 삽입했을 경우
@@ -332,7 +335,7 @@ public class MemoNewActivity extends AppCompatActivity {
             imgUri = data.getData();
             //Log.i("TESTS", ""+imageUri);
             if (imgUri != null)
-                inputImageToEditText(editText_content, imgUri);
+                inputImageToEditText(editText_content, imgUri.toString());
             imgUri = null;
 
         } else if (requestCode == REQ_LOCATION && resultCode == RESULT_OK) {
@@ -363,9 +366,9 @@ public class MemoNewActivity extends AppCompatActivity {
      * ImageSpan 과 SpannableStringBuilder 를 이용해
      * EditText 안에 Uri 텍스트를 이미지로 추가
      */
-    private void inputImageToEditText(EditText editText, Uri uri) {
-        String strUri = uri.toString();
-        ImageSpan imageSpan = new ImageSpan(this, uri);
+    private void inputImageToEditText(EditText editText, String strUri) {
+        //String strUri = uri.toString();
+        ImageSpan imageSpan = new ImageSpan(this, Uri.parse(strUri));
 
         int start = editText.getSelectionStart(); // 커서 시작 위치
         int end = editText.getSelectionEnd(); // 커서 마지막 위치
@@ -375,8 +378,14 @@ public class MemoNewActivity extends AppCompatActivity {
         builder.replace(start, end, strUri); // 커서의 시작 위치부터 마지막 위치까지 strUri 로 대체된다.
         builder.setSpan(imageSpan, start, start + strUri.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        uri_temp = uri_temp.concat(strUri).concat("\n");
-        editText.setText(builder);
+        uri_temp = uri_temp.concat(strUri).concat("\n"); // 이미지 uri 를 임시로 추가한다.
+        //Log.i("TESTS","// "+start+" // "+end+" // "+strUri);
+
+        editText.setText(builder.append(" ")); // 공백이 없을경우 이미지 뒤에 커서를 위치했을때 커서 위치가 제대로 잡히지않았음
+        editText.requestFocus();
+        editText.setFocusableInTouchMode(true);
+        editText.setSelection(end+strUri.length()+1);
+        displayKeypad();
     }
 
     /**

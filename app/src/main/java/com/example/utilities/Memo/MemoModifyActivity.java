@@ -1,6 +1,7 @@
 package com.example.utilities.Memo;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -14,12 +15,14 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.utilities.Gallery.GalleryActivity;
 import com.example.utilities.MapsActivity;
 import com.example.utilities.R;
 import com.example.utilities.data.DBHelper;
@@ -163,19 +166,20 @@ public class MemoModifyActivity extends AppCompatActivity {
         String context = memoList.get(position).getContent();
         uri_temp = memoList.get(position).getImgUri();
 
-        // 가져온 Memo data 를 뿌려준다.
-        editText_title.setText(title);; // ImageSpan 을 이용해 uri text 를 이미지로 표시한다.
-        editText_content.setText(setEditTextWithImage(context, uri_temp));
+        // 가져온 Memo data 를 widget 에 뿌려준다.
+        editText_title.setText(title);
+        editText_content.setText(setEditTextWithImage(context, uri_temp)); // ImageSpan 을 이용해 uri text 를 이미지로 표시한다.
    }
 
     private CharSequence setEditTextWithImage(String context, String strUri) {
-        SpannableStringBuilder builder = new SpannableStringBuilder(context); //
+        SpannableStringBuilder builder = new SpannableStringBuilder(); //
+        builder.append(context);
 
         if (!strUri.equals("")) {
             try {
                 BufferedReader br = new BufferedReader(new StringReader(strUri));
                 String line;
-                while ( (line = br.readLine()) != null) {
+                while ( (line = br.readLine()) != null ) {
                     int start = context.indexOf(line);
                     ImageSpan imageSpan = new ImageSpan(this, Uri.parse(line));
                     builder.setSpan(imageSpan, start, start + line.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -189,48 +193,40 @@ public class MemoModifyActivity extends AppCompatActivity {
     }
 
     /**
-     * ImageSpan 과 SpannableStringBuilder 를 이용해
-     * EditText 안에 Uri 텍스트를 이미지로 추가
-     */
-    private void inputImageToEditText(EditText editText, Uri uri) {
-        String strUri = uri.toString();
-        ImageSpan imageSpan = new ImageSpan(this, uri);
-
-        int start = editText.getSelectionStart(); // 커서 시작 위치
-        int end = editText.getSelectionEnd(); // 커서 마지막 위치
-
-        SpannableStringBuilder builder = new SpannableStringBuilder();
-        builder.append(editText.getText()); // builder 에 editText 의 내용을 붙인다.
-        builder.replace(start, end, strUri); // 커서의 시작 위치부터 마지막 위치까지 strUri 로 대체된다.
-        builder.setSpan(imageSpan, start, start + strUri.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        uri_temp = uri_temp.concat(strUri).concat("\n");
-        editText.setText(builder);
-    }
-
-    /**
      * Listener 계열
      */
-    View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.btn_OK:
-                    try {
-                        updateToDB(memoList.get(position));
-                        setResult(RESULT_OK, new Intent()); // MemoViewActivity 로 결과를 콜백한다.
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    finish();
-                    break;
-                case R.id.btn_cancel: MemoModifyActivity.super.onBackPressed();
-                    break;
-                case R.id.btn_addImg: alertAddImage();
-                    break;
-                case R.id.btn_addLocation: alertAddLocation();
-                    break;
-            }
+    View.OnClickListener clickListener = v -> {
+        switch (v.getId()) {
+            case R.id.btn_OK:
+                try {
+                    updateToDB(memoList.get(position));
+                    setResult(RESULT_OK, new Intent()); // MemoViewActivity 로 결과를 콜백한다.
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                finish();
+                break;
+            case R.id.btn_cancel:
+                hideKeypad();
+                // 제목이나 내용을 작성했을 경우에만 AlertDialog 나타나게함. // TODO: 작성 -> 수정으로
+                if( !(editText_title.getText().toString().equals("")) || !(editText_content.getText().toString().equals(""))) {
+                    AlertDialog.Builder alert_cancel = new AlertDialog.Builder(MemoModifyActivity.this);
+                    alert_cancel.setTitle("CANCEL WRITING A NOTE");
+                    alert_cancel.setMessage("Exit without saving.");
+                    alert_cancel.setPositiveButton("OK", (dialog, which) -> MemoModifyActivity.super.onBackPressed());
+                    alert_cancel.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                    alert_cancel.show();
+                } else {
+                    MemoModifyActivity.super.onBackPressed();
+                }
+                break;
+            case R.id.btn_addImg:
+                hideKeypad();
+                alertAddImage();
+                break;
+            case R.id.btn_addLocation:
+                alertAddLocation();
+                break;
         }
     };
 
@@ -260,9 +256,9 @@ public class MemoModifyActivity extends AppCompatActivity {
                     startActivityForResult(intent, REQ_CAMERA);
                     break;
                 case 1 : // Gallery
-                    intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    intent.setType("image/*"); // 외부저장소에 있는 이미지만 가져오기위한 필터링.
-                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQ_GALLERY); // createChooser 으로 타이틀을 붙여줄 수 있다.
+                    intent = new Intent(MemoModifyActivity.this, GalleryActivity.class);
+                    intent.putExtra("REQ_CODE", REQ_GALLERY);
+                    startActivityForResult(intent, REQ_GALLERY);
                     break;
             }
         });
@@ -299,30 +295,21 @@ public class MemoModifyActivity extends AppCompatActivity {
         alertLocation.show(); // show함수로 팝업창을 띄운다.
     }
 
-    /**
-     * ImageView 클릭시 이미지 바꿀지 삭제할지 AlertDialog 띄우는 함수
-     */
-    @Deprecated
-    private void alertClickImageView() {
-        if (imgUri != null) { // 이미지가 삽입되었을때만 작동
-            AlertDialog.Builder alertImageView = new AlertDialog.Builder(MemoModifyActivity.this);
-            alertImageView.setTitle("Image Option");
-            final CharSequence[] items_ImageView = {"Change", "Delete"};
-            alertImageView.setItems(items_ImageView, (dialog, which) -> {
-                switch (which) {
-                    case 0: // Image Change
-                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        intent.setType("image/*"); // 외부저장소에 있는 이미지만 가져오기위한 필터링.
-                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQ_GALLERY); // createChooser 으로 타이틀을 붙여줄 수 있다.
-                        break;
-                    case 1: // Image Delete
-                        //imageView.setImageResource(0);
-                        imgUri = null;
-                        break;
-                }
-            });
-            alertImageView.show(); // 팝업창을 띄운다.
+    // 키패드(키보드) 띄우기
+    private void displayKeypad() {
+        InputMethodManager imm;
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        //imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+    // 키패드(키보드) 없애기
+    private void hideKeypad() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(MemoNewActivity.INPUT_METHOD_SERVICE);
+        View view = this.getCurrentFocus();
+        if (view == null) {
+            view = new View(this);
         }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 
@@ -338,14 +325,14 @@ public class MemoModifyActivity extends AppCompatActivity {
                         imgUri = data.getData();
                 }
                 if (imgUri != null)
-                    inputImageToEditText(editText_content, imgUri);
+                    inputImageToEditText(editText_content, imgUri.toString());
                 imgUri = null;
                 break;
 
             case REQ_GALLERY:
                 imgUri = data.getData();
                 if (imgUri != null)
-                    inputImageToEditText(editText_content, imgUri);
+                    inputImageToEditText(editText_content, imgUri.toString());
                 imgUri = null;
                 break;
 
@@ -360,6 +347,32 @@ public class MemoModifyActivity extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    /**
+     * ImageSpan 과 SpannableStringBuilder 를 이용해
+     * EditText 안에 Uri 텍스트를 이미지로 추가
+     */
+    private void inputImageToEditText(EditText editText, String strUri) {
+        //String strUri = uri.toString();
+        ImageSpan imageSpan = new ImageSpan(this, Uri.parse(strUri));
+
+        int start = editText.getSelectionStart(); // 커서 시작 위치
+        int end = editText.getSelectionEnd(); // 커서 마지막 위치
+
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(editText.getText()); // builder 에 editText 의 내용을 붙인다.
+        builder.replace(start, end, strUri); // 커서의 시작 위치부터 마지막 위치까지 strUri 로 대체된다.
+        builder.setSpan(imageSpan, start, start + strUri.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        uri_temp = uri_temp.concat(strUri).concat("\n"); // 이미지 uri 를 임시로 추가한다.
+        //Log.i("TESTS","// "+start+" // "+end+" // "+strUri);
+
+        editText.setText(builder.append(" ")); // 공백이 없을경우 이미지 뒤에 커서를 위치했을때 커서 위치가 제대로 잡히지않았음
+        editText.requestFocus();
+        editText.setFocusableInTouchMode(true);
+        editText.setSelection(end+strUri.length()+1);
+        displayKeypad();
     }
 
     /**
