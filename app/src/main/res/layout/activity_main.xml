@@ -81,7 +81,7 @@
                     android:layout_gravity="center|bottom"/>
                 <EditText
                     android:id="@+id/et_search"
-                    android:background="@drawable/bg_simple_thick"
+                    android:background="@drawable/bg_simple_round"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:paddingLeft="8dp"

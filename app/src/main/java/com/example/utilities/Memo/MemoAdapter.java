@@ -3,8 +3,13 @@ package com.example.utilities.Memo;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,13 +52,34 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
 
         final Memo memo = memoList.get(position); // 데이터를 행 단위로 꺼낸다. 멤버변수가 아닌 지역변수를 참조할땐 상수로 가져와야함.
 
+        if (memo.getTitle().equals("")) // 메모의 제목이 없으면 숨김.
+            holder.textView_title.setVisibility(View.GONE);
+
+        if (!memo.getImgUri().equals("")) { // 이미지가(uri) 있는 경우
+            // 내용은 uri 빼고 "이미지"로 넣기
+
+            String context = memo.getContent(); // 메모 내용
+
+            // imgUri 의 내용을 한줄씩 비교
+            String[] split = memo.getImgUri().split("\n");
+            for (int i=0; i<split.length; i++) {
+                if (context.contains(split[i])) { // 메모 내용과 uri 가 같은 경우
+                    SpannableStringBuilder ssb = new SpannableStringBuilder("이미지");
+                    ssb.setSpan(new ForegroundColorSpan(Color.BLUE), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    context = context.replace(split[i], ssb+""+i);
+                    // TODO: ssb 제대로 나오도록 수정.
+                }
+            }
+            holder.textView_content.setText(context); // 메모 내용 세팅
+        } else
+            holder.textView_content.setText(memo.getContent()); // 메모 내용 세팅
+
         // 홀더에 데이터를 세팅한다.
-        holder.textView_title.setText(memo.getTitle());
-        holder.textView_content.setText(memo.getContent());
+        holder.textView_title.setText(memo.getTitle()); // 메모 제목 세팅
         String date = df.format(memo.getCurrentDate());
-        holder.textView_time.setText(date);
-        holder.imgUri = memo.getImgUri();
-        holder.position = position;
+        holder.textView_time.setText(date); // 메모 날짜 세팅
+        holder.imgUri = memo.getImgUri(); // 메모 이미지 가져오기
+        holder.position = position; // 메모 날짜 가져오기
     }
 
     @Override

@@ -18,9 +18,9 @@ import java.util.List;
 
 public class MemoActivity extends AppCompatActivity {
 
-    private static List<Memo> datas = new ArrayList<>();
-    MemoAdapter adapter;
+    List<Memo> memos = new ArrayList<>();
 
+    MemoAdapter adapter;
     RecyclerView recyclerView;
 
     @Override
@@ -50,7 +50,7 @@ public class MemoActivity extends AppCompatActivity {
     }
 
     private void init() {
-        adapter = new MemoAdapter(datas, this); // 2. Adapter 생성하기
+        adapter = new MemoAdapter(memos, this); // 2. Adapter 생성하기
         recyclerView.setAdapter(adapter); // 3. Recycler View에 Adapter 세팅하기
         recyclerView.setLayoutManager(new LinearLayoutManager(this)); // 4. Recycler View 매니저 등록하기(View의 모양(Grid, 일반, 비대칭Grid)을 결정한다.)
     }
@@ -60,7 +60,7 @@ public class MemoActivity extends AppCompatActivity {
         //DBHelper dbHelper = new DBHelper(context);
         Dao<Memo, Integer> memoDao = dbHelper.getMemoDao();
 
-        datas = memoDao.queryForAll();
+        memos = memoDao.queryForAll();
     }
 
     /**
