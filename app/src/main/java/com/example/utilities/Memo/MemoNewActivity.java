@@ -381,11 +381,12 @@ public class MemoNewActivity extends AppCompatActivity {
         builder.setSpan(imageSpan, start, start + strUri.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         uri_temp = uri_temp.concat(strUri).concat("\n"); // 이미지 uri 를 임시로 추가한다.
+        //Log.i("TESTS","// "+start+" // "+end+" // "+strUri);
 
         editText.setText(builder.append(" ")); // 공백이 없을경우 이미지 뒤에 커서를 위치했을때 커서 위치가 제대로 잡히지않았음
-        editText.requestFocus(); // EditText 에 포커스 설정.
-        editText.setFocusableInTouchMode(true); // EditText 에 커서 설정.
-        editText.setSelection(end+strUri.length()+1); // 이미지 뒤에 커서 설정.
+        editText.requestFocus();
+        editText.setFocusableInTouchMode(true);
+        editText.setSelection(end+strUri.length()+1);
         displayKeypad();
     }
 

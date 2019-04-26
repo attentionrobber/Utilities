@@ -123,7 +123,7 @@ public class MemoViewActivity extends AppCompatActivity {
 
         if (!strUri.equals("")) { // 이미지가 있을 경우에만 실행
             try {
-                BufferedReader br = new BufferedReader(new StringReader(strUri)); // 한줄씩 읽는다.
+                BufferedReader br = new BufferedReader(new StringReader(strUri));
                 String line;
                 while ((line = br.readLine()) != null) { // context 에서 strUri 의 시작, 마지막 위치를 찾는다.
                     if (context.contains(line)) {

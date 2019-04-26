@@ -5,8 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
 
 import com.example.utilities.R;
 import com.example.utilities.data.DBHelper;
@@ -24,10 +22,6 @@ public class MemoActivity extends AppCompatActivity {
 
     MemoAdapter adapter;
     RecyclerView recyclerView;
-    LinearLayoutManager layoutManager;
-
-    int index = -1;
-    int position = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +41,6 @@ public class MemoActivity extends AppCompatActivity {
 
     private void setWidget() {
         recyclerView = findViewById(R.id.recyclerView);
-        layoutManager = new LinearLayoutManager(this);
         findViewById(R.id.btn_new).setOnClickListener(v -> clickListener());
     }
 
@@ -59,7 +52,7 @@ public class MemoActivity extends AppCompatActivity {
     private void init() {
         adapter = new MemoAdapter(memos, this); // 2. Adapter 생성하기
         recyclerView.setAdapter(adapter); // 3. Recycler View에 Adapter 세팅하기
-        recyclerView.setLayoutManager(layoutManager); // 4. Recycler View 매니저 등록하기(View의 모양(Grid, 일반, 비대칭Grid)을 결정한다.)
+        recyclerView.setLayoutManager(new LinearLayoutManager(this)); // 4. Recycler View 매니저 등록하기(View의 모양(Grid, 일반, 비대칭Grid)을 결정한다.)
     }
 
     public void loadData() throws SQLException {
@@ -68,22 +61,6 @@ public class MemoActivity extends AppCompatActivity {
         Dao<Memo, Integer> memoDao = dbHelper.getMemoDao();
 
         memos = memoDao.queryForAll();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        index = layoutManager.findFirstVisibleItemPosition();
-        View v = recyclerView.getChildAt(0); // recyclerView 의 자식 뷰를 가져온다.(여기선 CardView 의 레이아웃)
-        position = (v == null) ? 0 : (v.getTop() - recyclerView.getPaddingTop()); // 삼항연산자 아래 4줄 코드와 같은 역할
-        if (v != null)
-            Log.i("TESTS", ""+v.getTop()+" // "+recyclerView.getPaddingTop()+" // "+(v.getTop() - recyclerView.getPaddingTop()));
-//        if (v == null)
-//            position = 0;
-//        else
-//            position = v.getTop() - recyclerView.getPaddingTop();
-
     }
 
     /**
@@ -98,7 +75,5 @@ public class MemoActivity extends AppCompatActivity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (index != -1)
-            layoutManager.scrollToPositionWithOffset(index, position);
     }
 }
