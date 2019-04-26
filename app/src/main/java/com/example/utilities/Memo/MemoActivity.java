@@ -86,19 +86,16 @@ public class MemoActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * 새 글을 쓰거나 수정하고난 뒤에 메인화면이 떴을 때 Refresh 해준다.
-     */
     @Override
     protected void onResume() {
         super.onResume();
         try {
-            loadData();
-            init();
+            loadData(); // 새 글을 쓰거나 수정하고난 뒤에 메인화면이 떴을 때
+            init(); // Refresh 해준다.
         } catch (SQLException e) {
             e.printStackTrace();
         }
         if (index != -1)
-            layoutManager.scrollToPositionWithOffset(index, position);
+            layoutManager.scrollToPositionWithOffset(index, position); // Keep Scroll Position. 현재 스크롤 위치로 세팅
     }
 }
