@@ -4,17 +4,22 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.utilities.R;
 import com.example.utilities.domain.Memo;
 
@@ -55,31 +60,37 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
         if (memo.getTitle().equals("")) // 메모의 제목이 없으면 숨김.
             holder.textView_title.setVisibility(View.GONE);
 
+
         if (!memo.getImgUri().equals("")) { // 이미지가(uri) 있는 경우
-            // 내용은 uri 빼고 "이미지"로 넣기
+            String content = memo.getContent(); // 메모 내용
+            String[] split = memo.getImgUri().split("\n"); // 여러개의 이미지 uri 를 하나씩 나눔.
 
-            String context = memo.getContent(); // 메모 내용
+            holder.layout_memoImage.setVisibility(View.VISIBLE);
+            Glide.with(context).load(split[0]).into(holder.iv_memo); // 첫번째로 추가한 이미지 보이기
 
-            // imgUri 의 내용을 한줄씩 비교
-            String[] split = memo.getImgUri().split("\n");
-            for (int i=0; i<split.length; i++) {
-                if (context.contains(split[i])) { // 메모 내용과 uri 가 같은 경우
-                    SpannableStringBuilder ssb = new SpannableStringBuilder("이미지");
-                    ssb.setSpan(new ForegroundColorSpan(Color.BLUE), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    context = context.replace(split[i], ssb+""+i);
-                    // TODO: ssb 제대로 나오도록 수정.
-                }
+            for (String splits : split) {
+                content = content.replace(splits, "");
             }
-            holder.textView_content.setText(context); // 메모 내용 세팅
-        } else
+            holder.textView_content.setText(content);
+
+//            SpannableStringBuilder ssb = new SpannableStringBuilder(content);
+//            for (int i=0; i<split.length; i++) {
+//                int start = content.indexOf(split[i]); // uri text 의 시작 위치
+//                int end = start + split[i].length(); // ri text 의 마지막 위치
+//                ssb.setSpan(new ForegroundColorSpan(Color.BLUE), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); // ssb 글씨 파란색으로 설정
+//            }
+//            holder.textView_content.setText(ssb);
+        } else {
+            holder.layout_memoImage.setVisibility(View.GONE);
             holder.textView_content.setText(memo.getContent()); // 메모 내용 세팅
+        }
 
         // 홀더에 데이터를 세팅한다.
-        holder.textView_title.setText(memo.getTitle()); // 메모 제목 세팅
-        String date = df.format(memo.getCurrentDate());
+        holder.textView_title.setText(memoList.get(position).getTitle()); // 메모 제목 세팅
+        String date = df.format(memoList.get(position).getCurrentDate()); // 메모 날짜 formatting
         holder.textView_time.setText(date); // 메모 날짜 세팅
-        holder.imgUri = memo.getImgUri(); // 메모 이미지 가져오기
-        holder.position = position; // 메모 날짜 가져오기
+        holder.imgUri = memoList.get(position).getImgUri(); // 메모 이미지 가져오기
+        holder.position = position; // 메모 위치 가져오기
     }
 
     @Override
@@ -91,6 +102,8 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
 
         CardView cardView;
         TextView textView_title, textView_content, textView_time;
+        ImageView iv_memo;
+        LinearLayout layout_memoImage;
         String imgUri;
         int position; // holder position
 
@@ -101,6 +114,8 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
             textView_title = itemView.findViewById(R.id.textView_title);
             textView_content = itemView.findViewById(R.id.textView_content);
             textView_time = itemView.findViewById(R.id.textView_time);
+            iv_memo = itemView.findViewById(R.id.iv_memo);
+            layout_memoImage = itemView.findViewById(R.id.layout_memoImage);
 
             cardView.setOnClickListener(clickListener);
         }
