@@ -349,6 +349,7 @@ public class MemoNewActivity extends AppCompatActivity {
                 String locationUrl = url + latitude + "," + longitude;
                 editText_content.append(locationUrl);
             }
+            Log.i("REQ_LOCATION","RESULT_OK");
 
         } else if (requestCode == REQ_PLACE_PICKER && resultCode == RESULT_OK) {
 //            Place place = PlacePicker.getPlace(data, this);
