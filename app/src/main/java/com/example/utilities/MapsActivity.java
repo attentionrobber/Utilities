@@ -124,6 +124,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             intent.putExtra("latitude", latitude);
             intent.putExtra("longitude", longitude);
             setResult(RESULT_OK, intent);
+            LoadingDialog.dismissDialog();
             //dialog.dismiss();
             Log.i("LOCATE", ""+longitude+" // "+latitude);
         }

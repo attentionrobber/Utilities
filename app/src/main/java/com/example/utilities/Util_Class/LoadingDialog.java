@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 public class LoadingDialog {
 
+    static AlertDialog dialog;
+
     public static void setProgressDialog(Activity activity) {
 
         int layoutPadding = 30;
@@ -44,7 +46,7 @@ public class LoadingDialog {
         builder.setCancelable(true);
         builder.setView(layout);
 
-        AlertDialog dialog = builder.create();
+        dialog = builder.create();
         dialog.show();
         Window window = dialog.getWindow();
         if (window != null) {
@@ -54,6 +56,10 @@ public class LoadingDialog {
             params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
             dialog.getWindow().setAttributes(params);
         }
+    }
+
+    public static void dismissDialog() {
+        dialog.dismiss();
     }
 }
 
