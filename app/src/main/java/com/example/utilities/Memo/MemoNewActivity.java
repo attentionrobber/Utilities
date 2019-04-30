@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -80,7 +81,9 @@ public class MemoNewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_new);
 
-        // TODO: context 내용이 길어져서 화면이 내려가도 버튼이랑 제목은 보이게 수정.
+        // Soft Keyboard(Keypad)가 떠도 화면은 그대로 되도록 설정(내용이 길어서 스크롤바를 내려도 상단 버튼들이 없어지지 않게 설정)
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         displayKeypad();// 키패드(키보드) 자동으로 띄우기
         setWidget();
         //checkPermission();

@@ -14,6 +14,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -77,6 +78,9 @@ public class MemoModifyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_modify);
+
+        // Soft Keyboard(Keypad)가 떠도 화면은 그대로 되도록 설정(내용이 길어서 스크롤바를 내려도 상단 버튼들이 없어지지 않게 설정)
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         setWidget();
 
