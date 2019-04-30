@@ -66,7 +66,12 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
             String[] split = memo.getImgUri().split("\n"); // 여러개의 이미지 uri 를 하나씩 나눔.
 
             holder.layout_memoImage.setVisibility(View.VISIBLE);
-            Glide.with(context).load(split[0]).into(holder.iv_memo); // 첫번째로 추가한 이미지 보이기
+            Glide.with(context)
+                    .load(split[0])
+                    .thumbnail(0.5f)// 50%의 비율로 로드
+                    .override(150) // 강제 사이즈 제한
+                    .dontAnimate()
+                    .into(holder.iv_memo); // 첫번째로 추가한 이미지 보이기
 
             for (String splits : split) {
                 content = content.replace(splits, "");
@@ -79,7 +84,6 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
 //                int end = start + split[i].length(); // ri text 의 마지막 위치
 //                ssb.setSpan(new ForegroundColorSpan(Color.BLUE), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); // ssb 글씨 파란색으로 설정
 //            }
-//            holder.textView_content.setText(ssb);
         } else {
             holder.layout_memoImage.setVisibility(View.GONE);
             holder.textView_content.setText(memo.getContent()); // 메모 내용 세팅
