@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimary">#475C6F</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
     <!-- Created Color -->
+    <color name="mainColor">#B8A5A0</color>
+    <color name="mainColorDark">#533731</color>
+    <color name="secondColor">#414B55</color>
+    <color name="transparent">#00000000</color>
     <color name="calc_btn_sign">#FF1B223F</color>
     <color name="calc_btn_num">#20294C</color>
     <color name="calc_btn_line">#263058</color>

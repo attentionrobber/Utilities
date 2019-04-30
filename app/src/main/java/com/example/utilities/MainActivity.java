@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setWidget();
-        //setListener();
     }
 
     private void setWidget() {

@@ -54,6 +54,7 @@ public class GalleryActivity extends AppCompatActivity {
 //    private final int REQ_PERMISSION = 100; // 권한 요청 코드
     private final int REQ_CAMERA = 101; // 카메라 요청 코드
 //    private final int REQ_GALLERY = 102; // 갤러리 요청 코드
+    // TODO: recyclerView saved Position 사진 클릭해서 크게 본 후 되돌아와도 위치 기억하기
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

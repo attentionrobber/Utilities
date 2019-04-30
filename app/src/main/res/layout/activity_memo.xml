@@ -7,10 +7,29 @@
     android:layout_height="match_parent"
     tools:context="com.example.utilities.Memo.MemoActivity">
 
+    <RelativeLayout
+        android:id="@+id/layout_memoTitle"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:background="#000000">
+        <TextView
+            android:text="@string/memo_title"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            tools:ignore="RtlSymmetry" />
+    </RelativeLayout>
+
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/recyclerView">
+        android:layout_below="@+id/layout_memoTitle">
     </android.support.v7.widget.RecyclerView>
 
     <ImageButton

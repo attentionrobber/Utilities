@@ -1,10 +1,12 @@
 package com.example.utilities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -12,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -49,6 +52,7 @@ public class UnitActivity extends AppCompatActivity {
         displayKeypad(); // 키패드 띄워줌
         setWidget();
         setListener();
+
     }
 
     private void setWidget() {
@@ -121,6 +125,8 @@ public class UnitActivity extends AppCompatActivity {
         spinner_area_to.setAdapter(adapter_area);
         spinner_weight_from.setAdapter(adapter_weight);
         spinner_weight_to.setAdapter(adapter_weight);
+
+        findViewById(R.id.layout_bottom).setOnClickListener(clickListener); // 하단부 버튼(누르면 키패드 나타남)
     } // setWidget();
 
     private void setListener() {
@@ -138,6 +144,7 @@ public class UnitActivity extends AppCompatActivity {
         spinner_length_to.setOnItemSelectedListener(toItemSelectedListener);
         spinner_weight_to.setOnItemSelectedListener(toItemSelectedListener);
         spinner_area_to.setOnItemSelectedListener(toItemSelectedListener);
+
     } // setListener();
 
     View.OnClickListener clickListener = new View.OnClickListener() {
@@ -170,6 +177,9 @@ public class UnitActivity extends AppCompatActivity {
                     layout_weight.setVisibility(View.GONE);
                     layout_area.setVisibility(View.VISIBLE);
                     unitFlag = AREA;
+                    break;
+                case R.id.layout_bottom:
+                    displayKeypad();
                     break;
             }
         }

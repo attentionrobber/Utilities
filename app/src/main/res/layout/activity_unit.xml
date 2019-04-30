@@ -1,14 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<GridLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_unit_converter"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/mainColor"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
+        android:background="#000000">
+        <TextView
+            android:text="@string/unit_title"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            tools:ignore="RtlSymmetry" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_top"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_gravity="top"
         android:orientation="horizontal">
 
         <Button
@@ -19,7 +39,7 @@
             android:layout_weight="1"
             android:text="@string/btn_length"
             android:textSize="20sp"
-            android:background="@drawable/bg_simple_btn_dark_ripple" />
+            android:background="@color/transparent" />
         <Button
             android:id="@+id/btn_weight"
             android:layout_width="0dp"
@@ -28,7 +48,7 @@
             android:layout_weight="1"
             android:text="@string/btn_weight"
             android:textSize="20sp"
-            android:background="@drawable/bg_simple_btn_ripple" />
+            android:background="@color/transparent" />
         <Button
             android:id="@+id/btn_area"
             android:layout_width="0dp"
@@ -37,28 +57,27 @@
             android:layout_weight="1"
             android:text="@string/btn_area"
             android:textSize="20sp"
-            android:background="@drawable/bg_simple_btn_ripple" />
+            android:background="@color/transparent" />
     </LinearLayout>
 
 
     <LinearLayout
         android:id="@+id/layout_length"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="visible" >
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="65dp"
             android:orientation="horizontal">
             <RelativeLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="8"
                 android:paddingRight="5dp"
                 android:layout_margin="5dp"
-                android:background="@drawable/bg_simple">
+                android:background="@drawable/bg_transparent">
                 <Spinner
                     android:id="@+id/spinner_length_from"
                     android:layout_height="match_parent"
@@ -66,18 +85,18 @@
             </RelativeLayout>
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="70dp"
                 android:layout_weight="1"
                 android:text="＞"
                 android:textSize="20sp"
                 android:gravity="center"/>
             <RelativeLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="8"
                 android:paddingRight="5dp"
                 android:layout_margin="5dp"
-                android:background="@drawable/bg_simple">
+                android:background="@drawable/bg_transparent">
                 <Spinner
                     android:id="@+id/spinner_length_to"
                     android:layout_height="match_parent"
@@ -86,17 +105,15 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="65dp"
             android:orientation="horizontal">
-
             <EditText
                 android:id="@+id/editText_length"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="8"
-                android:background="@drawable/bg_simple"
+                android:background="@drawable/bg_transparent"
                 android:ems="10"
                 android:gravity="center|end"
                 android:hint="@string/input_number"
@@ -121,7 +138,7 @@
                 android:layout_margin="5dp"
                 android:paddingRight="10dp"
                 android:paddingLeft="10dp"
-                android:background="@drawable/bg_simple"
+                android:background="@drawable/bg_transparent"
                 android:gravity="center|end"
                 android:text="0"
                 android:textColor="@color/quantum_orange700"
@@ -129,16 +146,14 @@
         </LinearLayout>
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="7">
+            android:layout_height="wrap_content">
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:layout_margin="5dp">
                 <TextView
                     android:id="@+id/tv_mm"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -153,7 +168,7 @@
                     android:text=" mm" />
                 <TextView
                     android:id="@+id/tv_cm"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -169,12 +184,11 @@
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:layout_margin="5dp">
                 <TextView
                     android:id="@+id/tv_m"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -189,7 +203,7 @@
                     android:text=" m" />
                 <TextView
                     android:id="@+id/tv_km"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -205,12 +219,11 @@
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:layout_margin="5dp">
                 <TextView
                     android:id="@+id/tv_inch"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -225,7 +238,7 @@
                     android:text=" inch" />
                 <TextView
                     android:id="@+id/tv_ft"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -241,12 +254,11 @@
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:layout_margin="5dp">
                 <TextView
                     android:id="@+id/tv_yd"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -261,7 +273,7 @@
                     android:text=" yd" />
                 <TextView
                     android:id="@+id/tv_mile"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -275,11 +287,6 @@
                     android:textSize="20sp"
                     android:text=" mile" />
             </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="20">
-            </TableRow>
         </TableLayout>
     </LinearLayout>
 
@@ -287,14 +294,12 @@
     <LinearLayout
         android:id="@+id/layout_weight"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone" >
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="65dp"
             android:orientation="horizontal">
             <RelativeLayout
                 android:layout_width="0dp"
@@ -330,8 +335,7 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="65dp"
             android:orientation="horizontal">
             <EditText
                 android:id="@+id/editText_weight"
@@ -372,8 +376,7 @@
         </LinearLayout>
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="7">
+            android:layout_height="wrap_content">
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -381,7 +384,7 @@
                 android:layout_margin="5dp">
                 <TextView
                     android:id="@+id/tv_mg"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -396,7 +399,7 @@
                     android:text=" mg" />
                 <TextView
                     android:id="@+id/tv_g"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -417,7 +420,7 @@
                 android:layout_margin="5dp">
                 <TextView
                     android:id="@+id/tv_kg"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -432,7 +435,7 @@
                     android:text=" kg" />
                 <TextView
                     android:id="@+id/tv_ton"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -453,7 +456,7 @@
                 android:layout_margin="5dp">
                 <TextView
                     android:id="@+id/tv_kt"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -468,7 +471,7 @@
                     android:text=" kt" />
                 <TextView
                     android:id="@+id/tv_lb"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -489,7 +492,7 @@
                 android:layout_margin="5dp">
                 <TextView
                     android:id="@+id/tv_gr"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -504,7 +507,7 @@
                     android:text=" gr" />
                 <TextView
                     android:id="@+id/tv_oz"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -518,11 +521,6 @@
                     android:textSize="20sp"
                     android:text=" oz" />
             </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="20">
-            </TableRow>
         </TableLayout>
     </LinearLayout>
 
@@ -530,14 +528,12 @@
     <LinearLayout
         android:id="@+id/layout_area"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone" >
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="65dp"
             android:orientation="horizontal">
             <RelativeLayout
                 android:layout_width="0dp"
@@ -574,8 +570,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="65dp"
             android:orientation="horizontal">
             <EditText
                 android:id="@+id/editText_area"
@@ -617,8 +612,7 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="7">
+            android:layout_height="wrap_content">
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -626,7 +620,7 @@
                 android:layout_margin="5dp">
                 <TextView
                     android:id="@+id/tv_m2"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -641,7 +635,7 @@
                     android:text=" ㎡" />
                 <TextView
                     android:id="@+id/tv_km2"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -662,7 +656,7 @@
                 android:layout_margin="5dp">
                 <TextView
                     android:id="@+id/tv_ft2"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -677,7 +671,7 @@
                     android:text=" ft²" />
                 <TextView
                     android:id="@+id/tv_yd2"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -698,7 +692,7 @@
                 android:layout_margin="5dp">
                 <TextView
                     android:id="@+id/tv_a"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -713,7 +707,7 @@
                     android:text=" a" />
                 <TextView
                     android:id="@+id/tv_ha"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -734,7 +728,7 @@
                 android:layout_margin="5dp">
                 <TextView
                     android:id="@+id/tv_ac"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -749,7 +743,7 @@
                     android:text=" ac" />
                 <TextView
                     android:id="@+id/tv_pyeong"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dp"
                     android:layout_width="0dp"
                     android:layout_weight="4"
                     android:gravity="center|end"
@@ -763,12 +757,14 @@
                     android:textSize="20sp"
                     android:text=" 평" />
             </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="20">
-            </TableRow>
         </TableLayout>
     </LinearLayout>
 
-</LinearLayout>
+    <Button
+        android:id="@+id/layout_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:background="?attr/selectableItemBackground"/>
+
+</GridLayout>
