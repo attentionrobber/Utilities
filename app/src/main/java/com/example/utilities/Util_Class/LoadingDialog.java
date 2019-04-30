@@ -11,11 +11,24 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+/**
+ * Loading, Searching etc.. Dialog
+ * Used by: MapsActivity
+ */
 public class LoadingDialog {
 
-    static AlertDialog dialog;
+    private Activity activity;
 
-    public static void setProgressDialog(Activity activity) {
+    private AlertDialog dialog;
+    private TextView tvText;
+
+    public LoadingDialog(Activity activity) {
+        this.activity = activity;
+
+        setProgressDialog(activity);
+    }
+
+    public void setProgressDialog(Activity activity) {
 
         int layoutPadding = 30;
         LinearLayout layout = new LinearLayout(activity);
@@ -33,8 +46,7 @@ public class LoadingDialog {
 
         layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.gravity = Gravity.CENTER;
-        TextView tvText = new TextView(activity);
-        tvText.setText("Loading ...");
+        tvText = new TextView(activity);
         tvText.setTextColor(Color.parseColor("#000000"));
         tvText.setTextSize(20);
         tvText.setLayoutParams(layoutParams);
@@ -47,7 +59,6 @@ public class LoadingDialog {
         builder.setView(layout);
 
         dialog = builder.create();
-        dialog.show();
         Window window = dialog.getWindow();
         if (window != null) {
             WindowManager.LayoutParams params = new WindowManager.LayoutParams();
@@ -58,7 +69,15 @@ public class LoadingDialog {
         }
     }
 
-    public static void dismissDialog() {
+    public void setMessage(String message) {
+        tvText.setText(message);
+    }
+
+    public void showDialog() {
+        dialog.show();
+    }
+
+    public void dismissDialog() {
         dialog.dismiss();
     }
 }

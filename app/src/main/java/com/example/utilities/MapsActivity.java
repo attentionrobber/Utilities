@@ -1,9 +1,10 @@
 package com.example.utilities;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -12,11 +13,6 @@ import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import com.example.utilities.Util_Class.LoadingDialog;
 import com.example.utilities.Util_Class.Logger;
@@ -34,13 +30,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
  */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    Dialog dialog;
-
     private GoogleMap mMap;
     SupportMapFragment mapFragment;
     LocationManager locationManager;
 
     LatLng myPosition; // 내 위치
+
+    LoadingDialog loadingDialog; //
 
     private final int REQ_PLACEPICKER = 98; // PlacePicker(장소 선택) 요청 코드
     private final int REQ_LOCATION = 99; // 내 위치 요청 코드
@@ -50,12 +46,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+
+        registerReceiver(mGpsSwitchStateReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)); // GPS 온오프 체크 리스너 등록
+
+        loadingDialog = new LoadingDialog(this);
 
         // 어떤 옵션으로 지도서비스를 이용하는지 받아온다.
         Intent intent = getIntent();
@@ -67,30 +66,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        alertGPS(); // GPS 센서가 꺼져있으면 알림 띄워주는 함수
-
         // 디폴트 지도 위치 설정 : 서울 신사역 37.516066 127.019361
         LatLng sinsa = new LatLng(37.516066, 127.019361);
         mMap.addMarker(new MarkerOptions().position(sinsa).title("Seoul in Sinsa"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sinsa, 15));
 
-        // Set loading Dialog
-//        dialog = new Dialog(this);
-//        dialog.setTitle("Loading...");
-//        dialog.show();
-        LoadingDialog.setProgressDialog(this);
+        if (gpsCheck()) // GPS 가 켜겨있을 경우에만 Searching
+            searchMyLocation(); // 현재 위치 찾기
+        else
+            alertGPS(); // GPS 센서가 꺼져있으면 알림 띄워주는 함수
 
 
-
-        searchMyLocation(); // 현재 위치 찾기 리스너 등록
-        //searchByPlacePicker();
+        //searchByPlacePicker(); // Deprecated
     }
-
 
     /**
      * locationListener로 현재 위치 찾는 함수
      */
     private void searchMyLocation() {
+
+        // Set loading Dialog
+        loadingDialog.showDialog();
+        loadingDialog.setMessage("Searching...");
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PermissionControl.checkPermission(MapsActivity.this, REQ_LOCATION);
             Logger.print("if","ErrorCheck");
@@ -109,24 +107,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            double longitude = location.getLongitude(); // 경도
             double latitude = location.getLatitude();   // 위도
+            double longitude = location.getLongitude(); // 경도
             //double altitude = location.getAltitude();   // 고도
             //float accuracy = location.getAccuracy();    // 정확도
             //String provider = location.getProvider();   // 위치제공자
 
-            // 내 위치
-            myPosition = new LatLng(latitude, longitude); // 위도, 경도
+            myPosition = new LatLng(latitude, longitude); // 내 위치 위도, 경도
             mMap.addMarker(new MarkerOptions().position(myPosition).title("I'm here")); // 내 위치와 마커 클릭시 나오는 텍스트
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 18)); // 화면을 내 위치로 이동시키는 함수, Zoom Level 설정
 
+            // 찾은 위치 결과를 호출한 액티비티로 보내기
             Intent intent = new Intent();
-            intent.putExtra("latitude", latitude);
-            intent.putExtra("longitude", longitude);
+            intent.putExtra("latitude", myPosition.latitude);
+            intent.putExtra("longitude", myPosition.longitude);
             setResult(RESULT_OK, intent);
-            LoadingDialog.dismissDialog();
-            //dialog.dismiss();
-            Log.i("LOCATE", ""+longitude+" // "+latitude);
+            Logger.print("position"+latitude +"/"+ longitude, "LOCATION");
+            loadingDialog.dismissDialog(); // Dialog 닫기
         }
 
         @Override // Provider 의 상태 변경시 호출
@@ -145,9 +142,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     };
 
+
+    /**
+     * Following broadcast receiver is to listen the Location button toggle state in Android.
+     */
+    private BroadcastReceiver mGpsSwitchStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if (intent.getAction().matches("android.location.PROVIDERS_CHANGED")) {
+                if (gpsCheck())
+                    searchMyLocation();
+            }
+        }
+    };
+
+
+
     // GPS 센서가 켜져있는지 체크 롤리팝 이하버전
     private boolean gpsCheck() {
-
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } else {
@@ -178,10 +191,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     dialog.cancel();
                 }
             });
+            alertDialog.setCancelable(false); // 다른곳 터치해도 창이 없어지지 않도록 설정.
             alertDialog.show(); // 5. 팝업창을 띄운다.
         }
     }
-
 
     @Override
     protected void onDestroy() {
@@ -191,5 +204,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             PermissionControl.checkPermission(MapsActivity.this, REQ_LOCATION);
         }
         locationManager.removeUpdates(locationListener);
+        unregisterReceiver(mGpsSwitchStateReceiver); // GPS 온오프 체크 리스너 등록
     }
+
 }

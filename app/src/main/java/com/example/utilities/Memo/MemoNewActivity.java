@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.example.utilities.Gallery.GalleryActivity;
 import com.example.utilities.MapsActivity;
 import com.example.utilities.R;
+import com.example.utilities.Util_Class.LoadingDialog;
 import com.example.utilities.Util_Class.Logger;
 import com.example.utilities.Util_Class.PermissionControl;
 import com.example.utilities.data.DBHelper;
@@ -168,9 +169,8 @@ public class MemoNewActivity extends AppCompatActivity {
                 hideKeypad();
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     PermissionControl.checkPermission(MemoNewActivity.this, REQ_LOCATION);
-                } else {
-                    alertAddLocation(); // 내 위치 or 지도 검색할지 선택하는 alert
                 }
+                alertAddLocation(); // 내 위치 or 지도 검색할지 선택하는 alert
                 break;
             default: break;
         }
