@@ -16,6 +16,7 @@ import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MemoActivity extends AppCompatActivity {
@@ -27,7 +28,7 @@ public class MemoActivity extends AppCompatActivity {
     LinearLayoutManager layoutManager;
 
     int index = -1;
-    int position = 0;
+    int position = 0; // Saved Scroll Position
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,8 @@ public class MemoActivity extends AppCompatActivity {
         Dao<Memo, Integer> memoDao = dbHelper.getMemoDao();
 
         memos = memoDao.queryForAll();
+        // 최신 날짜 기준으로 정렬
+        Collections.sort(memos, (o1, o2) -> Long.compare(o2.getCurrentDate().getTime(), o1.getCurrentDate().getTime()));
     }
 
     @Override
@@ -77,8 +80,6 @@ public class MemoActivity extends AppCompatActivity {
         index = layoutManager.findFirstVisibleItemPosition();
         View v = recyclerView.getChildAt(0); // recyclerView 의 자식 뷰를 가져온다.(여기선 CardView 의 레이아웃)
         position = (v == null) ? 0 : (v.getTop() - recyclerView.getPaddingTop()); // 삼항연산자 아래 4줄 코드와 같은 역할
-        if (v != null)
-            Log.i("TESTS", ""+v.getTop()+" // "+recyclerView.getPaddingTop()+" // "+(v.getTop() - recyclerView.getPaddingTop()));
 //        if (v == null)
 //            position = 0;
 //        else

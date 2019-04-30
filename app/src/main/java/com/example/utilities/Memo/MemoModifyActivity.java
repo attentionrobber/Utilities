@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class MemoModifyActivity extends AppCompatActivity {
     private final int REQ_GALLERY = 102; // 갤러리 요청 코드
 
     // 메모 데이터 관련
-    List<Memo> memoList = new ArrayList<>();
+    List<Memo> memos = new ArrayList<>();
     int position = 0; // Memo position
 
     // 이미지 Uri 관련
@@ -123,7 +124,9 @@ public class MemoModifyActivity extends AppCompatActivity {
         dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
         memoDao = dbHelper.getMemoDao();
 
-        memoList = memoDao.queryForAll();
+        memos = memoDao.queryForAll();
+        // 최신 날짜 기준으로 정렬
+        Collections.sort(memos, (o1, o2) -> Long.compare(o2.getCurrentDate().getTime(), o1.getCurrentDate().getTime()));
     }
 
     /**
@@ -162,9 +165,9 @@ public class MemoModifyActivity extends AppCompatActivity {
      */
     private void setMemo(int position) {
         // position 으로 Memo data 를 가져온다.
-        String title = memoList.get(position).getTitle();
-        String context = memoList.get(position).getContent();
-        uri_temp = memoList.get(position).getImgUri();
+        String title = memos.get(position).getTitle();
+        String context = memos.get(position).getContent();
+        uri_temp = memos.get(position).getImgUri();
 
         // 가져온 Memo data 를 widget 에 뿌려준다.
         editText_title.setText(title);
@@ -199,7 +202,7 @@ public class MemoModifyActivity extends AppCompatActivity {
         switch (v.getId()) {
             case R.id.btn_OK:
                 try {
-                    updateToDB(memoList.get(position));
+                    updateToDB(memos.get(position));
                     setResult(RESULT_OK, new Intent()); // MemoViewActivity 로 결과를 콜백한다.
                 } catch (SQLException e) {
                     e.printStackTrace();

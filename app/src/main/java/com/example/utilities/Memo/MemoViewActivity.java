@@ -10,7 +10,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ImageSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,6 +25,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,7 +45,7 @@ public class MemoViewActivity extends AppCompatActivity {
     ImageView imageView;
 
     // 메모 데이터 관련
-    List<Memo> memoList;
+    List<Memo> memos = new ArrayList<>();
     int position = 0; // Memo position
 
     // 이미지 관련
@@ -95,18 +96,19 @@ public class MemoViewActivity extends AppCompatActivity {
         dbHelper = OpenHelperManager.getHelper(this, DBHelper.class); // static 불가
         memoDao = dbHelper.getMemoDao();
 
-        memoList = memoDao.queryForAll();
+        memos = memoDao.queryForAll();
+        // 최신 날짜 기준으로 정렬
+        Collections.sort(memos, (o1, o2) -> Long.compare(o2.getCurrentDate().getTime(), o1.getCurrentDate().getTime()));
     }
 
     /**
      * 각 view 에 내용을 세팅한다.
      */
     private void setMemo(int position) {
-
         // position 으로 Memo data 를 가져온다.
-        String title = memoList.get(position).getTitle();
-        String context = memoList.get(position).getContent();
-        strUri = memoList.get(position).getImgUri();
+        String title = memos.get(position).getTitle();
+        String context = memos.get(position).getContent();
+        strUri = memos.get(position).getImgUri();
 
         // 가져온 Memo data 를 뿌려준다.
         tv_title.setText(title);
@@ -177,7 +179,7 @@ public class MemoViewActivity extends AppCompatActivity {
                     alert_delete.setMessage("Are you sure you want to delete?");
                     alert_delete.setPositiveButton("OK", (dialog, which) -> {
                         try {
-                            deleteMemo(memoList.get(position));
+                            deleteMemo(memos.get(position));
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }

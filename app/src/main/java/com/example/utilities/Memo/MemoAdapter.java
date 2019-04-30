@@ -3,15 +3,8 @@ package com.example.utilities.Memo;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.ImageSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,17 +25,15 @@ import java.util.List;
  */
 public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
 
-    private List<Memo> memoList;
+    private List<Memo> memos;
     private Context context;
-    private Intent intent;
 
     @SuppressLint("SimpleDateFormat")
     private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd kk:mm");
 
     MemoAdapter(List<Memo> memos, Context context) { // 생성자
-        this.memoList = memos;
+        this.memos = memos;
         this.context = context;
-        intent = new Intent(context, MemoViewActivity.class);
     }
 
     // 홀더(한 페이지)에 모양을 저장
@@ -55,7 +46,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
     @Override
     public void onBindViewHolder(Holder holder, int position) {
 
-        final Memo memo = memoList.get(position); // 데이터를 행 단위로 꺼낸다. 멤버변수가 아닌 지역변수를 참조할땐 상수로 가져와야함.
+        final Memo memo = memos.get(position); // 데이터를 행 단위로 꺼낸다. 멤버변수가 아닌 지역변수를 참조할땐 상수로 가져와야함.
 
         if (memo.getTitle().equals("")) // 메모의 제목이 없으면 숨김.
             holder.textView_title.setVisibility(View.GONE);
@@ -90,16 +81,16 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
         }
 
         // 홀더에 데이터를 세팅한다.
-        holder.textView_title.setText(memoList.get(position).getTitle()); // 메모 제목 세팅
-        String date = df.format(memoList.get(position).getCurrentDate()); // 메모 날짜 formatting
+        holder.textView_title.setText(memos.get(position).getTitle()); // 메모 제목 세팅
+        String date = df.format(memos.get(position).getCurrentDate()); // 메모 날짜 formatting
         holder.textView_time.setText(date); // 메모 날짜 세팅
-        holder.imgUri = memoList.get(position).getImgUri(); // 메모 이미지 가져오기
-        holder.position = position; // 메모 위치 가져오기
+        holder.imgUri = memos.get(position).getImgUri(); // 메모 이미지 가져오기
+        //holder.position = position; // 메모 위치 가져오기
     }
 
     @Override
     public int getItemCount() {
-        return memoList.size();
+        return memos.size();
     }
 
     class Holder extends RecyclerView.ViewHolder {
@@ -109,7 +100,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
         ImageView iv_memo;
         LinearLayout layout_memoImage;
         String imgUri;
-        int position; // holder position
+        //int position; // holder position
 
         Holder(View itemView) {
             super(itemView);
@@ -127,8 +118,10 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.Holder> {
         private View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //intent.putExtra("position", String.valueOf(datas.get(position)));
-                intent.putExtra("position", position);
+                //intent.putExtra("position", String.valueOf(memos.get(position)));
+                //intent.putExtra("position", position);
+                Intent intent = new Intent(context, MemoViewActivity.class);
+                intent.putExtra("position", getAdapterPosition());
                 context.startActivity(intent);
             }
         };
