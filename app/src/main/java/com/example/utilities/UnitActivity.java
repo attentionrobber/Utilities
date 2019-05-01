@@ -56,9 +56,9 @@ public class UnitActivity extends AppCompatActivity {
     }
 
     private void setWidget() {
-        btn_length = findViewById(R.id.btn_length);
-        btn_weight = findViewById(R.id.btn_weight);
-        btn_area = findViewById(R.id.btn_area);
+//        btn_length = findViewById(R.id.btn_length);
+//        btn_weight = findViewById(R.id.btn_weight);
+//        btn_area = findViewById(R.id.btn_area);
 
         editText_length = findViewById(R.id.editText_length);
         editText_area = findViewById(R.id.editText_area);
@@ -126,13 +126,13 @@ public class UnitActivity extends AppCompatActivity {
         spinner_weight_from.setAdapter(adapter_weight);
         spinner_weight_to.setAdapter(adapter_weight);
 
-        findViewById(R.id.layout_bottom).setOnClickListener(clickListener); // 하단부 버튼(누르면 키패드 나타남)
+        //findViewById(R.id.layout_bottom).setOnClickListener(clickListener); // 하단부 버튼(누르면 키패드 나타남)
     } // setWidget();
 
     private void setListener() {
-        btn_length.setOnClickListener(clickListener);
-        btn_weight.setOnClickListener(clickListener);
-        btn_area.setOnClickListener(clickListener);
+//        btn_length.setOnClickListener(clickListener);
+//        btn_weight.setOnClickListener(clickListener);
+//        btn_area.setOnClickListener(clickListener);
 
         editText_area.addTextChangedListener(textWatcher);
         editText_length.addTextChangedListener(textWatcher);
@@ -151,36 +151,36 @@ public class UnitActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch(v.getId()) {
-                case R.id.btn_length:
-                    btn_length.setBackgroundResource(R.drawable.bg_simple_btn_dark_ripple); // 현재 선택한 단위종류 표시
-                    btn_weight.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
-                    btn_area.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
-                    layout_length.setVisibility(View.VISIBLE);
-                    layout_area.setVisibility(View.GONE);
-                    layout_weight.setVisibility(View.GONE);
-                    unitFlag = LENGTH;
-                    break;
-                case R.id.btn_weight:
-                    btn_length.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
-                    btn_weight.setBackgroundResource(R.drawable.bg_simple_btn_dark_ripple);
-                    btn_area.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
-                    layout_length.setVisibility(View.GONE);
-                    layout_weight.setVisibility(View.VISIBLE);
-                    layout_area.setVisibility(View.GONE);
-                    unitFlag = WEIGHT;
-                    break;
-                case R.id.btn_area:
-                    btn_length.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
-                    btn_weight.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
-                    btn_area.setBackgroundResource(R.drawable.bg_simple_btn_dark_ripple);
-                    layout_length.setVisibility(View.GONE);
-                    layout_weight.setVisibility(View.GONE);
-                    layout_area.setVisibility(View.VISIBLE);
-                    unitFlag = AREA;
-                    break;
-                case R.id.layout_bottom:
-                    displayKeypad();
-                    break;
+//                case R.id.btn_length:
+//                    btn_length.setBackgroundResource(R.drawable.bg_simple_btn_dark_ripple); // 현재 선택한 단위종류 표시
+//                    btn_weight.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
+//                    btn_area.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
+//                    layout_length.setVisibility(View.VISIBLE);
+//                    layout_area.setVisibility(View.GONE);
+//                    layout_weight.setVisibility(View.GONE);
+//                    unitFlag = LENGTH;
+//                    break;
+//                case R.id.btn_weight:
+//                    btn_length.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
+//                    btn_weight.setBackgroundResource(R.drawable.bg_simple_btn_dark_ripple);
+//                    btn_area.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
+//                    layout_length.setVisibility(View.GONE);
+//                    layout_weight.setVisibility(View.VISIBLE);
+//                    layout_area.setVisibility(View.GONE);
+//                    unitFlag = WEIGHT;
+//                    break;
+//                case R.id.btn_area:
+//                    btn_length.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
+//                    btn_weight.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
+//                    btn_area.setBackgroundResource(R.drawable.bg_simple_btn_dark_ripple);
+//                    layout_length.setVisibility(View.GONE);
+//                    layout_weight.setVisibility(View.GONE);
+//                    layout_area.setVisibility(View.VISIBLE);
+//                    unitFlag = AREA;
+//                    break;
+//                case R.id.layout_bottom:
+//                    displayKeypad();
+//                    break;
             }
         }
     }; // clickListener
