@@ -19,7 +19,7 @@
         android:layout_alignBottom="@+id/btn_OK"
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
-        android:background="@drawable/bg_simple_btn_ripple"
+        android:background="@drawable/bg_simple_ripple"
         android:layout_marginLeft="3dp"
         android:layout_marginTop="3dp" />
     <ImageButton
@@ -27,7 +27,7 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:src="@android:drawable/ic_menu_mylocation"
-        android:background="@drawable/bg_simple_btn_ripple"
+        android:background="@drawable/bg_simple_ripple"
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
         android:layout_alignTop="@+id/btn_addImg"
@@ -43,7 +43,7 @@
         android:layout_toLeftOf="@+id/btn_cancel"
         android:layout_toStartOf="@+id/btn_cancel"
         android:layout_alignBottom="@+id/btn_cancel"
-        android:background="@drawable/bg_simple_btn_ripple"
+        android:background="@drawable/bg_simple_ripple"
         android:layout_marginRight="3dp"
         android:layout_marginTop="3dp" />
     <Button
@@ -54,7 +54,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/bg_simple_btn_ripple"
+        android:background="@drawable/bg_simple_ripple"
         android:layout_marginRight="3dp"
         android:layout_marginTop="3dp" />
 

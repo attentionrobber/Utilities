@@ -15,7 +15,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:background="@drawable/bg_simple_btn_ripple"
+        android:background="@drawable/bg_simple_ripple"
         android:layout_marginStart="3dp"
         android:layout_marginLeft="3dp"
         android:layout_marginTop="3dp"/>
@@ -27,7 +27,7 @@
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/btn_delete"
         android:layout_toEndOf="@+id/btn_delete"
-        android:background="@drawable/bg_simple_btn_ripple"
+        android:background="@drawable/bg_simple_ripple"
         android:layout_marginTop="3dp"
         android:layout_marginLeft="3dp"/>
     <Button
@@ -38,7 +38,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/bg_simple_btn_ripple"
+        android:background="@drawable/bg_simple_ripple"
         android:layout_marginRight="3dp"
         android:layout_marginTop="3dp" />
 

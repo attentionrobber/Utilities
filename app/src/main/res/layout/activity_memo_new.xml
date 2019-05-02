@@ -27,7 +27,7 @@
             android:paddingRight="3dp"
             android:layout_marginLeft="3dp"
             android:layout_marginTop="3dp"
-            android:background="@drawable/bg_simple_btn_ripple"/>
+            android:background="@drawable/bg_simple_ripple"/>
         <ImageButton
             android:id="@+id/btn_addLocation"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             android:layout_marginLeft="3dp"
             android:layout_alignTop="@+id/btn_addImg"
             android:src="@android:drawable/ic_menu_mylocation"
-            android:background="@drawable/bg_simple_btn_ripple" />
+            android:background="@drawable/bg_simple_ripple" />
 
         <Button
             android:id="@+id/btn_OK"
@@ -51,7 +51,7 @@
             android:layout_toStartOf="@+id/btn_cancel"
             android:layout_marginTop="3dp"
             android:layout_marginRight="3dp"
-            android:background="@drawable/bg_simple_btn_ripple"/>
+            android:background="@drawable/bg_simple_ripple"/>
         <Button
             android:id="@+id/btn_cancel"
             android:text="cancel"
@@ -62,7 +62,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="3dp"
             android:layout_marginRight="3dp"
-            android:background="@drawable/bg_simple_btn_ripple"/>
+            android:background="@drawable/bg_simple_ripple"/>
 
         <EditText
             android:id="@+id/textView_title"
