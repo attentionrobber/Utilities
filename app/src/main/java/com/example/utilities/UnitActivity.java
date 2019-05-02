@@ -1,32 +1,25 @@
 package com.example.utilities;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.example.utilities.Util_Class.Logger;
 
 import java.text.DecimalFormat;
 
 public class UnitActivity extends AppCompatActivity {
 
     Button btn_length, btn_area, btn_weight;
-    EditText editText_length, editText_area, editText_weight;
-    TextView tv_length_output, tv_area_output, tv_weight_output;
+    EditText editText_length, editText_area, editText_weight; // 입력값
+    TextView tv_length_output, tv_area_output, tv_weight_output; // 결과값
     TextView tv_mm, tv_cm, tv_m, tv_km, tv_inch, tv_ft, tv_yd, tv_mile;
     TextView tv_mg, tv_g, tv_kg, tv_ton, tv_kt, tv_lb, tv_gr, tv_oz;
     TextView tv_m2, tv_km2, tv_ft2, tv_yd2, tv_a, tv_ha, tv_ac, tv_pyeong;
@@ -35,7 +28,7 @@ public class UnitActivity extends AppCompatActivity {
 
     final String SPINNER_LENGTH[] = {"밀리미터(mm)", "센티미터(cm)", "미터(m)", "킬로미터(km)", "인치(inch)", "피트(ft)", "야드(yd)", "마일(mile)"};
     final String SPINNER_WEIGHT[] = {"밀리그램(mg)", "그램(g)", "킬로그램(kg)", "톤(t)", "킬로톤(kt)", "파운드(lb)", "그레인(gr)", "온스(oz)"};
-    final String SPINNER_AREA[] = {"제곱미터(m^2)", "제곱키로미터(km^2)", "제곱피트(ft^2)", "제곱야드(yd^2)", "아르(a)", "헥타르(ha)", "에이커(ac)", "평"};
+    final String SPINNER_AREA[] = {"제곱미터(m^2)", "제곱키로미터\n(km^2)", "제곱피트(ft^2)", "제곱야드(yd^2)", "아르(a)", "헥타르(ha)", "에이커(ac)", "평"};
 
     private double output_mm, output_cm, output_m, output_km, output_inch, output_ft, output_yd, output_mile;
     private double output_mg, output_g, output_kg, output_ton, output_kt, output_lb, output_gr, output_oz;
@@ -45,6 +38,8 @@ public class UnitActivity extends AppCompatActivity {
     private final String WEIGHT = "WEIGHT";
     private final String AREA = "AREA";
     private String unitFlag = "LENGTH"; // 어떤 종류의 단위를 선택했는지 나타내는 상태 변수
+
+    // TODO: 상단바 텍스트에서 아이콘으로 교체, 온도 레이아웃 추가(음수도 추가) ,  Clear 버튼 추가
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +52,9 @@ public class UnitActivity extends AppCompatActivity {
     }
 
     private void setWidget() {
-//        btn_length = findViewById(R.id.btn_length);
-//        btn_weight = findViewById(R.id.btn_weight);
-//        btn_area = findViewById(R.id.btn_area);
+        btn_length = findViewById(R.id.btn_length);
+        btn_weight = findViewById(R.id.btn_weight);
+        btn_area = findViewById(R.id.btn_area);
 
         editText_length = findViewById(R.id.editText_length);
         editText_area = findViewById(R.id.editText_area);
@@ -142,9 +137,9 @@ public class UnitActivity extends AppCompatActivity {
     } // setWidget();
 
     private void setListener() {
-//        btn_length.setOnClickListener(clickListener);
-//        btn_weight.setOnClickListener(clickListener);
-//        btn_area.setOnClickListener(clickListener);
+        btn_length.setOnClickListener(btnClickListener);
+        btn_weight.setOnClickListener(btnClickListener);
+        btn_area.setOnClickListener(btnClickListener);
 
         editText_area.addTextChangedListener(textWatcher);
         editText_length.addTextChangedListener(textWatcher);
@@ -156,7 +151,6 @@ public class UnitActivity extends AppCompatActivity {
         spinner_length_to.setOnItemSelectedListener(toItemSelectedListener);
         spinner_weight_to.setOnItemSelectedListener(toItemSelectedListener);
         spinner_area_to.setOnItemSelectedListener(toItemSelectedListener);
-
     } // setListener();
 
 
@@ -185,6 +179,36 @@ public class UnitActivity extends AppCompatActivity {
             case R.id.btn_dot: setTextToEditText("DOT");
                 break;
             case R.id.btn_del: setTextToEditText("DEL");
+                break;
+
+            case R.id.btn_length:
+                btn_length.setBackgroundResource(R.drawable.bg_white_dark_border_ripple); // 현재 선택한 단위종류 표시
+                btn_weight.setBackgroundResource(R.drawable.bg_transparent_ripple);
+                btn_area.setBackgroundResource(R.drawable.bg_transparent_ripple);
+                layout_length.setVisibility(View.VISIBLE);
+                layout_area.setVisibility(View.GONE);
+                layout_weight.setVisibility(View.GONE);
+                unitFlag = LENGTH;
+                break;
+
+            case R.id.btn_weight:
+                btn_length.setBackgroundResource(R.drawable.bg_transparent_ripple);
+                btn_weight.setBackgroundResource(R.drawable.bg_white_dark_border_ripple);
+                btn_area.setBackgroundResource(R.drawable.bg_transparent_ripple);
+                layout_length.setVisibility(View.GONE);
+                layout_weight.setVisibility(View.VISIBLE);
+                layout_area.setVisibility(View.GONE);
+                unitFlag = WEIGHT;
+                break;
+
+            case R.id.btn_area:
+                btn_length.setBackgroundResource(R.drawable.bg_transparent_ripple);
+                btn_weight.setBackgroundResource(R.drawable.bg_transparent_ripple);
+                btn_area.setBackgroundResource(R.drawable.bg_white_dark_border_ripple);
+                layout_length.setVisibility(View.GONE);
+                layout_weight.setVisibility(View.GONE);
+                layout_area.setVisibility(View.VISIBLE);
+                unitFlag = AREA;
                 break;
         }
     }; // btnClickListener
@@ -229,44 +253,6 @@ public class UnitActivity extends AppCompatActivity {
         String split[] = str.split("(?<=[*/+-])|(?=[*/+-])");
         return split[split.length - 1].contains(".");
     }
-
-    View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch(v.getId()) {
-//                case R.id.btn_length:
-//                    btn_length.setBackgroundResource(R.drawable.bg_simple_btn_dark_ripple); // 현재 선택한 단위종류 표시
-//                    btn_weight.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
-//                    btn_area.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
-//                    layout_length.setVisibility(View.VISIBLE);
-//                    layout_area.setVisibility(View.GONE);
-//                    layout_weight.setVisibility(View.GONE);
-//                    unitFlag = LENGTH;
-//                    break;
-//                case R.id.btn_weight:
-//                    btn_length.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
-//                    btn_weight.setBackgroundResource(R.drawable.bg_simple_btn_dark_ripple);
-//                    btn_area.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
-//                    layout_length.setVisibility(View.GONE);
-//                    layout_weight.setVisibility(View.VISIBLE);
-//                    layout_area.setVisibility(View.GONE);
-//                    unitFlag = WEIGHT;
-//                    break;
-//                case R.id.btn_area:
-//                    btn_length.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
-//                    btn_weight.setBackgroundResource(R.drawable.bg_simple_btn_ripple);
-//                    btn_area.setBackgroundResource(R.drawable.bg_simple_btn_dark_ripple);
-//                    layout_length.setVisibility(View.GONE);
-//                    layout_weight.setVisibility(View.GONE);
-//                    layout_area.setVisibility(View.VISIBLE);
-//                    unitFlag = AREA;
-//                    break;
-//                case R.id.layout_bottom:
-//                    displayKeypad();
-//                    break;
-            }
-        }
-    }; // clickListener
 
     /**
      * TextView 에 숫자를 입력할때 마다 결과값을 실시간으로 보여준다.
@@ -317,7 +303,6 @@ public class UnitActivity extends AppCompatActivity {
                 switch (unitFlag) {
                     case LENGTH:
                         convertLength(position, spinner_length_to.getSelectedItemPosition(), editText_length.getText().toString());
-                        break;
                     case WEIGHT:
                         convertWeight(position, spinner_weight_to.getSelectedItemPosition(), editText_weight.getText().toString());
                         break;
@@ -372,9 +357,8 @@ public class UnitActivity extends AppCompatActivity {
     private void convertLength(int slF, int slT, String editText) {
 
         double input = 0;
-        if( !(editText_length.getText().toString().equals("")) ) {
+        if( !(editText_length.getText().toString().equals("")) )
             input = Double.parseDouble(editText); // 입력값을 editText 에서 가져온다.
-        }
 
         if (slF == 0) { // mm를 다른 단위로 변환
             output_mm = input; setTextAndStringFormat(tv_mm, output_mm);
@@ -386,7 +370,7 @@ public class UnitActivity extends AppCompatActivity {
             output_yd = input * 0.001094; setTextAndStringFormat(tv_yd, output_yd); // mm -> yd
             output_mile = input * 0.000000621; setTextAndStringFormat(tv_mile, output_mile); // mm -> mile
             switchResult(slT);
-        } else if (slF == 1) {
+        } else if (slF == 1) { // cm를 다른 단위로 변환
             output_mm = input * 10; setTextAndStringFormat(tv_mm, output_mm);
             output_cm = input; setTextAndStringFormat(tv_cm, output_cm);
             output_m = input * 0.01; setTextAndStringFormat(tv_m, output_m);
@@ -396,7 +380,7 @@ public class UnitActivity extends AppCompatActivity {
             output_yd = input * 0.010936; setTextAndStringFormat(tv_yd, output_yd);
             output_mile = input * 0.00000621; setTextAndStringFormat(tv_mile, output_mile);
             switchResult(slT);
-        } else if (slF == 2) {
+        } else if (slF == 2) { // m를 다른 단위로 변환
             output_mm = input * 1000; setTextAndStringFormat(tv_mm, output_mm);
             output_cm = input * 10; setTextAndStringFormat(tv_cm, output_cm);
             output_m = input; setTextAndStringFormat(tv_m, output_m);
@@ -406,7 +390,7 @@ public class UnitActivity extends AppCompatActivity {
             output_yd = input * 1.093613;setTextAndStringFormat(tv_yd, output_yd);
             output_mile = input * 0.00062137; setTextAndStringFormat(tv_mile, output_mile);
             switchResult(slT);
-        } else if (slF == 3) {
+        } else if (slF == 3) { // km를 다른 단위로 변환
             output_mm = input * 1000; setTextAndStringFormat(tv_mm, output_mm);
             output_cm = input * 0.1; setTextAndStringFormat(tv_cm, output_cm);
             output_m = input * 0.001; setTextAndStringFormat(tv_m, output_m);
@@ -416,7 +400,7 @@ public class UnitActivity extends AppCompatActivity {
             output_yd = input * 1093.6133; setTextAndStringFormat(tv_yd, output_yd);
             output_mile = input * 0.621371; setTextAndStringFormat(tv_mile, output_mile);
             switchResult(slT);
-        } else if (slF == 4) {
+        } else if (slF == 4) { // inch 를 다른 단위로 변환
             output_mm = input * 25.4; setTextAndStringFormat(tv_mm, output_mm);
             output_cm = input * 2.54; setTextAndStringFormat(tv_cm, output_cm);
             output_m = input * 0.0254; setTextAndStringFormat(tv_m, output_m);

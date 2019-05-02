@@ -21,6 +21,7 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
     String PLUS, MINUS, MULTIPLY, DIVIDE; // "+", "-", "×", "÷"
     ArrayList<String> list = new ArrayList<>(); // 수식(숫자, 기호)을 담는 List
 
+    // TODO: 소수점+소수점은 계산되는데 소수점 * / 소수점은 계산안되는 버그
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

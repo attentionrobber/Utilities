@@ -6,12 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/mainColor"
     tools:context=".CalcActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="#000000">
+        android:background="@color/mainColorDark">
         <TextView
             android:text="@string/calc_title"
             android:textColor="#FFFFFF"
@@ -31,33 +32,33 @@
         android:layout_weight="15"
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
-        android:background="@drawable/bg_calc_btn_sign"
+        android:background="@drawable/bg_transparent_underline"
         android:gravity="center|end"
         android:textSize="45sp"
-        android:textColor="@color/quantum_grey500"
+        android:textColor="@color/quantum_grey800"
         android:textCursorDrawable="@null"
         android:cursorVisible="true"
         android:inputType="number"
         android:hint="@string/input_number"
-        android:textColorHint="@color/quantum_grey500"/>
+        android:textColorHint="@color/quantum_grey600"/>
 
     <TextView
         android:id="@+id/tv_result"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="25"
-        android:background="@drawable/bg_calc_btn_num"
         android:gravity="end"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="@string/btn_0"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textSize="70sp" />
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="70">
+        android:layout_weight="70"
+        android:layout_margin="3dp">
 
         <TableRow
             android:layout_width="match_parent"
@@ -68,7 +69,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:background="@drawable/bg_calc_btn_sign_ripple"
+                android:background="@drawable/bg_white_dark_border_ripple"
                 android:text="@string/btn_C"
                 android:textColor="#FFFFFF"
                 android:textSize="60sp" />
@@ -78,7 +79,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:src="@android:drawable/ic_input_delete"
-                android:background="@drawable/bg_calc_btn_sign_ripple"
+                android:background="@drawable/bg_white_dark_border_ripple"
                 android:text="@string/btn_back"
                 android:textColor="#FFFFFF"
                 android:textSize="50sp"/>
@@ -87,7 +88,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_sign_ripple"
+                android:background="@drawable/bg_white_dark_border_ripple"
                 android:text="@string/btn_divide"
                 android:textColor="#FFFFFF"
                 android:textSize="60sp" />
@@ -102,34 +103,34 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_7"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_8"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_8"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_9"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_9"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_multiply"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_sign_ripple"
+                android:background="@drawable/bg_white_dark_border_ripple"
                 android:text="@string/btn_multiply"
                 android:textColor="#FFFFFF"
                 android:textSize="60sp" />
@@ -144,34 +145,34 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_4"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_5"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_5"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_6"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_6"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_plus"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_sign_ripple"
+                android:background="@drawable/bg_white_dark_border_ripple"
                 android:text="@string/btn_plus"
                 android:textColor="#FFFFFF"
                 android:textSize="60sp" />
@@ -186,34 +187,34 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_1"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_2"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_3"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_minus"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_sign_ripple"
+                android:background="@drawable/bg_white_dark_border_ripple"
                 android:text="@string/btn_minus"
                 android:textColor="#FFFFFF"
                 android:textSize="60sp" />
@@ -228,8 +229,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:background="@drawable/bg_calc_btn_num_ripple"
-                android:textColor="#FFFFFF"
+                android:background="@drawable/bg_white_border_ripple"
+                android:textColor="@color/mainColorDark"
                 android:text="@string/btn_0"
                 android:textSize="50sp" />
             <Button
@@ -237,7 +238,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_sign_ripple"
+                android:background="@drawable/bg_white_dark_border_ripple"
                 android:text="@string/btn_dot"
                 android:textColor="#FFFFFF"
                 android:textSize="60sp" />
@@ -246,7 +247,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_sign_ripple"
+                android:background="@drawable/bg_white_dark_border_ripple"
                 android:text="@string/btn_result"
                 android:textColor="#FFFFFF"
                 android:textSize="60sp" />

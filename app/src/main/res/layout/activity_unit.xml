@@ -8,6 +8,7 @@
     android:background="@color/mainColor"
     android:orientation="vertical">
 
+    <!-- Layout Top -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -20,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@drawable/bg_transparent_border" />
+            android:background="@drawable/bg_white_dark_border_ripple" />
         <Button
             android:id="@+id/btn_weight"
             android:text="무게"
@@ -30,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/btn_length"
-            android:background="@drawable/bg_transparent_border" />
+            android:background="@drawable/bg_transparent_ripple" />
         <Button
             android:id="@+id/btn_area"
             android:text="넓이"
@@ -40,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/btn_weight"
-            android:background="@drawable/bg_transparent_border" />
+            android:background="@drawable/bg_transparent_ripple" />
         <Button
             android:id="@+id/btn_temper"
             android:text="온도"
@@ -50,10 +51,11 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/btn_area"
-            android:background="@drawable/bg_transparent_border" />
+            android:background="@drawable/bg_transparent_ripple" />
     </RelativeLayout>
+    <!-- Layout Top -->
 
-    <!--  -->
+    <!-- Layout Length -->
     <LinearLayout
         android:id="@+id/layout_length"
         android:layout_width="match_parent"
@@ -69,73 +71,48 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:background="@drawable/bg_transparent_underline">
                 <EditText
                     android:id="@+id/editText_length"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_margin="5dp"
-                    android:layout_weight="8"
+                    android:layout_weight="6"
                     android:background="@drawable/bg_transparent"
                     android:ems="10"
                     android:gravity="center|end"
                     android:hint="@string/input_number"
-                    android:inputType="text"
                     android:maxLength="12"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
                     android:textCursorDrawable="@null"
-                    android:textSize="30sp" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="＝"
-                    android:textSize="25sp"
-                    android:gravity="center"/>
-                <TextView
-                    android:id="@+id/tv_length_output"
-                    android:layout_height="match_parent"
-                    android:layout_width="0dp"
-                    android:layout_weight="8"
-                    android:layout_margin="5dp"
-                    android:paddingRight="10dp"
-                    android:paddingLeft="10dp"
-                    android:background="@drawable/bg_transparent"
-                    android:gravity="center|end"
-                    android:text="0"
-                    android:textColor="@color/quantum_orange700"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:orientation="horizontal">
+                    android:textSize="35sp" />
                 <RelativeLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="8"
-                    android:paddingRight="5dp"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/bg_transparent">
+                    android:layout_height="match_parent"
+                    android:layout_weight="4">
                     <Spinner
                         android:id="@+id/spinner_length_from"
                         android:layout_height="match_parent"
                         android:layout_width="match_parent"/>
                 </RelativeLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:orientation="horizontal">
                 <TextView
+                    android:id="@+id/tv_length_output"
+                    android:layout_height="match_parent"
                     android:layout_width="0dp"
-                    android:layout_height="70dp"
-                    android:layout_weight="1"
-                    android:text="＞"
-                    android:textSize="20sp"
-                    android:gravity="center"/>
+                    android:layout_weight="6"
+                    android:background="@drawable/bg_transparent"
+                    android:gravity="center|end"
+                    android:text="0"
+                    android:textColor="@color/quantum_indigo900"
+                    android:textSize="40sp"/>
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="8"
-                    android:paddingRight="5dp"
-                    android:layout_margin="5dp"
+                    android:layout_weight="4"
                     android:background="@drawable/bg_transparent">
                     <Spinner
                         android:id="@+id/spinner_length_to"
@@ -160,14 +137,16 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" mm" />
+                    android:text="@string/unit_mm" />
                 <TextView
                     android:id="@+id/tv_cm"
                     android:layout_height="30dp"
@@ -175,14 +154,16 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" cm" />
+                    android:text="@string/unit_cm" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
@@ -196,14 +177,16 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" m" />
+                    android:text="@string/unit_m" />
                 <TextView
                     android:id="@+id/tv_km"
                     android:layout_height="30dp"
@@ -211,14 +194,16 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" km" />
+                    android:text="@string/unit_km" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
@@ -232,14 +217,16 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" inch" />
+                    android:text="@string/unit_inch" />
                 <TextView
                     android:id="@+id/tv_ft"
                     android:layout_height="30dp"
@@ -247,14 +234,16 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" ft" />
+                    android:text="@string/unit_ft" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
@@ -268,14 +257,16 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" yd" />
+                    android:text="@string/unit_yd" />
                 <TextView
                     android:id="@+id/tv_mile"
                     android:layout_height="30dp"
@@ -283,110 +274,96 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" mile" />
+                    android:text="@string/unit_mile" />
             </TableRow>
         </TableLayout>
     </LinearLayout>
+    <!-- Layout Length -->
 
-
+    <!-- Layout Weight -->
     <LinearLayout
         android:id="@+id/layout_weight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone" >
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:orientation="horizontal">
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="8"
-                android:paddingRight="5dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/bg_simple">
-                <Spinner
-                    android:id="@+id/spinner_weight_from"
+            android:layout_height="130dp"
+            android:orientation="vertical"
+            android:background="@drawable/bg_white_highlight">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:orientation="horizontal"
+                android:background="@drawable/bg_transparent_underline">
+                <EditText
+                    android:id="@+id/editText_weight"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_width="match_parent"/>
-            </RelativeLayout>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="＞"
-                android:textSize="20sp"
-                android:gravity="center"/>
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="8"
-                android:paddingRight="5dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/bg_simple">
-                <Spinner
-                    android:id="@+id/spinner_weight_to"
+                    android:layout_weight="6"
+                    android:background="@drawable/bg_transparent"
+                    android:ems="10"
+                    android:gravity="center|end"
+                    android:hint="@string/input_number"
+                    android:maxLength="12"
+                    android:textCursorDrawable="@null"
+                    android:textSize="35sp" />
+                <RelativeLayout
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_width="match_parent" />
-            </RelativeLayout>
+                    android:layout_weight="4">
+                    <Spinner
+                        android:id="@+id/spinner_weight_from"
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"/>
+                </RelativeLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tv_weight_output"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="6"
+                    android:background="@drawable/bg_transparent"
+                    android:gravity="center|end"
+                    android:text="0"
+                    android:textColor="@color/quantum_indigo900"
+                    android:textSize="40sp"/>
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:background="@drawable/bg_transparent">
+                    <Spinner
+                        android:id="@+id/spinner_weight_to"
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent" />
+                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:orientation="horizontal">
-            <EditText
-                android:id="@+id/editText_weight"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="8"
-                android:layout_margin="5dp"
-                android:paddingRight="10dp"
-                android:paddingLeft="10dp"
-                android:background="@drawable/bg_simple"
-                android:ems="10"
-                android:inputType="number"
-                android:maxLength="12"
-                android:gravity="center|end"
-                android:textCursorDrawable="@null"
-                android:textSize="30sp"
-                android:hint="@string/input_number"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="＝"
-                android:textSize="25sp"
-                android:gravity="center"/>
-            <TextView
-                android:id="@+id/tv_weight_output"
-                android:layout_height="match_parent"
-                android:layout_width="0dp"
-                android:layout_weight="8"
-                android:layout_margin="5dp"
-                android:paddingRight="10dp"
-                android:paddingLeft="10dp"
-                android:background="@drawable/bg_simple"
-                android:gravity="center|end"
-                android:text="0"
-                android:textColor="@color/quantum_orange700"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-        </LinearLayout>
+
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_margin="5dp">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_transparent_underline">
                 <TextView
                     android:id="@+id/tv_mg"
                     android:layout_height="30dp"
@@ -394,14 +371,16 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" mg" />
+                    android:text="@string/unit_mg" />
                 <TextView
                     android:id="@+id/tv_g"
                     android:layout_height="30dp"
@@ -409,20 +388,22 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" g" />
+                    android:text="@string/unit_g" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_margin="5dp">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_transparent_underline">
                 <TextView
                     android:id="@+id/tv_kg"
                     android:layout_height="30dp"
@@ -430,14 +411,16 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" kg" />
+                    android:text="@string/unit_kg" />
                 <TextView
                     android:id="@+id/tv_ton"
                     android:layout_height="30dp"
@@ -445,20 +428,22 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" t" />
+                    android:text="@string/unit_ton" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_margin="5dp">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_transparent_underline">
                 <TextView
                     android:id="@+id/tv_kt"
                     android:layout_height="30dp"
@@ -466,14 +451,16 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" kt" />
+                    android:text="@string/unit_kt" />
                 <TextView
                     android:id="@+id/tv_lb"
                     android:layout_height="30dp"
@@ -481,20 +468,22 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" lb" />
+                    android:text="@string/unit_lb" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_margin="5dp">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_transparent_underline">
                 <TextView
                     android:id="@+id/tv_gr"
                     android:layout_height="30dp"
@@ -502,14 +491,16 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" gr" />
+                    android:text="@string/unit_gr" />
                 <TextView
                     android:id="@+id/tv_oz"
                     android:layout_height="30dp"
@@ -517,102 +508,86 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" oz" />
+                    android:text="@string/unit_oz" />
             </TableRow>
         </TableLayout>
     </LinearLayout>
+    <!-- Layout Weight -->
 
-
+    <!-- Layout Area -->
     <LinearLayout
         android:id="@+id/layout_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone" >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:orientation="horizontal">
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="8"
-                android:paddingRight="5dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/bg_simple">
-                <Spinner
-                    android:id="@+id/spinner_area_from"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"/>
-            </RelativeLayout>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="＞"
-                android:textSize="20sp"
-                android:gravity="center"/>
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="8"
-                android:paddingRight="5dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/bg_simple">
-                <Spinner
-                    android:id="@+id/spinner_area_to"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent" />
-            </RelativeLayout>
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:orientation="horizontal">
-            <EditText
-                android:id="@+id/editText_area"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="8"
-                android:layout_margin="5dp"
-                android:paddingRight="10dp"
-                android:paddingLeft="10dp"
-                android:background="@drawable/bg_simple"
-                android:ems="10"
-                android:inputType="number"
-                android:maxLength="12"
-                android:gravity="center|end"
-                android:textCursorDrawable="@null"
-                android:textSize="30sp"
-                android:hint="@string/input_number"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="＝"
-                android:textSize="25sp"
-                android:gravity="center"/>
-            <TextView
-                android:id="@+id/tv_area_output"
-                android:layout_height="match_parent"
-                android:layout_width="0dp"
-                android:layout_weight="8"
-                android:layout_margin="5dp"
-                android:paddingRight="10dp"
-                android:paddingLeft="10dp"
-                android:background="@drawable/bg_simple"
-                android:gravity="center|end"
-                android:text="0"
-                android:textColor="@color/quantum_orange700"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+            android:layout_height="130dp"
+            android:orientation="vertical"
+            android:background="@drawable/bg_white_highlight">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:orientation="horizontal"
+                android:background="@drawable/bg_transparent_underline">
+                <EditText
+                    android:id="@+id/editText_area"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="6"
+                    android:background="@drawable/bg_transparent"
+                    android:ems="10"
+                    android:gravity="center|end"
+                    android:hint="@string/input_number"
+                    android:maxLength="12"
+                    android:textCursorDrawable="@null"
+                    android:textSize="35sp" />
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4">
+                    <Spinner
+                        android:id="@+id/spinner_area_from"
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"/>
+                </RelativeLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tv_area_output"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="6"
+                    android:background="@drawable/bg_transparent"
+                    android:gravity="center|end"
+                    android:text="0"
+                    android:textColor="@color/quantum_indigo900"
+                    android:textSize="40sp"/>
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:background="@drawable/bg_transparent">
+                    <Spinner
+                        android:id="@+id/spinner_area_to"
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent" />
+                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <TableLayout
@@ -620,9 +595,9 @@
             android:layout_height="wrap_content">
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_margin="5dp">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_transparent_underline">
                 <TextView
                     android:id="@+id/tv_m2"
                     android:layout_height="30dp"
@@ -630,14 +605,16 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" ㎡" />
+                    android:text="@string/unit_m2" />
                 <TextView
                     android:id="@+id/tv_km2"
                     android:layout_height="30dp"
@@ -645,20 +622,22 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" ㎢" />
+                    android:text="@string/unit_km2" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_margin="5dp">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_transparent_underline">
                 <TextView
                     android:id="@+id/tv_ft2"
                     android:layout_height="30dp"
@@ -666,14 +645,16 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" ft²" />
+                    android:text="@string/unit_ft2" />
                 <TextView
                     android:id="@+id/tv_yd2"
                     android:layout_height="30dp"
@@ -681,20 +662,22 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" yd²" />
+                    android:text="@string/unit_yd2" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_margin="5dp">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_transparent_underline">
                 <TextView
                     android:id="@+id/tv_a"
                     android:layout_height="30dp"
@@ -702,14 +685,16 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" a" />
+                    android:text="@string/unit_a" />
                 <TextView
                     android:id="@+id/tv_ha"
                     android:layout_height="30dp"
@@ -717,20 +702,22 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" ha" />
+                    android:text="@string/unit_ha" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_margin="5dp">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_transparent_underline">
                 <TextView
                     android:id="@+id/tv_ac"
                     android:layout_height="30dp"
@@ -738,14 +725,16 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" ac" />
+                    android:text="@string/unit_ac" />
                 <TextView
                     android:id="@+id/tv_pyeong"
                     android:layout_height="30dp"
@@ -753,19 +742,22 @@
                     android:layout_weight="4"
                     android:gravity="center|end"
                     android:textSize="20sp"
-                    android:textColor="@color/quantum_orange700"/>
+                    android:textColor="@color/quantum_indigo900"/>
                 <TextView
                     android:layout_height="match_parent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:gravity="center|start"
                     android:textSize="20sp"
-                    android:text=" 평" />
+                    android:text="@string/unit_pyeong" />
             </TableRow>
         </TableLayout>
-    </LinearLayout>
+    </LinearLayout> <!-- Layout Area -->
 
 
+    <!-- number pad -->
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -785,7 +777,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_1"
-                android:textColor="@color/secondColor"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_2"
@@ -794,7 +786,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_2"
-                android:textColor="@color/secondColor"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_3"
@@ -803,7 +795,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_3"
-                android:textColor="@color/secondColor"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
         </TableRow>
 
@@ -818,7 +810,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_4"
-                android:textColor="#000000"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_5"
@@ -827,7 +819,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_5"
-                android:textColor="#000000"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_6"
@@ -836,7 +828,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_6"
-                android:textColor="#000000"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
         </TableRow>
 
@@ -851,7 +843,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_7"
-                android:textColor="#000000"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_8"
@@ -860,7 +852,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_8"
-                android:textColor="#000000"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_9"
@@ -869,7 +861,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_9"
-                android:textColor="#000000"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
         </TableRow>
 
@@ -893,7 +885,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_0"
-                android:textColor="#000000"
+                android:textColor="@color/mainColorDark"
                 android:textSize="50sp" />
             <ImageButton
                 android:id="@+id/btn_del"
