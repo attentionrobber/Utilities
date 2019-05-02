@@ -11,18 +11,46 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="#000000">
+        android:background="@drawable/bg_transparent_underline">
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/tv_unitTitle"
-            android:text="@string/unit_title"
+            android:id="@+id/btn_length"
+            android:text="길이"
             android:textColor="#FFFFFF"
             android:textSize="30sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_transparent_border" />
+        <Button
+            android:id="@+id/btn_weight"
+            android:text="무게"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/btn_length"
+            android:background="@drawable/bg_transparent_border" />
+        <Button
+            android:id="@+id/btn_area"
+            android:text="넓이"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/btn_weight"
+            android:background="@drawable/bg_transparent_border" />
+        <Button
+            android:id="@+id/btn_temper"
+            android:text="온도"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/btn_area"
+            android:background="@drawable/bg_transparent_border" />
     </RelativeLayout>
 
     <!--  -->
@@ -32,46 +60,89 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="visible" >
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:orientation="horizontal">
-            <EditText
-                android:id="@+id/editText_length"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="8"
-                android:background="@drawable/bg_transparent"
-                android:ems="10"
-                android:gravity="center|end"
-                android:hint="@string/input_number"
-                android:inputType="number"
-                android:maxLength="12"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:textCursorDrawable="@null"
-                android:textSize="30sp" />
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="＝"
-                android:textSize="25sp"
-                android:gravity="center"/>
-            <TextView
-                android:id="@+id/tv_length_output"
-                android:layout_height="match_parent"
-                android:layout_width="0dp"
-                android:layout_weight="8"
-                android:layout_margin="5dp"
-                android:paddingRight="10dp"
-                android:paddingLeft="10dp"
-                android:background="@drawable/bg_transparent"
-                android:gravity="center|end"
-                android:text="0"
-                android:textColor="@color/quantum_orange700"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+            android:layout_height="130dp"
+            android:orientation="vertical"
+            android:background="@drawable/bg_white_highlight">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/editText_length"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="8"
+                    android:background="@drawable/bg_transparent"
+                    android:ems="10"
+                    android:gravity="center|end"
+                    android:hint="@string/input_number"
+                    android:inputType="number"
+                    android:maxLength="12"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textCursorDrawable="@null"
+                    android:textSize="30sp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="＝"
+                    android:textSize="25sp"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/tv_length_output"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="8"
+                    android:layout_margin="5dp"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"
+                    android:background="@drawable/bg_transparent"
+                    android:gravity="center|end"
+                    android:text="0"
+                    android:textColor="@color/quantum_orange700"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:orientation="horizontal">
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="8"
+                    android:paddingRight="5dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/bg_transparent">
+                    <Spinner
+                        android:id="@+id/spinner_length_from"
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"/>
+                </RelativeLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="70dp"
+                    android:layout_weight="1"
+                    android:text="＞"
+                    android:textSize="20sp"
+                    android:gravity="center"/>
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="8"
+                    android:paddingRight="5dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/bg_transparent">
+                    <Spinner
+                        android:id="@+id/spinner_length_to"
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent" />
+                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <TableLayout
@@ -80,7 +151,8 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp">
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_transparent_underline">
                 <TextView
                     android:id="@+id/tv_mm"
                     android:layout_height="30dp"
@@ -115,7 +187,8 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp">
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_transparent_underline">
                 <TextView
                     android:id="@+id/tv_m"
                     android:layout_height="30dp"
@@ -150,7 +223,8 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp">
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_transparent_underline">
                 <TextView
                     android:id="@+id/tv_inch"
                     android:layout_height="30dp"
@@ -185,7 +259,8 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp">
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_transparent_underline">
                 <TextView
                     android:id="@+id/tv_yd"
                     android:layout_height="30dp"
@@ -218,43 +293,6 @@
                     android:text=" mile" />
             </TableRow>
         </TableLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:orientation="horizontal">
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="8"
-                android:paddingRight="5dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/bg_transparent">
-                <Spinner
-                    android:id="@+id/spinner_length_from"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"/>
-            </RelativeLayout>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:layout_weight="1"
-                android:text="＞"
-                android:textSize="20sp"
-                android:gravity="center"/>
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="8"
-                android:paddingRight="5dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/bg_transparent">
-                <Spinner
-                    android:id="@+id/spinner_length_to"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent" />
-            </RelativeLayout>
-        </LinearLayout>
     </LinearLayout>
 
 
@@ -731,7 +769,11 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:paddingBottom="10dp"
         android:layout_gravity="bottom">
+
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -741,27 +783,27 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_1"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/secondColor"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_2"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/secondColor"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_3"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/secondColor"
                 android:textSize="50sp" />
         </TableRow>
 
@@ -774,27 +816,27 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_4"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_5"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_5"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_6"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_6"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textSize="50sp" />
         </TableRow>
 
@@ -807,27 +849,27 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_7"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_8"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_8"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textSize="50sp" />
             <Button
                 android:id="@+id/btn_9"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_9"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textSize="50sp" />
         </TableRow>
 
@@ -840,7 +882,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_sign_ripple"
+                android:background="@drawable/bg_white_dark_border_ripple"
                 android:text="@string/btn_dot"
                 android:textColor="#FFFFFF"
                 android:textSize="60sp" />
@@ -849,16 +891,16 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_num_ripple"
+                android:background="@drawable/bg_white_border_ripple"
                 android:text="@string/btn_0"
-                android:textColor="#FFFFFF"
+                android:textColor="#000000"
                 android:textSize="50sp" />
             <ImageButton
                 android:id="@+id/btn_back"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_calc_btn_sign_ripple"
+                android:background="@drawable/bg_white_dark_border_ripple"
                 android:src="@android:drawable/ic_input_delete"
                 android:text="@string/btn_back"
                 android:textColor="#FFFFFF"
