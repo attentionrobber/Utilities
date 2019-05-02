@@ -18,6 +18,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.utilities.Util_Class.Logger;
+
 import java.text.DecimalFormat;
 
 public class UnitActivity extends AppCompatActivity {
@@ -49,7 +51,6 @@ public class UnitActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unit);
 
-        displayKeypad(); // 키패드 띄워줌
         setWidget();
         setListener();
 
@@ -126,7 +127,18 @@ public class UnitActivity extends AppCompatActivity {
         spinner_weight_from.setAdapter(adapter_weight);
         spinner_weight_to.setAdapter(adapter_weight);
 
-        //findViewById(R.id.layout_bottom).setOnClickListener(clickListener); // 하단부 버튼(누르면 키패드 나타남)
+        findViewById(R.id.btn_0).setOnClickListener(btnClickListener);
+        findViewById(R.id.btn_1).setOnClickListener(btnClickListener);
+        findViewById(R.id.btn_2).setOnClickListener(btnClickListener);
+        findViewById(R.id.btn_3).setOnClickListener(btnClickListener);
+        findViewById(R.id.btn_4).setOnClickListener(btnClickListener);
+        findViewById(R.id.btn_5).setOnClickListener(btnClickListener);
+        findViewById(R.id.btn_6).setOnClickListener(btnClickListener);
+        findViewById(R.id.btn_7).setOnClickListener(btnClickListener);
+        findViewById(R.id.btn_8).setOnClickListener(btnClickListener);
+        findViewById(R.id.btn_9).setOnClickListener(btnClickListener);
+        findViewById(R.id.btn_dot).setOnClickListener(btnClickListener);
+        findViewById(R.id.btn_del).setOnClickListener(btnClickListener);
     } // setWidget();
 
     private void setListener() {
@@ -146,6 +158,77 @@ public class UnitActivity extends AppCompatActivity {
         spinner_area_to.setOnItemSelectedListener(toItemSelectedListener);
 
     } // setListener();
+
+
+    View.OnClickListener btnClickListener = v -> {
+        switch (v.getId()) {
+            case R.id.btn_0: setTextToEditText("0");
+                break;
+            case R.id.btn_1: setTextToEditText("1");
+                break;
+            case R.id.btn_2: setTextToEditText("2");
+                break;
+            case R.id.btn_3: setTextToEditText("3");
+                break;
+            case R.id.btn_4: setTextToEditText("4");
+                break;
+            case R.id.btn_5: setTextToEditText("5");
+                break;
+            case R.id.btn_6: setTextToEditText("6");
+                break;
+            case R.id.btn_7: setTextToEditText("7");
+                break;
+            case R.id.btn_8: setTextToEditText("8");
+                break;
+            case R.id.btn_9: setTextToEditText("9");
+                break;
+            case R.id.btn_dot: setTextToEditText("DOT");
+                break;
+            case R.id.btn_del: setTextToEditText("DEL");
+                break;
+        }
+    }; // btnClickListener
+
+    private void setTextToEditText(String str) {
+        EditText editText;
+        switch (unitFlag) {
+            case LENGTH: editText = editText_length; break;
+            case WEIGHT: editText = editText_weight; break;
+            case AREA: editText = editText_area; break;
+            default: editText = editText_length; break;
+        }
+        String text = editText.getText().toString();
+
+        switch (str) {
+            case "DEL": // 입력값이 delete 일 경우
+                if ((editText.length() == 1) || (editText.length() == 0)) // 1글자 또는 0글자일 경우
+                    editText.setText("");
+                else
+                    editText.setText(text.substring(0, text.length() - 1));// substring 으로 마지막 문자를 지운다.
+                editText.setSelection(editText.length()); // set cursor at text's last index
+                break;
+
+            case "DOT": // 입력값이 .(dot)일 경우
+                if (!isDotExist(text)) // EditText 에 .(dot)이 없는 경우
+                    editText.append(".");
+                break;
+
+            default: // 입력값이 숫자일 경우
+                editText.append(str);
+                break;
+        }
+
+    }
+    /**
+     * 수식에서 현재 입력중인 숫자가 .(dot)을 포함하고 있는지 검사 -> 숫자에서 .(dot)은 하나만 입력가능 하도록 함
+     * dot 이 포함되면 true, 없으면 false 반환
+     */
+    public boolean isDotExist(String str) {
+        if (str.equals("")) // 아무것도 입력되지 않았을 경우에도 true 반환
+            return true;
+        String split[] = str.split("(?<=[*/+-])|(?=[*/+-])");
+        return split[split.length - 1].contains(".");
+    }
 
     View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
@@ -250,7 +333,6 @@ public class UnitActivity extends AppCompatActivity {
             }
         };
     } // itemSelectedListener
-
     /**
      * 뒷쪽에 있는 Spinner 를 선택했을 때(바뀔 때)의 Listener
      */
@@ -278,6 +360,7 @@ public class UnitActivity extends AppCompatActivity {
             }
         };
     } // toItemSelectedListener
+
 
     /**
      * 길이를 변환하는 함수 ver.2
@@ -639,13 +722,4 @@ public class UnitActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * 키보드(키패드) 띄우기
-     */
-    public void displayKeypad() {
-        InputMethodManager imm;
-        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        //imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-    }
 }
