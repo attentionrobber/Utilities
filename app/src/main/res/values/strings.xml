@@ -12,30 +12,32 @@
 
     <!-- Calculator -->
     <string name="calc_title">CALCULATOR</string>
-    <string name="btn_C">Ｃ</string>
-    <string name="btn_back">←</string>
-    <string name="btn_plus">+</string>
-    <string name="btn_7">７</string>
-    <string name="btn_8">８</string>
-    <string name="btn_9">９</string>
-    <string name="btn_minus">-</string>
-    <string name="btn_4">４</string>
-    <string name="btn_5">５</string>
-    <string name="btn_6">６</string>
-    <string name="btn_multiply">×</string>
     <string name="btn_1">１</string>
     <string name="btn_2">２</string>
     <string name="btn_3">３</string>
-    <string name="btn_divide">÷</string>
+    <string name="btn_4">４</string>
+    <string name="btn_5">５</string>
+    <string name="btn_6">６</string>
+    <string name="btn_7">７</string>
+    <string name="btn_8">８</string>
+    <string name="btn_9">９</string>
     <string name="btn_0">０</string>
+    <string name="btn_plus">+</string>
+    <string name="btn_minus">-</string>
+    <string name="btn_multiply">×</string>
+    <string name="btn_divide">÷</string>
+    <string name="btn_plusMinus">±</string>
     <string name="btn_dot">．</string>
+    <string name="btn_C">Ｃ</string>
+    <string name="btn_back">←</string>
     <string name="btn_result">＝</string>
 
     <!-- Unit Converter -->
     <string name="unit_title">UNIT CONVERTER</string>
-    <string name="btn_length">길이\n(LENGTH)</string>
-    <string name="btn_weight">무게\n(WEIGHT)</string>
-    <string name="btn_area">넓이\n(AREA)</string>
+    <string name="btn_length">길이</string>
+    <string name="btn_weight">무게</string>
+    <string name="btn_area">넓이</string>
+    <string name="btn_temp">온도</string>
     <string name="input_number">input number</string>
     <string name="unit_mm">mm</string>
     <string name="unit_cm">cm</string>
@@ -61,8 +63,8 @@
     <string name="unit_ha">ha</string>
     <string name="unit_ac">ac</string>
     <string name="unit_pyeong">평</string>
-    <string name="unit_Cel">℃</string>
-    <string name="unit_Fah">℉</string>
+    <string name="unit_Cel">°C</string>
+    <string name="unit_Fah">°F</string>
     <string name="unit_Kel">K</string>
     <string name="unit_Ran">°R</string>
 
@@ -76,5 +78,8 @@
 
     <!-- Memo -->
     <string name="memo_title">MEMO</string>
+
+    <!-- common -->
+    <string name="_0">0</string>
 
 </resources>

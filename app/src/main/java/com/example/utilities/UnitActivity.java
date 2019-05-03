@@ -3,6 +3,7 @@ package com.example.utilities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
@@ -37,13 +38,16 @@ public class UnitActivity extends AppCompatActivity {
     private double output_m2, output_km2, output_ft2, output_yd2, output_a, output_ha, output_ac, output_pyeong;
     private double output_Cel, output_Fah, output_Kel, output_Ran;
 
+    private int unitFlag = 100; // 어떤 종류의 단위를 선택했는지 나타내는 상태 변수
     private final int LENGTH = 100;
     private final int WEIGHT = 101;
     private final int AREA = 102;
     private final int TEMP = 103;
-    private int unitFlag = 100; // 어떤 종류의 단위를 선택했는지 나타내는 상태 변수
 
-    // TODO: 상단바 텍스트에서 아이콘으로 교체, 온도 레이아웃 추가(음수도 추가) ,  Clear 버튼 추가
+    private final String DOT = "DOT";
+    private final String DEL = "DEL";
+    private final String CLEAR = "CLEAR";
+    private final String PLUS_MINUS = "PLUS_MINUS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,19 @@ public class UnitActivity extends AppCompatActivity {
         setWidget();
         setListener();
 
+
+        /*
+           Disable soft keyboard in EditText, but Selectable
+           EditText 클릭해도 키패드가 뜨지 않지만, 선택은 가능하도록 설정(롱클릭 가능)
+         */
+        editText_length.setInputType(InputType.TYPE_NULL);
+        editText_length.setTextIsSelectable(true);
+        editText_weight.setInputType(InputType.TYPE_NULL);
+        editText_weight.setTextIsSelectable(true);
+        editText_area.setInputType(InputType.TYPE_NULL);
+        editText_area.setTextIsSelectable(true);
+        editText_temp.setInputType(InputType.TYPE_NULL);
+        editText_temp.setTextIsSelectable(true);
     }
 
     private void setWidget() {
@@ -111,7 +128,7 @@ public class UnitActivity extends AppCompatActivity {
         spinner_length_from = findViewById(R.id.spinner_length_from);
         spinner_length_to = findViewById(R.id.spinner_length_to);
         spinner_area_from =findViewById(R.id.spinner_area_from);
-        spinner_area_to =findViewById(R.id.spinner_area_to);
+        spinner_area_to = findViewById(R.id.spinner_area_to);
         spinner_weight_from = findViewById(R.id.spinner_weight_from);
         spinner_weight_to = findViewById(R.id.spinner_weight_to);
         spinner_temp_from = findViewById(R.id.spinner_temp_from);
@@ -145,6 +162,8 @@ public class UnitActivity extends AppCompatActivity {
         findViewById(R.id.btn_9).setOnClickListener(btnClickListener);
         findViewById(R.id.btn_dot).setOnClickListener(btnClickListener);
         findViewById(R.id.btn_del).setOnClickListener(btnClickListener);
+        findViewById(R.id.btn_C).setOnClickListener(btnClickListener);
+        findViewById(R.id.btn_plusMinus).setOnClickListener(btnClickListener);
     } // setWidget();
 
     private void setListener() {
@@ -191,9 +210,13 @@ public class UnitActivity extends AppCompatActivity {
                 break;
             case R.id.btn_9: setTextToEditText("9");
                 break;
-            case R.id.btn_dot: setTextToEditText("DOT");
+            case R.id.btn_dot: setTextToEditText(DOT);
                 break;
-            case R.id.btn_del: setTextToEditText("DEL");
+            case R.id.btn_plusMinus: setTextToEditText(PLUS_MINUS);
+                break;
+            case R.id.btn_del: setTextToEditText(DEL);
+                break;
+            case R.id.btn_C: setTextToEditText(CLEAR);
                 break;
 
             case R.id.btn_length:
@@ -245,6 +268,9 @@ public class UnitActivity extends AppCompatActivity {
         }
     }; // btnClickListener
 
+    /**
+     * EditText 에 누른 버튼의 입력값을 추가한다.
+     */
     private void setTextToEditText(String str) {
         EditText editText;
         switch (unitFlag) {
@@ -257,7 +283,20 @@ public class UnitActivity extends AppCompatActivity {
         String text = editText.getText().toString();
 
         switch (str) {
-            case "DEL": // 입력값이 delete 일 경우
+            case DOT: // 입력값이 .(dot)일 경우
+                if (!isDotExist(text)) // EditText 에 .(dot)이 없는 경우
+                    editText.append(".");
+                break;
+
+            case PLUS_MINUS: // 입력값이 ± 일 경우
+                if ( unitFlag == TEMP && !text.equals("") && !text.equals("0") ) { // 온도 변환이고 입력값(숫자)가 있으며 0이 아닐 경우
+                    double value = Double.parseDouble(text);
+                    value = value*-1; // 양수면 음수로, 음수면 양수로 변환
+                    setTextAndStringFormat(editText, value);
+                }
+                break;
+
+            case DEL: // 입력값이 delete 일 경우
                 if ((editText.length() == 1) || (editText.length() == 0)) // 1글자 또는 0글자일 경우
                     editText.setText("");
                 else
@@ -265,9 +304,8 @@ public class UnitActivity extends AppCompatActivity {
                 editText.setSelection(editText.length()); // set cursor at text's last index
                 break;
 
-            case "DOT": // 입력값이 .(dot)일 경우
-                if (!isDotExist(text)) // EditText 에 .(dot)이 없는 경우
-                    editText.append(".");
+            case CLEAR: // 입력값이 C 일 경우
+                editText.setText("");
                 break;
 
             default: // 입력값이 숫자일 경우
@@ -284,6 +322,13 @@ public class UnitActivity extends AppCompatActivity {
             return true;
         String split[] = str.split("(?<=[*/+-])|(?=[*/+-])");
         return split[split.length - 1].contains(".");
+    }
+    /**
+     * 숫자인지 아닌지 검사하는 함수
+     */
+    public boolean isNumber(String str) {
+        return str.endsWith("0") || str.endsWith("1") || str.endsWith("2") || str.endsWith("3") || str.endsWith("4")
+                || str.endsWith("5") || str.endsWith("6") || str.endsWith("7") || str.endsWith("8") || str.endsWith("9");
     }
 
     /**
@@ -339,6 +384,7 @@ public class UnitActivity extends AppCompatActivity {
                 switch (unitFlag) {
                     case LENGTH:
                         convertLength(position, spinner_length_to.getSelectedItemPosition(), editText_length.getText().toString());
+                        break;
                     case WEIGHT:
                         convertWeight(position, spinner_weight_to.getSelectedItemPosition(), editText_weight.getText().toString());
                         break;
@@ -591,8 +637,8 @@ public class UnitActivity extends AppCompatActivity {
      * @param editText(value)
      */
     public void convertArea(int saF, int saT, String editText) {
-        double input = 0;
 
+        double input = 0;
         if( !(editText_area.getText().toString().equals("")) )
             input = Double.parseDouble(editText);
 
@@ -684,43 +730,50 @@ public class UnitActivity extends AppCompatActivity {
      * 0 is 섭씨(℃),  1 is 화씨(℉),  2 is 켈빈(K),  3 is 란씨(°R)
      * @param slF(spinner_temp_from)
      * @param slT(spinner_temp_to)
-     * @param editText(value)
+     * @param editText( editText.getText().toString() )
      */
     private void convertTemper(int slF, int slT, String editText) {
 
-        double input = 0;
-        if( !(editText_temp.getText().toString().equals("")) )
+        double input;
+
+        if (isNumber(editText)) { // EditText 문자가 숫자일 경우
             input = Double.parseDouble(editText); // 입력값을 editText 에서 가져온다.
 
-        if (slF == 0) { // 섭씨(℃)를 다른 단위로 변환
-            output_Cel = input; setTextAndStringFormat(tv_Cel, output_Cel);
-            output_Fah = (input * 9/5) + 32; setTextAndStringFormat(tv_Fah, output_Fah); // ℃ -> ℉
-            output_Kel = input + 273.15; setTextAndStringFormat(tv_Kel, output_Kel); // ℃ -> K
-            output_Ran = (input + 273.15) * 3/2; setTextAndStringFormat(tv_Ran, output_Ran); // ℃ -> °R
-            switchResult(slT);
-        } else if (slF == 1) { // 화씨(℉)를 다른 단위로 변환
-            output_Cel = (input - 32) * 5/9; setTextAndStringFormat(tv_Cel, output_Cel); // ℉ -> ℃
-            output_Fah = input; setTextAndStringFormat(tv_Fah, output_Fah);
-            output_Kel = (input + 459.67) * 5/9; setTextAndStringFormat(tv_Kel, output_Kel); // ℉ -> K
-            output_Ran = input + 459.67; setTextAndStringFormat(tv_Ran, output_Ran);  //℉ -> °R
-            switchResult(slT);
-        } else if (slF == 2) { // 켈빈(K)를 다른 단위로 변환
-            output_Cel = input - 273.15; setTextAndStringFormat(tv_Cel, output_Cel); // K -> ℃
-            output_Fah = (input * 9/5) - 459.67; setTextAndStringFormat(tv_Fah, output_Fah); // K -> ℉
-            output_Kel = input; setTextAndStringFormat(tv_Kel, output_Kel);
-            output_Ran = input * 9/5; setTextAndStringFormat(tv_Ran, output_Ran); // K -> °R
-            switchResult(slT);
-        } else if (slF == 3) { // 란씨(°R)를 다른 단위로 변환
-            output_Cel = (input - 491.67) * 5/9; setTextAndStringFormat(tv_Cel, output_Cel); // °R -> ℃
-            output_Fah = input - 459.67; setTextAndStringFormat(tv_Fah, output_Fah); // °R -> ℉
-            output_Kel = input * 5/9; setTextAndStringFormat(tv_Kel, output_Kel); // °R -> K
-            output_Ran = input; setTextAndStringFormat(tv_Ran, output_Ran);
-            switchResult(slT);
+            switch (slF) {
+                case 0: // 섭씨(℃)를 다른 단위로 변환
+                    output_Cel = input; setTextAndStringFormat(tv_Cel, output_Cel);
+                    output_Fah = (input * 9 / 5) + 32; setTextAndStringFormat(tv_Fah, output_Fah); // ℃ -> ℉
+                    output_Kel = input + 273.15; setTextAndStringFormat(tv_Kel, output_Kel); // ℃ -> K
+                    output_Ran = (input + 273.15) * 3 / 2; setTextAndStringFormat(tv_Ran, output_Ran); // ℃ -> °R
+                    switchResult(slT);
+                    break;
+                case 1: // 화씨(℉)를 다른 단위로 변환
+                    output_Cel = (input - 32) * 5 / 9; setTextAndStringFormat(tv_Cel, output_Cel); // ℉ -> ℃
+                    output_Fah = input; setTextAndStringFormat(tv_Fah, output_Fah);
+                    output_Kel = (input + 459.67) * 5 / 9; setTextAndStringFormat(tv_Kel, output_Kel); // ℉ -> K
+                    output_Ran = input + 459.67; setTextAndStringFormat(tv_Ran, output_Ran);  //℉ -> °R
+                    switchResult(slT);
+                    break;
+                case 2: // 켈빈(K)를 다른 단위로 변환
+                    output_Cel = input - 273.15; setTextAndStringFormat(tv_Cel, output_Cel); // K -> ℃
+                    output_Fah = (input * 9 / 5) - 459.67; setTextAndStringFormat(tv_Fah, output_Fah); // K -> ℉
+                    output_Kel = input; setTextAndStringFormat(tv_Kel, output_Kel);
+                    output_Ran = input * 9 / 5; setTextAndStringFormat(tv_Ran, output_Ran); // K -> °R
+                    switchResult(slT);
+                    break;
+                case 3: // 란씨(°R)를 다른 단위로 변환
+                    output_Cel = (input - 491.67) * 5 / 9; setTextAndStringFormat(tv_Cel, output_Cel); // °R -> ℃
+                    output_Fah = input - 459.67; setTextAndStringFormat(tv_Fah, output_Fah); // °R -> ℉
+                    output_Kel = input * 5 / 9; setTextAndStringFormat(tv_Kel, output_Kel); // °R -> K
+                    output_Ran = input; setTextAndStringFormat(tv_Ran, output_Ran);
+                    switchResult(slT);
+                    break;
+            }
         }
     }
 
     /**
-     * 숫자 표시 형식을 맞춰주고 TextView setText 를 해주는 함수
+     * 숫자 표시 형식을 맞춰주고 TextView.setText() 를 해준다.
      * @param tv
      * @param num
      */
@@ -786,10 +839,10 @@ public class UnitActivity extends AppCompatActivity {
                 } break;
             case TEMP:
                 switch (slT) {
-                    case 0: setTextAndStringFormat(tv_area_output, output_Cel); break;
-                    case 1: setTextAndStringFormat(tv_area_output, output_Fah); break;
-                    case 2: setTextAndStringFormat(tv_area_output, output_Kel); break;
-                    case 3: setTextAndStringFormat(tv_area_output, output_Ran); break;
+                    case 0: setTextAndStringFormat(tv_temp_output, output_Cel); break;
+                    case 1: setTextAndStringFormat(tv_temp_output, output_Fah); break;
+                    case 2: setTextAndStringFormat(tv_temp_output, output_Kel); break;
+                    case 3: setTextAndStringFormat(tv_temp_output, output_Ran); break;
                     default: break;
                 } break;
             default: break;
