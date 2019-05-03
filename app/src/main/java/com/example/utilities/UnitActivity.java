@@ -17,27 +17,31 @@ import java.text.DecimalFormat;
 
 public class UnitActivity extends AppCompatActivity {
 
-    Button btn_length, btn_area, btn_weight;
-    EditText editText_length, editText_area, editText_weight; // 입력값
-    TextView tv_length_output, tv_area_output, tv_weight_output; // 결과값
-    TextView tv_mm, tv_cm, tv_m, tv_km, tv_inch, tv_ft, tv_yd, tv_mile;
-    TextView tv_mg, tv_g, tv_kg, tv_ton, tv_kt, tv_lb, tv_gr, tv_oz;
-    TextView tv_m2, tv_km2, tv_ft2, tv_yd2, tv_a, tv_ha, tv_ac, tv_pyeong;
-    LinearLayout layout_length, layout_area, layout_weight;
-    Spinner spinner_length_from, spinner_length_to, spinner_area_from, spinner_area_to, spinner_weight_from, spinner_weight_to;
+    Button btn_length, btn_area, btn_weight, btn_temp;
+    EditText editText_length, editText_area, editText_weight, editText_temp; // 입력값
+    TextView tv_length_output, tv_area_output, tv_weight_output, tv_temp_output; // 결과값
+    TextView tv_mm, tv_cm, tv_m, tv_km, tv_inch, tv_ft, tv_yd, tv_mile; // 길이
+    TextView tv_mg, tv_g, tv_kg, tv_ton, tv_kt, tv_lb, tv_gr, tv_oz; // 무게
+    TextView tv_m2, tv_km2, tv_ft2, tv_yd2, tv_a, tv_ha, tv_ac, tv_pyeong; // 넓이
+    TextView tv_Cel, tv_Fah, tv_Kel, tv_Ran; // 온도
+    LinearLayout layout_length, layout_area, layout_weight, layout_temp;
+    Spinner spinner_length_from, spinner_length_to, spinner_area_from, spinner_area_to, spinner_weight_from, spinner_weight_to, spinner_temp_from, spinner_temp_to;
 
     final String SPINNER_LENGTH[] = {"밀리미터(mm)", "센티미터(cm)", "미터(m)", "킬로미터(km)", "인치(inch)", "피트(ft)", "야드(yd)", "마일(mile)"};
     final String SPINNER_WEIGHT[] = {"밀리그램(mg)", "그램(g)", "킬로그램(kg)", "톤(t)", "킬로톤(kt)", "파운드(lb)", "그레인(gr)", "온스(oz)"};
-    final String SPINNER_AREA[] = {"제곱미터(m^2)", "제곱키로미터\n(km^2)", "제곱피트(ft^2)", "제곱야드(yd^2)", "아르(a)", "헥타르(ha)", "에이커(ac)", "평"};
+    final String SPINNER_AREA[] = {"제곱미터(m²)", "제곱키로미터\n(km²)", "제곱피트(ft²)", "제곱야드(yd²)", "아르(a)", "헥타르(ha)", "에이커(ac)", "평"};
+    final String SPINNER_TEMP[] = {"섭씨(℃)", "화씨(℉)", "켈빈(K)", "란씨(°R)"};
 
     private double output_mm, output_cm, output_m, output_km, output_inch, output_ft, output_yd, output_mile;
     private double output_mg, output_g, output_kg, output_ton, output_kt, output_lb, output_gr, output_oz;
     private double output_m2, output_km2, output_ft2, output_yd2, output_a, output_ha, output_ac, output_pyeong;
+    private double output_Cel, output_Fah, output_Kel, output_Ran;
 
-    private final String LENGTH = "LENGTH";
-    private final String WEIGHT = "WEIGHT";
-    private final String AREA = "AREA";
-    private String unitFlag = "LENGTH"; // 어떤 종류의 단위를 선택했는지 나타내는 상태 변수
+    private final int LENGTH = 100;
+    private final int WEIGHT = 101;
+    private final int AREA = 102;
+    private final int TEMP = 103;
+    private int unitFlag = 100; // 어떤 종류의 단위를 선택했는지 나타내는 상태 변수
 
     // TODO: 상단바 텍스트에서 아이콘으로 교체, 온도 레이아웃 추가(음수도 추가) ,  Clear 버튼 추가
 
@@ -55,14 +59,17 @@ public class UnitActivity extends AppCompatActivity {
         btn_length = findViewById(R.id.btn_length);
         btn_weight = findViewById(R.id.btn_weight);
         btn_area = findViewById(R.id.btn_area);
+        btn_temp = findViewById(R.id.btn_temp);
 
         editText_length = findViewById(R.id.editText_length);
         editText_area = findViewById(R.id.editText_area);
         editText_weight = findViewById(R.id.editText_weight);
+        editText_temp = findViewById(R.id.editText_temp);
 
         tv_length_output = findViewById(R.id.tv_length_output);
         tv_area_output = findViewById(R.id.tv_area_output);
         tv_weight_output = findViewById(R.id.tv_weight_output);
+        tv_temp_output = findViewById(R.id.tv_temp_output);
 
         tv_mm = findViewById(R.id.tv_mm);
         tv_cm = findViewById(R.id.tv_cm);
@@ -91,16 +98,15 @@ public class UnitActivity extends AppCompatActivity {
         tv_ac = findViewById(R.id.tv_ac);
         tv_pyeong = findViewById(R.id.tv_pyeong);
 
-        spinner_length_from = findViewById(R.id.spinner_length_from);
-        spinner_length_to = findViewById(R.id.spinner_length_to);
-        spinner_area_from = findViewById(R.id.spinner_area_from);
-        spinner_area_to = findViewById(R.id.spinner_area_to);
-        spinner_weight_from = findViewById(R.id.spinner_weight_from);
-        spinner_weight_to = findViewById(R.id.spinner_weight_to);
+        tv_Cel = findViewById(R.id.tv_Cel);
+        tv_Fah = findViewById(R.id.tv_Fah);
+        tv_Kel = findViewById(R.id.tv_Kel);
+        tv_Ran = findViewById(R.id.tv_Ran);
 
         layout_length = findViewById(R.id.layout_length);
         layout_area = findViewById(R.id.layout_area);
         layout_weight = findViewById(R.id.layout_weight);
+        layout_temp = findViewById(R.id.layout_temp);
 
         spinner_length_from = findViewById(R.id.spinner_length_from);
         spinner_length_to = findViewById(R.id.spinner_length_to);
@@ -108,11 +114,14 @@ public class UnitActivity extends AppCompatActivity {
         spinner_area_to =findViewById(R.id.spinner_area_to);
         spinner_weight_from = findViewById(R.id.spinner_weight_from);
         spinner_weight_to = findViewById(R.id.spinner_weight_to);
+        spinner_temp_from = findViewById(R.id.spinner_temp_from);
+        spinner_temp_to = findViewById(R.id.spinner_temp_to);
 
         // 스피너 데이터(length, area, weight)를 어댑터로 생성
         ArrayAdapter<String> adapter_length = new ArrayAdapter<>(this, R.layout.spniner_dropdown_item, SPINNER_LENGTH); // R. 은 내가 정의한 리소스 android.R. 은 android에 정의되어있는 리소스
         ArrayAdapter<String> adapter_area = new ArrayAdapter<>(this, R.layout.spniner_dropdown_item, SPINNER_AREA);
         ArrayAdapter<String> adapter_weight = new ArrayAdapter<>(this, R.layout.spniner_dropdown_item, SPINNER_WEIGHT);
+        ArrayAdapter<String> adapter_temp = new ArrayAdapter<>(this, R.layout.spniner_dropdown_item, SPINNER_TEMP);
 
         // 스피너 어댑터에 등록
         spinner_length_from.setAdapter(adapter_length);
@@ -121,6 +130,8 @@ public class UnitActivity extends AppCompatActivity {
         spinner_area_to.setAdapter(adapter_area);
         spinner_weight_from.setAdapter(adapter_weight);
         spinner_weight_to.setAdapter(adapter_weight);
+        spinner_temp_from.setAdapter(adapter_temp);
+        spinner_temp_to.setAdapter(adapter_temp);
 
         findViewById(R.id.btn_0).setOnClickListener(btnClickListener);
         findViewById(R.id.btn_1).setOnClickListener(btnClickListener);
@@ -140,17 +151,21 @@ public class UnitActivity extends AppCompatActivity {
         btn_length.setOnClickListener(btnClickListener);
         btn_weight.setOnClickListener(btnClickListener);
         btn_area.setOnClickListener(btnClickListener);
+        btn_temp.setOnClickListener(btnClickListener);
 
         editText_area.addTextChangedListener(textWatcher);
         editText_length.addTextChangedListener(textWatcher);
         editText_weight.addTextChangedListener(textWatcher);
+        editText_temp.addTextChangedListener(textWatcher);
 
         spinner_length_from.setOnItemSelectedListener(itemSelectedListener);
-        spinner_weight_from.setOnItemSelectedListener(itemSelectedListener);
-        spinner_area_from.setOnItemSelectedListener(itemSelectedListener);
         spinner_length_to.setOnItemSelectedListener(toItemSelectedListener);
+        spinner_weight_from.setOnItemSelectedListener(itemSelectedListener);
         spinner_weight_to.setOnItemSelectedListener(toItemSelectedListener);
+        spinner_area_from.setOnItemSelectedListener(itemSelectedListener);
         spinner_area_to.setOnItemSelectedListener(toItemSelectedListener);
+        spinner_temp_from.setOnItemSelectedListener(itemSelectedListener);
+        spinner_temp_to.setOnItemSelectedListener(toItemSelectedListener);
     } // setListener();
 
 
@@ -185,9 +200,11 @@ public class UnitActivity extends AppCompatActivity {
                 btn_length.setBackgroundResource(R.drawable.bg_white_dark_border_ripple); // 현재 선택한 단위종류 표시
                 btn_weight.setBackgroundResource(R.drawable.bg_transparent_ripple);
                 btn_area.setBackgroundResource(R.drawable.bg_transparent_ripple);
+                btn_temp.setBackgroundResource(R.drawable.bg_transparent_ripple);
                 layout_length.setVisibility(View.VISIBLE);
                 layout_area.setVisibility(View.GONE);
                 layout_weight.setVisibility(View.GONE);
+                layout_temp.setVisibility(View.GONE);
                 unitFlag = LENGTH;
                 break;
 
@@ -195,9 +212,11 @@ public class UnitActivity extends AppCompatActivity {
                 btn_length.setBackgroundResource(R.drawable.bg_transparent_ripple);
                 btn_weight.setBackgroundResource(R.drawable.bg_white_dark_border_ripple);
                 btn_area.setBackgroundResource(R.drawable.bg_transparent_ripple);
+                btn_temp.setBackgroundResource(R.drawable.bg_transparent_ripple);
                 layout_length.setVisibility(View.GONE);
                 layout_weight.setVisibility(View.VISIBLE);
                 layout_area.setVisibility(View.GONE);
+                layout_temp.setVisibility(View.GONE);
                 unitFlag = WEIGHT;
                 break;
 
@@ -205,10 +224,23 @@ public class UnitActivity extends AppCompatActivity {
                 btn_length.setBackgroundResource(R.drawable.bg_transparent_ripple);
                 btn_weight.setBackgroundResource(R.drawable.bg_transparent_ripple);
                 btn_area.setBackgroundResource(R.drawable.bg_white_dark_border_ripple);
+                btn_temp.setBackgroundResource(R.drawable.bg_transparent_ripple);
                 layout_length.setVisibility(View.GONE);
                 layout_weight.setVisibility(View.GONE);
                 layout_area.setVisibility(View.VISIBLE);
+                layout_temp.setVisibility(View.GONE);
                 unitFlag = AREA;
+                break;
+            case R.id.btn_temp:
+                btn_length.setBackgroundResource(R.drawable.bg_transparent_ripple);
+                btn_weight.setBackgroundResource(R.drawable.bg_transparent_ripple);
+                btn_area.setBackgroundResource(R.drawable.bg_transparent_ripple);
+                btn_temp.setBackgroundResource(R.drawable.bg_white_dark_border_ripple);
+                layout_length.setVisibility(View.GONE);
+                layout_weight.setVisibility(View.GONE);
+                layout_area.setVisibility(View.GONE);
+                layout_temp.setVisibility(View.VISIBLE);
+                unitFlag = TEMP;
                 break;
         }
     }; // btnClickListener
@@ -219,6 +251,7 @@ public class UnitActivity extends AppCompatActivity {
             case LENGTH: editText = editText_length; break;
             case WEIGHT: editText = editText_weight; break;
             case AREA: editText = editText_area; break;
+            case TEMP: editText = editText_temp; break;
             default: editText = editText_length; break;
         }
         String text = editText.getText().toString();
@@ -241,8 +274,7 @@ public class UnitActivity extends AppCompatActivity {
                 editText.append(str);
                 break;
         }
-
-    }
+    } // setTextToEditText()
     /**
      * 수식에서 현재 입력중인 숫자가 .(dot)을 포함하고 있는지 검사 -> 숫자에서 .(dot)은 하나만 입력가능 하도록 함
      * dot 이 포함되면 true, 없으면 false 반환
@@ -281,13 +313,17 @@ public class UnitActivity extends AppCompatActivity {
                     case AREA:
                         convertArea(spinner_area_from.getSelectedItemPosition(), spinner_area_to.getSelectedItemPosition(), editText_area.getText().toString());
                         break;
+                    case TEMP:
+                        convertTemper(spinner_temp_from.getSelectedItemPosition(), spinner_temp_to.getSelectedItemPosition(), editText_temp.getText().toString());
+                        break;
                     default: break;
                 }
             } else if(s.toString().equals("")) {
-                tv_length_output.setText("0"); tv_weight_output.setText("0"); tv_area_output.setText("0");
+                tv_length_output.setText("0"); tv_weight_output.setText("0"); tv_area_output.setText("0"); tv_temp_output.setText("0");
                 tv_mm.setText("0");tv_cm.setText("0");tv_m.setText("0");tv_km.setText("0");tv_inch.setText("0");tv_ft.setText("0");tv_yd.setText("0");tv_mile.setText("0");
                 tv_mg.setText("0");tv_g.setText("0");tv_kg.setText("0");tv_ton.setText("0");tv_kt.setText("0");tv_lb.setText("0");tv_gr.setText("0");tv_oz.setText("0");
                 tv_m2.setText("0");tv_km2.setText("0");tv_ft2.setText("0");tv_yd2.setText("0");tv_a.setText("0");tv_ha.setText("0");tv_ac.setText("0");tv_pyeong.setText("0");
+                tv_Cel.setText("0");tv_Fah.setText("0");tv_Kel.setText("0");tv_Ran.setText("0");
             }
         }
     }; // textWatcher
@@ -309,6 +345,10 @@ public class UnitActivity extends AppCompatActivity {
                     case AREA:
                         convertArea(position, spinner_area_to.getSelectedItemPosition(), editText_area.getText().toString());
                         break;
+                    case TEMP:
+                        convertTemper(position, spinner_temp_to.getSelectedItemPosition(), editText_temp.getText().toString());
+                        break;
+                    default: break;
                 }
             }
 
@@ -336,6 +376,10 @@ public class UnitActivity extends AppCompatActivity {
                     case AREA:
                         convertArea(spinner_area_from.getSelectedItemPosition(), position, editText_area.getText().toString());
                         break;
+                    case TEMP:
+                        convertTemper(spinner_temp_from.getSelectedItemPosition(), position, editText_temp.getText().toString());
+                        break;
+                    default: break;
                 }
             }
 
@@ -453,9 +497,8 @@ public class UnitActivity extends AppCompatActivity {
     public void convertWeight(int swF, int swT, String editText) {
 
         double input = 0;
-        if( !(editText_weight.getText().toString().equals("")) ) {
+        if( !(editText_weight.getText().toString().equals("")) )
             input = Double.parseDouble(editText); // 입력값을 editText 에서 가져온다.
-        }
 
         if (swF == 0) { // mg를 다른 단위로 변환
             output_mg = input; setTextAndStringFormat(tv_mg, output_mg);
@@ -550,9 +593,8 @@ public class UnitActivity extends AppCompatActivity {
     public void convertArea(int saF, int saT, String editText) {
         double input = 0;
 
-        if( !(editText_area.getText().toString().equals("")) ) {
+        if( !(editText_area.getText().toString().equals("")) )
             input = Double.parseDouble(editText);
-        }
 
         if (saF == 0) { // m^2를 다른 단위로 변환
             output_m2 = input; setTextAndStringFormat(tv_m2, output_m2);
@@ -638,6 +680,46 @@ public class UnitActivity extends AppCompatActivity {
     }
 
     /**
+     * 온도를 변환하는 함수
+     * 0 is 섭씨(℃),  1 is 화씨(℉),  2 is 켈빈(K),  3 is 란씨(°R)
+     * @param slF(spinner_temp_from)
+     * @param slT(spinner_temp_to)
+     * @param editText(value)
+     */
+    private void convertTemper(int slF, int slT, String editText) {
+
+        double input = 0;
+        if( !(editText_temp.getText().toString().equals("")) )
+            input = Double.parseDouble(editText); // 입력값을 editText 에서 가져온다.
+
+        if (slF == 0) { // 섭씨(℃)를 다른 단위로 변환
+            output_Cel = input; setTextAndStringFormat(tv_Cel, output_Cel);
+            output_Fah = (input * 9/5) + 32; setTextAndStringFormat(tv_Fah, output_Fah); // ℃ -> ℉
+            output_Kel = input + 273.15; setTextAndStringFormat(tv_Kel, output_Kel); // ℃ -> K
+            output_Ran = (input + 273.15) * 3/2; setTextAndStringFormat(tv_Ran, output_Ran); // ℃ -> °R
+            switchResult(slT);
+        } else if (slF == 1) { // 화씨(℉)를 다른 단위로 변환
+            output_Cel = (input - 32) * 5/9; setTextAndStringFormat(tv_Cel, output_Cel); // ℉ -> ℃
+            output_Fah = input; setTextAndStringFormat(tv_Fah, output_Fah);
+            output_Kel = (input + 459.67) * 5/9; setTextAndStringFormat(tv_Kel, output_Kel); // ℉ -> K
+            output_Ran = input + 459.67; setTextAndStringFormat(tv_Ran, output_Ran);  //℉ -> °R
+            switchResult(slT);
+        } else if (slF == 2) { // 켈빈(K)를 다른 단위로 변환
+            output_Cel = input - 273.15; setTextAndStringFormat(tv_Cel, output_Cel); // K -> ℃
+            output_Fah = (input * 9/5) - 459.67; setTextAndStringFormat(tv_Fah, output_Fah); // K -> ℉
+            output_Kel = input; setTextAndStringFormat(tv_Kel, output_Kel);
+            output_Ran = input * 9/5; setTextAndStringFormat(tv_Ran, output_Ran); // K -> °R
+            switchResult(slT);
+        } else if (slF == 3) { // 란씨(°R)를 다른 단위로 변환
+            output_Cel = (input - 491.67) * 5/9; setTextAndStringFormat(tv_Cel, output_Cel); // °R -> ℃
+            output_Fah = input - 459.67; setTextAndStringFormat(tv_Fah, output_Fah); // °R -> ℉
+            output_Kel = input * 5/9; setTextAndStringFormat(tv_Kel, output_Kel); // °R -> K
+            output_Ran = input; setTextAndStringFormat(tv_Ran, output_Ran);
+            switchResult(slT);
+        }
+    }
+
+    /**
      * 숫자 표시 형식을 맞춰주고 TextView setText 를 해주는 함수
      * @param tv
      * @param num
@@ -701,8 +783,16 @@ public class UnitActivity extends AppCompatActivity {
                     case 6: setTextAndStringFormat(tv_area_output, output_ac); break;
                     case 7: setTextAndStringFormat(tv_area_output, output_pyeong); break;
                     default: break;
-                }
-                break;
+                } break;
+            case TEMP:
+                switch (slT) {
+                    case 0: setTextAndStringFormat(tv_area_output, output_Cel); break;
+                    case 1: setTextAndStringFormat(tv_area_output, output_Fah); break;
+                    case 2: setTextAndStringFormat(tv_area_output, output_Kel); break;
+                    case 3: setTextAndStringFormat(tv_area_output, output_Ran); break;
+                    default: break;
+                } break;
+            default: break;
         }
     }
 

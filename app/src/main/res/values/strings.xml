@@ -61,6 +61,10 @@
     <string name="unit_ha">ha</string>
     <string name="unit_ac">ac</string>
     <string name="unit_pyeong">평</string>
+    <string name="unit_Cel">℃</string>
+    <string name="unit_Fah">℉</string>
+    <string name="unit_Kel">K</string>
+    <string name="unit_Ran">°R</string>
 
     <!-- Gallery -->
     <string name="gallery_title">GALLERY</string>
