@@ -84,7 +84,9 @@
                         android:gravity="center|end"
                         android:hint="@string/input_number"
                         android:maxLength="12"
+                        android:cursorVisible="true"
                         android:textCursorDrawable="@null"
+                        android:inputType="number"
                         android:textSize="35sp" />
                     <RelativeLayout
                         android:layout_width="0dp"
@@ -139,6 +141,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -156,6 +159,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -179,6 +183,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -196,6 +201,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -219,6 +225,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -236,6 +243,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -259,6 +267,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -276,6 +285,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -320,7 +330,9 @@
                         android:gravity="center|end"
                         android:hint="@string/input_number"
                         android:maxLength="12"
+                        android:cursorVisible="true"
                         android:textCursorDrawable="@null"
+                        android:inputType="number"
                         android:textSize="35sp" />
                     <RelativeLayout
                         android:layout_width="0dp"
@@ -345,7 +357,7 @@
                         android:layout_weight="6"
                         android:background="@drawable/bg_transparent"
                         android:gravity="center|end"
-                        android:text="0"
+                        android:text="@string/_0"
                         android:textColor="@color/quantum_indigo900"
                         android:textSize="40sp"/>
                     <RelativeLayout
@@ -376,6 +388,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -393,6 +406,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -416,6 +430,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -433,6 +448,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -456,6 +472,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -473,6 +490,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -496,6 +514,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -513,6 +532,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -558,7 +578,9 @@
                         android:gravity="center|end"
                         android:hint="@string/input_number"
                         android:maxLength="12"
+                        android:cursorVisible="true"
                         android:textCursorDrawable="@null"
+                        android:inputType="number"
                         android:textSize="35sp" />
                     <RelativeLayout
                         android:layout_width="0dp"
@@ -583,7 +605,7 @@
                         android:layout_weight="6"
                         android:background="@drawable/bg_transparent"
                         android:gravity="center|end"
-                        android:text="0"
+                        android:text="@string/_0"
                         android:textColor="@color/quantum_indigo900"
                         android:textSize="40sp"/>
                     <RelativeLayout
@@ -614,6 +636,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -631,6 +654,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -654,6 +678,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -671,6 +696,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -694,6 +720,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -711,6 +738,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -734,6 +762,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -751,6 +780,7 @@
                         android:layout_height="30dp"
                         android:layout_width="0dp"
                         android:layout_weight="4"
+                        android:text="@string/btn_0"
                         android:gravity="center|end"
                         android:textSize="20sp"
                         android:textColor="@color/quantum_indigo900"/>
@@ -796,7 +826,9 @@
                         android:gravity="center|end"
                         android:hint="@string/input_number"
                         android:maxLength="12"
+                        android:cursorVisible="true"
                         android:textCursorDrawable="@null"
+                        android:inputType="number"
                         android:textSize="35sp" />
                     <RelativeLayout
                         android:layout_width="0dp"
@@ -821,7 +853,7 @@
                         android:layout_weight="6"
                         android:background="@drawable/bg_transparent"
                         android:gravity="center|end"
-                        android:text="0"
+                        android:text="@string/_0"
                         android:textColor="@color/quantum_indigo900"
                         android:textSize="40sp"/>
                     <RelativeLayout

@@ -5,7 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -13,6 +16,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.example.utilities.Memo.MemoNewActivity;
 
 import java.text.DecimalFormat;
 
@@ -49,6 +54,8 @@ public class UnitActivity extends AppCompatActivity {
     private final String CLEAR = "CLEAR";
     private final String PLUS_MINUS = "PLUS_MINUS";
 
+    // TODO: 다른 단위 선택 시 EditText 에 cursor 가 1회만 없어지는 현상.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,19 +64,7 @@ public class UnitActivity extends AppCompatActivity {
         setWidget();
         setListener();
 
-
-        /*
-           Disable soft keyboard in EditText, but Selectable
-           EditText 클릭해도 키패드가 뜨지 않지만, 선택은 가능하도록 설정(롱클릭 가능)
-         */
-        editText_length.setInputType(InputType.TYPE_NULL);
-        editText_length.setTextIsSelectable(true);
-        editText_weight.setInputType(InputType.TYPE_NULL);
-        editText_weight.setTextIsSelectable(true);
-        editText_area.setInputType(InputType.TYPE_NULL);
-        editText_area.setTextIsSelectable(true);
-        editText_temp.setInputType(InputType.TYPE_NULL);
-        editText_temp.setTextIsSelectable(true);
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); // Don't show soft keyboard when activity start
     }
 
     private void setWidget() {
@@ -79,9 +74,13 @@ public class UnitActivity extends AppCompatActivity {
         btn_temp = findViewById(R.id.btn_temp);
 
         editText_length = findViewById(R.id.editText_length);
-        editText_area = findViewById(R.id.editText_area);
         editText_weight = findViewById(R.id.editText_weight);
+        editText_area = findViewById(R.id.editText_area);
         editText_temp = findViewById(R.id.editText_temp);
+        editText_length.setTextIsSelectable(true); // Don't show soft keyboard
+        editText_weight.setTextIsSelectable(true);
+        editText_area.setTextIsSelectable(true);
+        editText_temp.setTextIsSelectable(true);
 
         tv_length_output = findViewById(R.id.tv_length_output);
         tv_area_output = findViewById(R.id.tv_area_output);
@@ -228,6 +227,7 @@ public class UnitActivity extends AppCompatActivity {
                 layout_area.setVisibility(View.GONE);
                 layout_weight.setVisibility(View.GONE);
                 layout_temp.setVisibility(View.GONE);
+//                editText_length.setFocusable(true);
                 unitFlag = LENGTH;
                 break;
 
@@ -240,6 +240,9 @@ public class UnitActivity extends AppCompatActivity {
                 layout_weight.setVisibility(View.VISIBLE);
                 layout_area.setVisibility(View.GONE);
                 layout_temp.setVisibility(View.GONE);
+//                editText_weight.setActivated(true);
+//                editText_weight.setFocusable(true);
+//                editText_weight.setFocusableInTouchMode(true);
                 unitFlag = WEIGHT;
                 break;
 
@@ -252,6 +255,7 @@ public class UnitActivity extends AppCompatActivity {
                 layout_weight.setVisibility(View.GONE);
                 layout_area.setVisibility(View.VISIBLE);
                 layout_temp.setVisibility(View.GONE);
+//                editText_area.setFocusable(true);
                 unitFlag = AREA;
                 break;
             case R.id.btn_temp:
@@ -263,8 +267,10 @@ public class UnitActivity extends AppCompatActivity {
                 layout_weight.setVisibility(View.GONE);
                 layout_area.setVisibility(View.GONE);
                 layout_temp.setVisibility(View.VISIBLE);
+//                editText_temp.setFocusable(true);
                 unitFlag = TEMP;
                 break;
+            default: break;
         }
     }; // btnClickListener
 
@@ -284,8 +290,10 @@ public class UnitActivity extends AppCompatActivity {
 
         switch (str) {
             case DOT: // 입력값이 .(dot)일 경우
-                if (!isDotExist(text)) // EditText 에 .(dot)이 없는 경우
-                    editText.append(".");
+                if (!isDotExist(text)) { // EditText 에 .(dot)이 없는 경우
+                    editText.setText(text.concat(".")); // This way is possible to input .(dot) even though INPUT_TYPE is "number"
+                    editText.setSelection(editText.length()); // set cursor at text's last index
+                }
                 break;
 
             case PLUS_MINUS: // 입력값이 ± 일 경우
@@ -310,6 +318,7 @@ public class UnitActivity extends AppCompatActivity {
 
             default: // 입력값이 숫자일 경우
                 editText.append(str);
+                editText.setSelection(editText.length()); // set cursor at text's last index
                 break;
         }
     } // setTextToEditText()
@@ -446,90 +455,92 @@ public class UnitActivity extends AppCompatActivity {
      */
     private void convertLength(int slF, int slT, String editText) {
 
-        double input = 0;
-        if( !(editText_length.getText().toString().equals("")) )
+        double input;
+        //if( !(editText_length.getText().toString().equals("")) )
+        if (isNumber(editText)) {
             input = Double.parseDouble(editText); // 입력값을 editText 에서 가져온다.
 
-        if (slF == 0) { // mm를 다른 단위로 변환
-            output_mm = input; setTextAndStringFormat(tv_mm, output_mm);
-            output_cm = input * 0.1; setTextAndStringFormat(tv_cm, output_cm); // mm -> cm
-            output_m = input * 0.001; setTextAndStringFormat(tv_m, output_m); // mm -> m
-            output_km = input * 0.000001; setTextAndStringFormat(tv_km, output_km); // mm -> km
-            output_inch = input * 0.03937; setTextAndStringFormat(tv_inch, output_inch); // mm -> inch
-            output_ft = input * 0.003281; setTextAndStringFormat(tv_ft, output_ft); // mm -> ft
-            output_yd = input * 0.001094; setTextAndStringFormat(tv_yd, output_yd); // mm -> yd
-            output_mile = input * 0.000000621; setTextAndStringFormat(tv_mile, output_mile); // mm -> mile
-            switchResult(slT);
-        } else if (slF == 1) { // cm를 다른 단위로 변환
-            output_mm = input * 10; setTextAndStringFormat(tv_mm, output_mm);
-            output_cm = input; setTextAndStringFormat(tv_cm, output_cm);
-            output_m = input * 0.01; setTextAndStringFormat(tv_m, output_m);
-            output_km = input * 0.00001; setTextAndStringFormat(tv_km, output_km);
-            output_inch = input * 0.393701; setTextAndStringFormat(tv_inch, output_inch);
-            output_ft = input * 0.032808; setTextAndStringFormat(tv_ft, output_ft);
-            output_yd = input * 0.010936; setTextAndStringFormat(tv_yd, output_yd);
-            output_mile = input * 0.00000621; setTextAndStringFormat(tv_mile, output_mile);
-            switchResult(slT);
-        } else if (slF == 2) { // m를 다른 단위로 변환
-            output_mm = input * 1000; setTextAndStringFormat(tv_mm, output_mm);
-            output_cm = input * 10; setTextAndStringFormat(tv_cm, output_cm);
-            output_m = input; setTextAndStringFormat(tv_m, output_m);
-            output_km = input * 0.001; setTextAndStringFormat(tv_km, output_km);
-            output_inch = input * 39.370079; setTextAndStringFormat(tv_inch, output_inch);
-            output_ft = input * 3.28084; setTextAndStringFormat(tv_ft, output_ft);
-            output_yd = input * 1.093613;setTextAndStringFormat(tv_yd, output_yd);
-            output_mile = input * 0.00062137; setTextAndStringFormat(tv_mile, output_mile);
-            switchResult(slT);
-        } else if (slF == 3) { // km를 다른 단위로 변환
-            output_mm = input * 1000; setTextAndStringFormat(tv_mm, output_mm);
-            output_cm = input * 0.1; setTextAndStringFormat(tv_cm, output_cm);
-            output_m = input * 0.001; setTextAndStringFormat(tv_m, output_m);
-            output_km = input; setTextAndStringFormat(tv_km, output_km);
-            output_inch = input * 39370.0787; setTextAndStringFormat(tv_inch, output_inch);
-            output_ft = input * 3280.8399; setTextAndStringFormat(tv_ft, output_ft);
-            output_yd = input * 1093.6133; setTextAndStringFormat(tv_yd, output_yd);
-            output_mile = input * 0.621371; setTextAndStringFormat(tv_mile, output_mile);
-            switchResult(slT);
-        } else if (slF == 4) { // inch 를 다른 단위로 변환
-            output_mm = input * 25.4; setTextAndStringFormat(tv_mm, output_mm);
-            output_cm = input * 2.54; setTextAndStringFormat(tv_cm, output_cm);
-            output_m = input * 0.0254; setTextAndStringFormat(tv_m, output_m);
-            output_km = input * 0.000025; setTextAndStringFormat(tv_km, output_km);
-            output_inch = input; setTextAndStringFormat(tv_inch, output_inch);
-            output_ft = input * 0.083333; setTextAndStringFormat(tv_ft, output_ft);
-            output_yd = input * 0.027778; setTextAndStringFormat(tv_yd, output_yd);
-            output_mile = input * 0.000016; setTextAndStringFormat(tv_mile, output_mile);
-            switchResult(slT);
-        } else if (slF == 5) { // ft
-            output_mm = input * 304.8; setTextAndStringFormat(tv_mm, output_mm);
-            output_cm = input * 30.48; setTextAndStringFormat(tv_cm, output_cm);
-            output_m = input * 0.3048; setTextAndStringFormat(tv_m, output_m);
-            output_km = input * 0.000305; setTextAndStringFormat(tv_km, output_km);
-            output_inch = input * 12; setTextAndStringFormat(tv_inch, output_inch);
-            output_ft = input; setTextAndStringFormat(tv_ft, output_ft);
-            output_yd = input * 0.333333; setTextAndStringFormat(tv_yd, output_yd);
-            output_mile = input * 0.000189; setTextAndStringFormat(tv_mile, output_mile);
-            switchResult(slT);
-        } else if (slF == 6) { // yd
-            output_mm = input * 914.4; setTextAndStringFormat(tv_mm, output_mm);
-            output_cm = input * 91.44; setTextAndStringFormat(tv_cm, output_cm);
-            output_m = input * 0.9144; setTextAndStringFormat(tv_m, output_m);
-            output_km = input * 0.000914; setTextAndStringFormat(tv_km, output_km);
-            output_inch = input * 36; setTextAndStringFormat(tv_inch, output_inch);
-            output_ft = input * 3; setTextAndStringFormat(tv_ft, output_ft);
-            output_yd = input; setTextAndStringFormat(tv_yd, output_yd);
-            output_mile = input * 0.000568; setTextAndStringFormat(tv_mile, output_mile);
-            switchResult(slT);
-        } else if (slF == 7) { // mile
-            output_mm = input * 1609344; setTextAndStringFormat(tv_mm, output_mm);
-            output_cm = input * 160934.4; setTextAndStringFormat(tv_cm, output_cm);
-            output_m = input * 1609.344; setTextAndStringFormat(tv_m, output_m);
-            output_km = input * 1.609344; setTextAndStringFormat(tv_km, output_km);
-            output_inch = input * 63360; setTextAndStringFormat(tv_inch, output_inch);
-            output_ft = input * 5280; setTextAndStringFormat(tv_ft, output_ft);
-            output_yd = input * 1760; setTextAndStringFormat(tv_yd, output_yd);
-            output_mile = input; setTextAndStringFormat(tv_mile, output_mile);
-            switchResult(slT);
+            if (slF == 0) { // mm를 다른 단위로 변환
+                output_mm = input; setTextAndStringFormat(tv_mm, output_mm);
+                output_cm = input * 0.1; setTextAndStringFormat(tv_cm, output_cm); // mm -> cm
+                output_m = input * 0.001; setTextAndStringFormat(tv_m, output_m); // mm -> m
+                output_km = input * 0.000001; setTextAndStringFormat(tv_km, output_km); // mm -> km
+                output_inch = input * 0.03937; setTextAndStringFormat(tv_inch, output_inch); // mm -> inch
+                output_ft = input * 0.003281; setTextAndStringFormat(tv_ft, output_ft); // mm -> ft
+                output_yd = input * 0.001094; setTextAndStringFormat(tv_yd, output_yd); // mm -> yd
+                output_mile = input * 0.000000621; setTextAndStringFormat(tv_mile, output_mile); // mm -> mile
+                switchResult(slT);
+            } else if (slF == 1) { // cm를 다른 단위로 변환
+                output_mm = input * 10; setTextAndStringFormat(tv_mm, output_mm);
+                output_cm = input; setTextAndStringFormat(tv_cm, output_cm);
+                output_m = input * 0.01; setTextAndStringFormat(tv_m, output_m);
+                output_km = input * 0.00001; setTextAndStringFormat(tv_km, output_km);
+                output_inch = input * 0.393701; setTextAndStringFormat(tv_inch, output_inch);
+                output_ft = input * 0.032808; setTextAndStringFormat(tv_ft, output_ft);
+                output_yd = input * 0.010936; setTextAndStringFormat(tv_yd, output_yd);
+                output_mile = input * 0.00000621; setTextAndStringFormat(tv_mile, output_mile);
+                switchResult(slT);
+            } else if (slF == 2) { // m를 다른 단위로 변환
+                output_mm = input * 1000; setTextAndStringFormat(tv_mm, output_mm);
+                output_cm = input * 10; setTextAndStringFormat(tv_cm, output_cm);
+                output_m = input; setTextAndStringFormat(tv_m, output_m);
+                output_km = input * 0.001; setTextAndStringFormat(tv_km, output_km);
+                output_inch = input * 39.370079; setTextAndStringFormat(tv_inch, output_inch);
+                output_ft = input * 3.28084; setTextAndStringFormat(tv_ft, output_ft);
+                output_yd = input * 1.093613;setTextAndStringFormat(tv_yd, output_yd);
+                output_mile = input * 0.00062137; setTextAndStringFormat(tv_mile, output_mile);
+                switchResult(slT);
+            } else if (slF == 3) { // km를 다른 단위로 변환
+                output_mm = input * 1000; setTextAndStringFormat(tv_mm, output_mm);
+                output_cm = input * 0.1; setTextAndStringFormat(tv_cm, output_cm);
+                output_m = input * 0.001; setTextAndStringFormat(tv_m, output_m);
+                output_km = input; setTextAndStringFormat(tv_km, output_km);
+                output_inch = input * 39370.0787; setTextAndStringFormat(tv_inch, output_inch);
+                output_ft = input * 3280.8399; setTextAndStringFormat(tv_ft, output_ft);
+                output_yd = input * 1093.6133; setTextAndStringFormat(tv_yd, output_yd);
+                output_mile = input * 0.621371; setTextAndStringFormat(tv_mile, output_mile);
+                switchResult(slT);
+            } else if (slF == 4) { // inch 를 다른 단위로 변환
+                output_mm = input * 25.4; setTextAndStringFormat(tv_mm, output_mm);
+                output_cm = input * 2.54; setTextAndStringFormat(tv_cm, output_cm);
+                output_m = input * 0.0254; setTextAndStringFormat(tv_m, output_m);
+                output_km = input * 0.000025; setTextAndStringFormat(tv_km, output_km);
+                output_inch = input; setTextAndStringFormat(tv_inch, output_inch);
+                output_ft = input * 0.083333; setTextAndStringFormat(tv_ft, output_ft);
+                output_yd = input * 0.027778; setTextAndStringFormat(tv_yd, output_yd);
+                output_mile = input * 0.000016; setTextAndStringFormat(tv_mile, output_mile);
+                switchResult(slT);
+            } else if (slF == 5) { // ft
+                output_mm = input * 304.8; setTextAndStringFormat(tv_mm, output_mm);
+                output_cm = input * 30.48; setTextAndStringFormat(tv_cm, output_cm);
+                output_m = input * 0.3048; setTextAndStringFormat(tv_m, output_m);
+                output_km = input * 0.000305; setTextAndStringFormat(tv_km, output_km);
+                output_inch = input * 12; setTextAndStringFormat(tv_inch, output_inch);
+                output_ft = input; setTextAndStringFormat(tv_ft, output_ft);
+                output_yd = input * 0.333333; setTextAndStringFormat(tv_yd, output_yd);
+                output_mile = input * 0.000189; setTextAndStringFormat(tv_mile, output_mile);
+                switchResult(slT);
+            } else if (slF == 6) { // yd
+                output_mm = input * 914.4; setTextAndStringFormat(tv_mm, output_mm);
+                output_cm = input * 91.44; setTextAndStringFormat(tv_cm, output_cm);
+                output_m = input * 0.9144; setTextAndStringFormat(tv_m, output_m);
+                output_km = input * 0.000914; setTextAndStringFormat(tv_km, output_km);
+                output_inch = input * 36; setTextAndStringFormat(tv_inch, output_inch);
+                output_ft = input * 3; setTextAndStringFormat(tv_ft, output_ft);
+                output_yd = input; setTextAndStringFormat(tv_yd, output_yd);
+                output_mile = input * 0.000568; setTextAndStringFormat(tv_mile, output_mile);
+                switchResult(slT);
+            } else if (slF == 7) { // mile
+                output_mm = input * 1609344; setTextAndStringFormat(tv_mm, output_mm);
+                output_cm = input * 160934.4; setTextAndStringFormat(tv_cm, output_cm);
+                output_m = input * 1609.344; setTextAndStringFormat(tv_m, output_m);
+                output_km = input * 1.609344; setTextAndStringFormat(tv_km, output_km);
+                output_inch = input * 63360; setTextAndStringFormat(tv_inch, output_inch);
+                output_ft = input * 5280; setTextAndStringFormat(tv_ft, output_ft);
+                output_yd = input * 1760; setTextAndStringFormat(tv_yd, output_yd);
+                output_mile = input; setTextAndStringFormat(tv_mile, output_mile);
+                switchResult(slT);
+            }
         }
     }
 
@@ -542,90 +553,92 @@ public class UnitActivity extends AppCompatActivity {
      */
     public void convertWeight(int swF, int swT, String editText) {
 
-        double input = 0;
-        if( !(editText_weight.getText().toString().equals("")) )
+        double input;
+        //if( !(editText_weight.getText().toString().equals("")) )
+        if (isNumber(editText)) { // EditText 문자가 숫자일 경우
             input = Double.parseDouble(editText); // 입력값을 editText 에서 가져온다.
 
-        if (swF == 0) { // mg를 다른 단위로 변환
-            output_mg = input; setTextAndStringFormat(tv_mg, output_mg);
-            output_g = input * 0.001; setTextAndStringFormat(tv_g, output_g); // mg -> g
-            output_kg = input * 0.000001; setTextAndStringFormat(tv_kg, output_kg); // mg -> kg
-            output_ton = input * 0.000000001; setTextAndStringFormat(tv_ton, output_ton); // mg -> ton
-            output_kt = input * 0.000000000001; setTextAndStringFormat(tv_kt, output_kt); // mg -> kt
-            output_lb = input * 0.0000022; setTextAndStringFormat(tv_lb, output_lb); // mg -> lb
-            output_gr = input * 0.015432; setTextAndStringFormat(tv_gr, output_gr); // mg -> gr
-            output_oz = input * 0.000035; setTextAndStringFormat(tv_oz, output_oz); // mg -> oz
-            switchResult(swT);
-        } else if (swF == 1) { // g를 다른 단위로 변환
-            output_mg = input * 1000; setTextAndStringFormat(tv_mg, output_mg); // g -> mg
-            output_g = input; setTextAndStringFormat(tv_g, output_g);
-            output_kg = input * 0.001; setTextAndStringFormat(tv_kg, output_kg); // g -> kg
-            output_ton = input * 0.000001; setTextAndStringFormat(tv_ton, output_ton); // g -> t
-            output_kt = input * 0.000000001; setTextAndStringFormat(tv_kt, output_kt); // g -> kt
-            output_lb = input * 0.002205; setTextAndStringFormat(tv_lb, output_lb); // g -> lb
-            output_gr = input * 15.432358; setTextAndStringFormat(tv_gr, output_gr); // g -> gr
-            output_oz = input * 0.035274; setTextAndStringFormat(tv_oz, output_oz); // g -> oz
-            switchResult(swT);
-        } else if (swF == 2) { // kg를 다른 단위로 변환
-            output_mg = input * 1000000; setTextAndStringFormat(tv_mg, output_mg); // kg -> mg
-            output_g = input * 1000; setTextAndStringFormat(tv_g, output_g); // kg -> g
-            output_kg = input; setTextAndStringFormat(tv_kg, output_kg);
-            output_ton = input * 0.001; setTextAndStringFormat(tv_ton, output_ton); // kg -> ton
-            output_kt = input * 0.000001; setTextAndStringFormat(tv_kt, output_kt); // kg -> kt
-            output_lb = input * 2.204623; setTextAndStringFormat(tv_lb, output_lb); // kg -> lb
-            output_gr = input * 15432.3584; setTextAndStringFormat(tv_gr, output_gr); // kg -> gr
-            output_oz = input * 35.273962; setTextAndStringFormat(tv_oz, output_oz);      // kg -> oz
-            switchResult(swT);
-        } else if (swF == 3) { // ton를 다른 단위로 변환
-            output_mg = input * 1000000000; setTextAndStringFormat(tv_mg, output_mg); // ton -> mg
-            output_g = input * 1000000; setTextAndStringFormat(tv_g, output_g); // ton -> g
-            output_kg = input * 1000; setTextAndStringFormat(tv_kg, output_kg); // ton -> kg
-            output_ton = input; setTextAndStringFormat(tv_ton, output_ton);
-            output_kt = input * 0.001; setTextAndStringFormat(tv_kt, output_kt); // ton -> kt
-            output_lb = input * 2204.62262; setTextAndStringFormat(tv_lb, output_lb); // ton -> lb
-            output_gr = input * 15432358.4; setTextAndStringFormat(tv_gr, output_gr); // ton -> gr
-            output_oz = input * 35273.9619; setTextAndStringFormat(tv_oz, output_oz); // ton -> oz
-            switchResult(swT);
-        } else if (swF == 4) { // kt를 다른 단위로 변환
-            output_mg = input * 1000000000000L; setTextAndStringFormat(tv_mg, output_mg); // kt -> mg
-            output_g = input * 1000000000; setTextAndStringFormat(tv_g, output_g); // kt -> g
-            output_kg = input * 1000000; setTextAndStringFormat(tv_kg, output_kg);    // kt -> kg
-            output_ton = input * 1000; setTextAndStringFormat(tv_ton, output_ton);    // kt -> t
-            output_kt = input; setTextAndStringFormat(tv_kt, output_kt);
-            output_lb = input * 2204622.62; setTextAndStringFormat(tv_lb, output_lb); // kt -> lb
-            output_gr = input * 15432358400L; setTextAndStringFormat(tv_gr, output_gr); // kt -> gr
-            output_oz = input * 35273961.9; setTextAndStringFormat(tv_oz, output_oz); // kt -> oz
-            switchResult(swT);
-        } else if (swF == 5) { // lb를 다른 단위로 변환
-            output_mg = input * 453592.37; setTextAndStringFormat(tv_mg, output_mg); // lb -> mg
-            output_g = input * 453.59237; setTextAndStringFormat(tv_g, output_g); // lb -> g
-            output_kg = input * 0.453592; setTextAndStringFormat(tv_kg, output_kg);    // lb -> kg
-            output_ton = input * 0.000454; setTextAndStringFormat(tv_ton, output_ton);    // lb -> t
-            output_kt = input * 0.000000454; setTextAndStringFormat(tv_kt, output_kt); // lb -> kt
-            output_lb = input; setTextAndStringFormat(tv_lb, output_lb);
-            output_gr = input * 7000; setTextAndStringFormat(tv_gr, output_gr); // lb -> gr
-            output_oz= input * 16; setTextAndStringFormat(tv_oz, output_oz); // lb -> oz
-            switchResult(swT);
-        } else if (swF == 6) { // gr를 다른 단위로 변환
-            output_mg = input * 64.79891; setTextAndStringFormat(tv_mg, output_mg); // gr -> mg
-            output_g = input * 0.064799; setTextAndStringFormat(tv_g, output_g); // gr -> g
-            output_kg = input * 0.000065; setTextAndStringFormat(tv_kg, output_kg);    // gr -> kg
-            output_ton = input * 0.000000065; setTextAndStringFormat(tv_ton, output_ton);    // gr -> t
-            output_kt = input * 0.000000000065; setTextAndStringFormat(tv_kt, output_kt); // gr -> kt
-            output_lb = input * 0.000143; setTextAndStringFormat(tv_lb, output_lb); // gr -> lb
-            output_gr = input; setTextAndStringFormat(tv_gr, output_gr);
-            output_oz = input * 0.002286; setTextAndStringFormat(tv_oz, output_oz); // gr -> oz
-            switchResult(swT);
-        } else if (swF == 7) { // oz를 다른 단위로 변환
-            output_mg = input * 28349.5231; setTextAndStringFormat(tv_mg, output_mg); // oz -> mg
-            output_g = input * 28.349523; setTextAndStringFormat(tv_g, output_g); // oz -> g
-            output_kg = input * 0.02835; setTextAndStringFormat(tv_kg, output_kg);    // oz -> kg
-            output_ton = input * 0.000028; setTextAndStringFormat(tv_ton, output_ton);    // oz -> t
-            output_kt = input * 0.000000028; setTextAndStringFormat(tv_kt, output_kt); // oz -> kt
-            output_lb = input * 0.0625; setTextAndStringFormat(tv_lb, output_lb); // oz -> lb
-            output_gr = input * 437.5; setTextAndStringFormat(tv_gr, output_gr); // oz -> gr
-            output_oz = input; setTextAndStringFormat(tv_oz, output_oz);
-            switchResult(swT);
+            if (swF == 0) { // mg를 다른 단위로 변환
+                output_mg = input; setTextAndStringFormat(tv_mg, output_mg);
+                output_g = input * 0.001; setTextAndStringFormat(tv_g, output_g); // mg -> g
+                output_kg = input * 0.000001; setTextAndStringFormat(tv_kg, output_kg); // mg -> kg
+                output_ton = input * 0.000000001; setTextAndStringFormat(tv_ton, output_ton); // mg -> ton
+                output_kt = input * 0.000000000001; setTextAndStringFormat(tv_kt, output_kt); // mg -> kt
+                output_lb = input * 0.0000022; setTextAndStringFormat(tv_lb, output_lb); // mg -> lb
+                output_gr = input * 0.015432; setTextAndStringFormat(tv_gr, output_gr); // mg -> gr
+                output_oz = input * 0.000035; setTextAndStringFormat(tv_oz, output_oz); // mg -> oz
+                switchResult(swT);
+            } else if (swF == 1) { // g를 다른 단위로 변환
+                output_mg = input * 1000; setTextAndStringFormat(tv_mg, output_mg); // g -> mg
+                output_g = input; setTextAndStringFormat(tv_g, output_g);
+                output_kg = input * 0.001; setTextAndStringFormat(tv_kg, output_kg); // g -> kg
+                output_ton = input * 0.000001; setTextAndStringFormat(tv_ton, output_ton); // g -> t
+                output_kt = input * 0.000000001; setTextAndStringFormat(tv_kt, output_kt); // g -> kt
+                output_lb = input * 0.002205; setTextAndStringFormat(tv_lb, output_lb); // g -> lb
+                output_gr = input * 15.432358; setTextAndStringFormat(tv_gr, output_gr); // g -> gr
+                output_oz = input * 0.035274; setTextAndStringFormat(tv_oz, output_oz); // g -> oz
+                switchResult(swT);
+            } else if (swF == 2) { // kg를 다른 단위로 변환
+                output_mg = input * 1000000; setTextAndStringFormat(tv_mg, output_mg); // kg -> mg
+                output_g = input * 1000; setTextAndStringFormat(tv_g, output_g); // kg -> g
+                output_kg = input; setTextAndStringFormat(tv_kg, output_kg);
+                output_ton = input * 0.001; setTextAndStringFormat(tv_ton, output_ton); // kg -> ton
+                output_kt = input * 0.000001; setTextAndStringFormat(tv_kt, output_kt); // kg -> kt
+                output_lb = input * 2.204623; setTextAndStringFormat(tv_lb, output_lb); // kg -> lb
+                output_gr = input * 15432.3584; setTextAndStringFormat(tv_gr, output_gr); // kg -> gr
+                output_oz = input * 35.273962; setTextAndStringFormat(tv_oz, output_oz);      // kg -> oz
+                switchResult(swT);
+            } else if (swF == 3) { // ton를 다른 단위로 변환
+                output_mg = input * 1000000000; setTextAndStringFormat(tv_mg, output_mg); // ton -> mg
+                output_g = input * 1000000; setTextAndStringFormat(tv_g, output_g); // ton -> g
+                output_kg = input * 1000; setTextAndStringFormat(tv_kg, output_kg); // ton -> kg
+                output_ton = input; setTextAndStringFormat(tv_ton, output_ton);
+                output_kt = input * 0.001; setTextAndStringFormat(tv_kt, output_kt); // ton -> kt
+                output_lb = input * 2204.62262; setTextAndStringFormat(tv_lb, output_lb); // ton -> lb
+                output_gr = input * 15432358.4; setTextAndStringFormat(tv_gr, output_gr); // ton -> gr
+                output_oz = input * 35273.9619; setTextAndStringFormat(tv_oz, output_oz); // ton -> oz
+                switchResult(swT);
+            } else if (swF == 4) { // kt를 다른 단위로 변환
+                output_mg = input * 1000000000000L; setTextAndStringFormat(tv_mg, output_mg); // kt -> mg
+                output_g = input * 1000000000; setTextAndStringFormat(tv_g, output_g); // kt -> g
+                output_kg = input * 1000000; setTextAndStringFormat(tv_kg, output_kg);    // kt -> kg
+                output_ton = input * 1000; setTextAndStringFormat(tv_ton, output_ton);    // kt -> t
+                output_kt = input; setTextAndStringFormat(tv_kt, output_kt);
+                output_lb = input * 2204622.62; setTextAndStringFormat(tv_lb, output_lb); // kt -> lb
+                output_gr = input * 15432358400L; setTextAndStringFormat(tv_gr, output_gr); // kt -> gr
+                output_oz = input * 35273961.9; setTextAndStringFormat(tv_oz, output_oz); // kt -> oz
+                switchResult(swT);
+            } else if (swF == 5) { // lb를 다른 단위로 변환
+                output_mg = input * 453592.37; setTextAndStringFormat(tv_mg, output_mg); // lb -> mg
+                output_g = input * 453.59237; setTextAndStringFormat(tv_g, output_g); // lb -> g
+                output_kg = input * 0.453592; setTextAndStringFormat(tv_kg, output_kg);    // lb -> kg
+                output_ton = input * 0.000454; setTextAndStringFormat(tv_ton, output_ton);    // lb -> t
+                output_kt = input * 0.000000454; setTextAndStringFormat(tv_kt, output_kt); // lb -> kt
+                output_lb = input; setTextAndStringFormat(tv_lb, output_lb);
+                output_gr = input * 7000; setTextAndStringFormat(tv_gr, output_gr); // lb -> gr
+                output_oz= input * 16; setTextAndStringFormat(tv_oz, output_oz); // lb -> oz
+                switchResult(swT);
+            } else if (swF == 6) { // gr를 다른 단위로 변환
+                output_mg = input * 64.79891; setTextAndStringFormat(tv_mg, output_mg); // gr -> mg
+                output_g = input * 0.064799; setTextAndStringFormat(tv_g, output_g); // gr -> g
+                output_kg = input * 0.000065; setTextAndStringFormat(tv_kg, output_kg);    // gr -> kg
+                output_ton = input * 0.000000065; setTextAndStringFormat(tv_ton, output_ton);    // gr -> t
+                output_kt = input * 0.000000000065; setTextAndStringFormat(tv_kt, output_kt); // gr -> kt
+                output_lb = input * 0.000143; setTextAndStringFormat(tv_lb, output_lb); // gr -> lb
+                output_gr = input; setTextAndStringFormat(tv_gr, output_gr);
+                output_oz = input * 0.002286; setTextAndStringFormat(tv_oz, output_oz); // gr -> oz
+                switchResult(swT);
+            } else if (swF == 7) { // oz를 다른 단위로 변환
+                output_mg = input * 28349.5231; setTextAndStringFormat(tv_mg, output_mg); // oz -> mg
+                output_g = input * 28.349523; setTextAndStringFormat(tv_g, output_g); // oz -> g
+                output_kg = input * 0.02835; setTextAndStringFormat(tv_kg, output_kg);    // oz -> kg
+                output_ton = input * 0.000028; setTextAndStringFormat(tv_ton, output_ton);    // oz -> t
+                output_kt = input * 0.000000028; setTextAndStringFormat(tv_kt, output_kt); // oz -> kt
+                output_lb = input * 0.0625; setTextAndStringFormat(tv_lb, output_lb); // oz -> lb
+                output_gr = input * 437.5; setTextAndStringFormat(tv_gr, output_gr); // oz -> gr
+                output_oz = input; setTextAndStringFormat(tv_oz, output_oz);
+                switchResult(swT);
+            }
         }
     }
 
@@ -638,135 +651,146 @@ public class UnitActivity extends AppCompatActivity {
      */
     public void convertArea(int saF, int saT, String editText) {
 
-        double input = 0;
-        if( !(editText_area.getText().toString().equals("")) )
-            input = Double.parseDouble(editText);
+        double input;
 
-        if (saF == 0) { // m^2를 다른 단위로 변환
-            output_m2 = input; setTextAndStringFormat(tv_m2, output_m2);
-            output_km2 = input * 0.000001; setTextAndStringFormat(tv_km2, output_km2); // m^2 -> km^2
-            output_ft2 = input * 10.76391; setTextAndStringFormat(tv_ft2, output_ft2); // m^2 -> ft^2
-            output_yd2 = input * 1.19599; setTextAndStringFormat(tv_yd2, output_yd2); // m^2 -> yd^2
-            output_a = input * 0.01; setTextAndStringFormat(tv_a, output_a); // m^2 -> a
-            output_ha = input * 0.0001; setTextAndStringFormat(tv_ha, output_ha); // m^2 -> ha
-            output_ac = input * 0.000247; setTextAndStringFormat(tv_ac, output_ac); // m^2 -> ac
-            output_pyeong = input * 0.3025; setTextAndStringFormat(tv_pyeong, output_pyeong); // m^2 -> 평
-            switchResult(saT);
-        } else if (saF == 1) { // km^2를 다른 단위로 변환
-            output_m2 = input * 1000000; setTextAndStringFormat(tv_m2, output_m2); // km^2 -> m^2
-            output_km2 = input; setTextAndStringFormat(tv_km2, output_km2);
-            output_ft2 = input * 10763910.4; setTextAndStringFormat(tv_ft2, output_ft2); // km^2 -> ft^2
-            output_yd2 = input * 1195990.05; setTextAndStringFormat(tv_yd2, output_yd2); // km^2 -> yd^2
-            output_a = input * 10000; setTextAndStringFormat(tv_a, output_a); // km^2 -> a
-            output_ha = input * 100; setTextAndStringFormat(tv_ha, output_ha); // km^2 -> ha
-            output_ac = input * 247.105381; setTextAndStringFormat(tv_ac, output_ac); // km^2 -> ac
-            output_pyeong = input * 302500; setTextAndStringFormat(tv_pyeong, output_pyeong); // km^2 -> 평
-            switchResult(saT);
-        } else if (saF == 2) { // ft^2를 다른 단위로 변환
-            output_m2 = input * 0.092903; setTextAndStringFormat(tv_m2, output_m2); // ft^2 -> m^2
-            output_km2 = input * 0.000000093; setTextAndStringFormat(tv_km2, output_km2); // ft^2 -> km^2
-            output_ft2 = input; setTextAndStringFormat(tv_ft2, output_ft2);
-            output_yd2 = input * 0.111111; setTextAndStringFormat(tv_yd2, output_yd2); // ft^2 -> yd^2
-            output_a = input * 0.000929; setTextAndStringFormat(tv_a, output_a); // ft^2 -> a
-            output_ha = input * 0.00000929; setTextAndStringFormat(tv_ha, output_ha); // ft^2 -> ha
-            output_ac = input * 0.000023; setTextAndStringFormat(tv_ac, output_ac); // ft^2 -> ac
-            output_pyeong = input * 0.028103; setTextAndStringFormat(tv_pyeong, output_pyeong); // ft^2 -> 평
-            switchResult(saT);
-        } else if (saF == 3) { // yd^2를 다른 단위로 변환
-            output_m2 = input * 0.836127; setTextAndStringFormat(tv_m2, output_m2); // yd^2 -> m^2
-            output_km2 = input * 0.000000836; setTextAndStringFormat(tv_km2, output_km2); // yd^2 -> km^2
-            output_ft2 = input * 9; setTextAndStringFormat(tv_ft2, output_ft2); // yd^2 -> ft^2
-            output_yd2 = input; setTextAndStringFormat(tv_yd2, output_yd2);
-            output_a = input * 0.008361; setTextAndStringFormat(tv_a, output_a); // yd^2 -> a
-            output_ha = input * 0.000084; setTextAndStringFormat(tv_ha, output_ha); // yd^2 -> ha
-            output_ac = input * 0.000207; setTextAndStringFormat(tv_ac, output_ac); // yd^2 -> ac
-            output_pyeong = input * 0.252929; setTextAndStringFormat(tv_pyeong, output_pyeong); // yd^2 -> 평
-            switchResult(saT);
-        } else if (saF == 4) { // a를 다른 단위로 변환
-            output_m2 = input * 100; setTextAndStringFormat(tv_m2, output_m2); // a -> m^2
-            output_km2 = input * 0.0001; setTextAndStringFormat(tv_km2, output_km2); // a -> km^2
-            output_ft2 = input * 1076.39104; setTextAndStringFormat(tv_ft2, output_ft2); // a -> ft^2
-            output_yd2 = input * 119.599005; setTextAndStringFormat(tv_yd2, output_yd2); // a -> yd^2
-            output_a = input; setTextAndStringFormat(tv_a, output_a);
-            output_ha = input * 0.01; setTextAndStringFormat(tv_ha, output_ha); // a -> ha
-            output_ac = input * 0.024711; setTextAndStringFormat(tv_ac, output_ac); // a -> ac
-            output_pyeong = input * 30.25; setTextAndStringFormat(tv_pyeong, output_pyeong); // a -> 평
-            switchResult(saT);
-        } else if (saF == 5) { // ha를 다른 단위로 변환
-            output_m2 = input * 10000; setTextAndStringFormat(tv_m2, output_m2); // ha -> m^2
-            output_km2 = input * 0.01; setTextAndStringFormat(tv_km2, output_km2); // ha -> km^2
-            output_ft2 = input * 107639.104; setTextAndStringFormat(tv_ft2, output_ft2); // ha -> ft^2
-            output_yd2 = input * 11959.9005; setTextAndStringFormat(tv_yd2, output_yd2); // ha -> yd^2
-            output_a = input * 100; setTextAndStringFormat(tv_a, output_a); // ha -> a
-            output_ha = input; setTextAndStringFormat(tv_ha, output_ha);
-            output_ac = input * 2.471054; setTextAndStringFormat(tv_ac, output_ac); // ha -> ac
-            output_pyeong = input * 3025; setTextAndStringFormat(tv_pyeong, output_pyeong); // ha -> 평
-            switchResult(saT);
-        } else if (saF == 6) { // ac를 다른 단위로 변환
-            output_m2 = input * 4046.85642; setTextAndStringFormat(tv_m2, output_m2); // ac -> m^2
-            output_km2 = input * 0.004047; setTextAndStringFormat(tv_km2, output_km2); // ac -> km^2
-            output_ft2 = input * 43560; setTextAndStringFormat(tv_ft2, output_ft2); // ac -> ft^2
-            output_yd2 = input * 4840; setTextAndStringFormat(tv_yd2, output_yd2); // ac -> yd^2
-            output_a = input * 40.468564; setTextAndStringFormat(tv_a, output_a); // ac -> a
-            output_ha = input * 0.404686; setTextAndStringFormat(tv_ha, output_ha); // ac -> ha
-            output_ac = input; setTextAndStringFormat(tv_ac, output_ac);
-            output_pyeong = input * 1224.17407; setTextAndStringFormat(tv_pyeong, output_pyeong); // ac -> 평
-            switchResult(saT);
-        } else if (saF == 7) { // 평을 다른 단위로 변환
-            output_m2 = input * 3.305785; setTextAndStringFormat(tv_m2, output_m2); // 평 -> m^2
-            output_km2 = input * 0.0000033058; setTextAndStringFormat(tv_km2, output_km2); // 평 -> km^2
-            output_ft2 = input * 35.583175; setTextAndStringFormat(tv_ft2, output_ft2); // 평 -> ft^2
-            output_yd2 = input * 3.953686; setTextAndStringFormat(tv_yd2, output_yd2); // 평 -> yd^2
-            output_a = input * 0.033058; setTextAndStringFormat(tv_a, output_a); // 평 -> a
-            output_ha = input * 0.000331; setTextAndStringFormat(tv_ha, output_ha); // 평 -> ha
-            output_ac = input * 0.000817; setTextAndStringFormat(tv_ac, output_ac); // 평 -> ac
-            output_pyeong = input; setTextAndStringFormat(tv_pyeong, output_pyeong);
-            switchResult(saT);
+        if (isNumber(editText)) { // EditText 문자가 숫자일 경우
+            input = Double.parseDouble(editText); // 입력값을 editText 에서 가져온다.
+
+            switch (saF) {
+                case 0: // m^2를 다른 단위로 변환
+                    output_m2 = input; setTextAndStringFormat(tv_m2, output_m2);
+                    output_km2 = input * 0.000001; setTextAndStringFormat(tv_km2, output_km2); // m^2 -> km^2
+                    output_ft2 = input * 10.76391; setTextAndStringFormat(tv_ft2, output_ft2); // m^2 -> ft^2
+                    output_yd2 = input * 1.19599; setTextAndStringFormat(tv_yd2, output_yd2); // m^2 -> yd^2
+                    output_a = input * 0.01; setTextAndStringFormat(tv_a, output_a); // m^2 -> a
+                    output_ha = input * 0.0001; setTextAndStringFormat(tv_ha, output_ha); // m^2 -> ha
+                    output_ac = input * 0.000247; setTextAndStringFormat(tv_ac, output_ac); // m^2 -> ac
+                    output_pyeong = input * 0.3025; setTextAndStringFormat(tv_pyeong, output_pyeong); // m^2 -> 평
+                    switchResult(saT);
+                    break;
+                case 1: // km^2를 다른 단위로 변환
+                    output_m2 = input * 1000000; setTextAndStringFormat(tv_m2, output_m2); // km^2 -> m^2
+                    output_km2 = input; setTextAndStringFormat(tv_km2, output_km2);
+                    output_ft2 = input * 10763910.4; setTextAndStringFormat(tv_ft2, output_ft2); // km^2 -> ft^2
+                    output_yd2 = input * 1195990.05; setTextAndStringFormat(tv_yd2, output_yd2); // km^2 -> yd^2
+                    output_a = input * 10000; setTextAndStringFormat(tv_a, output_a); // km^2 -> a
+                    output_ha = input * 100; setTextAndStringFormat(tv_ha, output_ha); // km^2 -> ha
+                    output_ac = input * 247.105381; setTextAndStringFormat(tv_ac, output_ac); // km^2 -> ac
+                    output_pyeong = input * 302500; setTextAndStringFormat(tv_pyeong, output_pyeong); // km^2 -> 평
+                    switchResult(saT);
+                    break;
+                case 2: // ft^2를 다른 단위로 변환
+                    output_m2 = input * 0.092903; setTextAndStringFormat(tv_m2, output_m2); // ft^2 -> m^2
+                    output_km2 = input * 0.000000093; setTextAndStringFormat(tv_km2, output_km2); // ft^2 -> km^2
+                    output_ft2 = input; setTextAndStringFormat(tv_ft2, output_ft2);
+                    output_yd2 = input * 0.111111; setTextAndStringFormat(tv_yd2, output_yd2); // ft^2 -> yd^2
+                    output_a = input * 0.000929; setTextAndStringFormat(tv_a, output_a); // ft^2 -> a
+                    output_ha = input * 0.00000929; setTextAndStringFormat(tv_ha, output_ha); // ft^2 -> ha
+                    output_ac = input * 0.000023; setTextAndStringFormat(tv_ac, output_ac); // ft^2 -> ac
+                    output_pyeong = input * 0.028103; setTextAndStringFormat(tv_pyeong, output_pyeong); // ft^2 -> 평
+                    switchResult(saT);
+                    break;
+                case 3: // yd^2를 다른 단위로 변환
+                    output_m2 = input * 0.836127; setTextAndStringFormat(tv_m2, output_m2); // yd^2 -> m^2
+                    output_km2 = input * 0.000000836; setTextAndStringFormat(tv_km2, output_km2); // yd^2 -> km^2
+                    output_ft2 = input * 9; setTextAndStringFormat(tv_ft2, output_ft2); // yd^2 -> ft^2
+                    output_yd2 = input; setTextAndStringFormat(tv_yd2, output_yd2);
+                    output_a = input * 0.008361; setTextAndStringFormat(tv_a, output_a); // yd^2 -> a
+                    output_ha = input * 0.000084; setTextAndStringFormat(tv_ha, output_ha); // yd^2 -> ha
+                    output_ac = input * 0.000207; setTextAndStringFormat(tv_ac, output_ac); // yd^2 -> ac
+                    output_pyeong = input * 0.252929; setTextAndStringFormat(tv_pyeong, output_pyeong); // yd^2 -> 평
+                    switchResult(saT);
+                    break;
+                case 4: // a를 다른 단위로 변환
+                    output_m2 = input * 100; setTextAndStringFormat(tv_m2, output_m2); // a -> m^2
+                    output_km2 = input * 0.0001; setTextAndStringFormat(tv_km2, output_km2); // a -> km^2
+                    output_ft2 = input * 1076.39104; setTextAndStringFormat(tv_ft2, output_ft2); // a -> ft^2
+                    output_yd2 = input * 119.599005; setTextAndStringFormat(tv_yd2, output_yd2); // a -> yd^2
+                    output_a = input; setTextAndStringFormat(tv_a, output_a);
+                    output_ha = input * 0.01; setTextAndStringFormat(tv_ha, output_ha); // a -> ha
+                    output_ac = input * 0.024711; setTextAndStringFormat(tv_ac, output_ac); // a -> ac
+                    output_pyeong = input * 30.25; setTextAndStringFormat(tv_pyeong, output_pyeong); // a -> 평
+                    switchResult(saT);
+                    break;
+                case 5: // ha를 다른 단위로 변환
+                    output_m2 = input * 10000; setTextAndStringFormat(tv_m2, output_m2); // ha -> m^2
+                    output_km2 = input * 0.01; setTextAndStringFormat(tv_km2, output_km2); // ha -> km^2
+                    output_ft2 = input * 107639.104; setTextAndStringFormat(tv_ft2, output_ft2); // ha -> ft^2
+                    output_yd2 = input * 11959.9005; setTextAndStringFormat(tv_yd2, output_yd2); // ha -> yd^2
+                    output_a = input * 100; setTextAndStringFormat(tv_a, output_a); // ha -> a
+                    output_ha = input; setTextAndStringFormat(tv_ha, output_ha);
+                    output_ac = input * 2.471054; setTextAndStringFormat(tv_ac, output_ac); // ha -> ac
+                    output_pyeong = input * 3025; setTextAndStringFormat(tv_pyeong, output_pyeong); // ha -> 평
+                    switchResult(saT);
+                    break;
+                case 6: // ac를 다른 단위로 변환
+                    output_m2 = input * 4046.85642; setTextAndStringFormat(tv_m2, output_m2); // ac -> m^2
+                    output_km2 = input * 0.004047; setTextAndStringFormat(tv_km2, output_km2); // ac -> km^2
+                    output_ft2 = input * 43560; setTextAndStringFormat(tv_ft2, output_ft2); // ac -> ft^2
+                    output_yd2 = input * 4840; setTextAndStringFormat(tv_yd2, output_yd2); // ac -> yd^2
+                    output_a = input * 40.468564; setTextAndStringFormat(tv_a, output_a); // ac -> a
+                    output_ha = input * 0.404686; setTextAndStringFormat(tv_ha, output_ha); // ac -> ha
+                    output_ac = input; setTextAndStringFormat(tv_ac, output_ac);
+                    output_pyeong = input * 1224.17407; setTextAndStringFormat(tv_pyeong, output_pyeong); // ac -> 평
+                    switchResult(saT);
+                    break;
+                case 7: // 평을 다른 단위로 변환
+                    output_m2 = input * 3.305785; setTextAndStringFormat(tv_m2, output_m2); // 평 -> m^2
+                    output_km2 = input * 0.0000033058; setTextAndStringFormat(tv_km2, output_km2); // 평 -> km^2
+                    output_ft2 = input * 35.583175; setTextAndStringFormat(tv_ft2, output_ft2); // 평 -> ft^2
+                    output_yd2 = input * 3.953686; setTextAndStringFormat(tv_yd2, output_yd2); // 평 -> yd^2
+                    output_a = input * 0.033058; setTextAndStringFormat(tv_a, output_a); // 평 -> a
+                    output_ha = input * 0.000331; setTextAndStringFormat(tv_ha, output_ha); // 평 -> ha
+                    output_ac = input * 0.000817; setTextAndStringFormat(tv_ac, output_ac); // 평 -> ac
+                    output_pyeong = input; setTextAndStringFormat(tv_pyeong, output_pyeong);
+                    switchResult(saT);
+                    break;
+            }
         }
     }
 
     /**
      * 온도를 변환하는 함수
      * 0 is 섭씨(℃),  1 is 화씨(℉),  2 is 켈빈(K),  3 is 란씨(°R)
-     * @param slF(spinner_temp_from)
-     * @param slT(spinner_temp_to)
+     * @param stF(spinner_temp_from)
+     * @param stT(spinner_temp_to)
      * @param editText( editText.getText().toString() )
      */
-    private void convertTemper(int slF, int slT, String editText) {
+    private void convertTemper(int stF, int stT, String editText) {
 
         double input;
 
         if (isNumber(editText)) { // EditText 문자가 숫자일 경우
             input = Double.parseDouble(editText); // 입력값을 editText 에서 가져온다.
 
-            switch (slF) {
+            switch (stF) {
                 case 0: // 섭씨(℃)를 다른 단위로 변환
                     output_Cel = input; setTextAndStringFormat(tv_Cel, output_Cel);
                     output_Fah = (input * 9 / 5) + 32; setTextAndStringFormat(tv_Fah, output_Fah); // ℃ -> ℉
                     output_Kel = input + 273.15; setTextAndStringFormat(tv_Kel, output_Kel); // ℃ -> K
                     output_Ran = (input + 273.15) * 3 / 2; setTextAndStringFormat(tv_Ran, output_Ran); // ℃ -> °R
-                    switchResult(slT);
+                    switchResult(stT);
                     break;
                 case 1: // 화씨(℉)를 다른 단위로 변환
                     output_Cel = (input - 32) * 5 / 9; setTextAndStringFormat(tv_Cel, output_Cel); // ℉ -> ℃
                     output_Fah = input; setTextAndStringFormat(tv_Fah, output_Fah);
                     output_Kel = (input + 459.67) * 5 / 9; setTextAndStringFormat(tv_Kel, output_Kel); // ℉ -> K
                     output_Ran = input + 459.67; setTextAndStringFormat(tv_Ran, output_Ran);  //℉ -> °R
-                    switchResult(slT);
+                    switchResult(stT);
                     break;
                 case 2: // 켈빈(K)를 다른 단위로 변환
                     output_Cel = input - 273.15; setTextAndStringFormat(tv_Cel, output_Cel); // K -> ℃
                     output_Fah = (input * 9 / 5) - 459.67; setTextAndStringFormat(tv_Fah, output_Fah); // K -> ℉
                     output_Kel = input; setTextAndStringFormat(tv_Kel, output_Kel);
                     output_Ran = input * 9 / 5; setTextAndStringFormat(tv_Ran, output_Ran); // K -> °R
-                    switchResult(slT);
+                    switchResult(stT);
                     break;
                 case 3: // 란씨(°R)를 다른 단위로 변환
                     output_Cel = (input - 491.67) * 5 / 9; setTextAndStringFormat(tv_Cel, output_Cel); // °R -> ℃
                     output_Fah = input - 459.67; setTextAndStringFormat(tv_Fah, output_Fah); // °R -> ℉
                     output_Kel = input * 5 / 9; setTextAndStringFormat(tv_Kel, output_Kel); // °R -> K
                     output_Ran = input; setTextAndStringFormat(tv_Ran, output_Ran);
-                    switchResult(slT);
+                    switchResult(stT);
                     break;
             }
         }
