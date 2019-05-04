@@ -93,7 +93,9 @@
                         <Spinner
                             android:id="@+id/spinner_length_from"
                             android:layout_height="match_parent"
-                            android:layout_width="match_parent"/>
+                            android:layout_width="match_parent"
+                            android:background="@drawable/bg_spinner_ripple"
+                            style="@style/SpinnerStyle" />
                     </RelativeLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -113,12 +115,13 @@
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="4"
-                        android:background="@drawable/bg_transparent">
+                        android:layout_weight="4">
                         <Spinner
                             android:id="@+id/spinner_length_to"
                             android:layout_height="match_parent"
-                            android:layout_width="match_parent" />
+                            android:layout_width="match_parent"
+                            android:background="@drawable/bg_spinner_ripple"
+                            style="@style/SpinnerStyle" />
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -326,7 +329,9 @@
                         <Spinner
                             android:id="@+id/spinner_weight_from"
                             android:layout_height="match_parent"
-                            android:layout_width="match_parent"/>
+                            android:layout_width="match_parent"
+                            android:background="@drawable/bg_spinner_ripple"
+                            style="@style/SpinnerStyle" />
                     </RelativeLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -351,7 +356,9 @@
                         <Spinner
                             android:id="@+id/spinner_weight_to"
                             android:layout_height="match_parent"
-                            android:layout_width="match_parent" />
+                            android:layout_width="match_parent"
+                            android:background="@drawable/bg_spinner_ripple"
+                            style="@style/SpinnerStyle" />
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -560,7 +567,9 @@
                         <Spinner
                             android:id="@+id/spinner_area_from"
                             android:layout_height="match_parent"
-                            android:layout_width="match_parent"/>
+                            android:layout_width="match_parent"
+                            android:background="@drawable/bg_spinner_ripple"
+                            style="@style/SpinnerStyle" />
                     </RelativeLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -585,7 +594,9 @@
                         <Spinner
                             android:id="@+id/spinner_area_to"
                             android:layout_height="match_parent"
-                            android:layout_width="match_parent" />
+                            android:layout_width="match_parent"
+                            android:background="@drawable/bg_spinner_ripple"
+                            style="@style/SpinnerStyle" />
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -794,7 +805,9 @@
                         <Spinner
                             android:id="@+id/spinner_temp_from"
                             android:layout_height="match_parent"
-                            android:layout_width="match_parent"/>
+                            android:layout_width="match_parent"
+                            android:background="@drawable/bg_spinner_ripple"
+                            style="@style/SpinnerStyle" />
                     </RelativeLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -819,7 +832,9 @@
                         <Spinner
                             android:id="@+id/spinner_temp_to"
                             android:layout_height="match_parent"
-                            android:layout_width="match_parent" />
+                            android:layout_width="match_parent"
+                            android:background="@drawable/bg_spinner_ripple"
+                            style="@style/SpinnerStyle" />
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>

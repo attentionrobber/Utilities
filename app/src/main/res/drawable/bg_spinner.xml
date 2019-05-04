@@ -1,0 +1,19 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/transparent" />
+                    <stroke android:width="2px" android:color="@color/transparent" />
+                </shape>
+            </item>
+
+            <item>
+                <bitmap
+                    android:gravity="right" android:src="@drawable/img_spinner" />
+            </item>
+        </layer-list>
+    </item>
+
+</selector>

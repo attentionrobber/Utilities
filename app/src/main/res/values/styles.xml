@@ -10,6 +10,14 @@
         <item name="windowActionBar">false</item> <!-- 타이틀바 없애기 -->
         <item name="windowNoTitle">true</item> <!-- 타이틀바 없애기 -->
 
+        <item name="android:dropDownListViewStyle">@style/SpinnerStyle</item> <!-- Spinner Style-->
     </style>
+
+    <!-- Customize Spinner -->
+    <style name="SpinnerStyle" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:divider">#d1d1d1</item>
+        <item name="android:dividerHeight">0.5dp</item>
+    </style>
+
 
 </resources>

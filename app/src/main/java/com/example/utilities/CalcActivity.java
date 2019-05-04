@@ -152,8 +152,8 @@ public class CalcActivity extends AppCompatActivity implements View.OnClickListe
                 back_toggle = false; // 백스페이스 버튼 초기화
                 if (lastStrIsSign(preview)) // 마지막 문자가 기호인 경우
                     preview = preview.substring(0, preview.length()-1); // 마지막 문자를 지운다.
-
-                showResult(calculate(preview));
+                if (!preview.equals("")) // 입력값이 존재할 경우
+                    showResult(calculate(preview));
                 break;
             default : break;
         }
